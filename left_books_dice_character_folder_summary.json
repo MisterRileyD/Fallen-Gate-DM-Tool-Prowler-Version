@@ -1,0 +1,24 @@
+{
+  "dice_system_updated_from_file": "Fallen Gate - Dice System.txt",
+  "dice_sections": [
+    "Main Stats",
+    "Combat Modifier",
+    "Low Stat Effects and Death",
+    "Combat Dice",
+    "Critical Fails and Automatic Hits",
+    "Combat Specifics",
+    "1s, 20s, and AC",
+    "Curses, Judgements, Magic, and Potions",
+    "Recovery and Out-of-Combat Magic"
+  ],
+  "left_tabs_open_on_left": true,
+  "left_books": [
+    "Dice System",
+    "How to Use DM Tool"
+  ],
+  "character_sheet_folder_added": true,
+  "character_sheet_folder": "character_sheets/",
+  "character_sheet_manifest": "character_sheets/manifest.js",
+  "character_sheet_template": "character_sheets/FG001_template.js",
+  "static_site_note": "Browsers cannot auto-list folder files, so new sheet files must be listed in manifest.js."
+}

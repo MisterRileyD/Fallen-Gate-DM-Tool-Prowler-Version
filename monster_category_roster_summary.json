@@ -1,0 +1,21 @@
+{
+  "total_monsters": 91,
+  "category_counts": {
+    "Other": 39,
+    "Abyssal Nature": 2,
+    "Dreadspire Enemies": 4,
+    "Infected Enemies": 7,
+    "Isle of Arachne Spiders": 8,
+    "Jotun": 5,
+    "Monsters of Heaven": 6,
+    "Slimes of The Abyss": 3,
+    "The Covenant of the Endless Maw": 5,
+    "The Grimm": 7,
+    "The Order of the Eternal Prism": 5
+  },
+  "monster_dropdown_grouped_by_category": true,
+  "monster_option_text_includes_category": true,
+  "monster_effects_autofill_category": true,
+  "images_embedded_matched": 66,
+  "no_image_statement_count": 25
+}

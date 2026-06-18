@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Fallen Gate Warrior Skills</title>
+  <style>
+:root {
+  --page-bg: #f4e6c5;
+  --page-line: #e7d4aa;
+  --ink: #24170e;
+  --purple: #4d245d;
+  --gold: #c99739;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  color: var(--ink);
+  font-family: Georgia, "Times New Roman", serif;
+  background:
+    linear-gradient(90deg, rgba(0,0,0,0.10), transparent 7%, transparent 93%, rgba(0,0,0,0.10)),
+    repeating-linear-gradient(0deg, var(--page-bg) 0 26px, var(--page-line) 27px 28px);
+  overflow: hidden;
+}
+
+.embedded-book {
+  height: 100%;
+  padding: 8px;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  gap: 6px;
+}
+
+.book-toolbar,
+.book-footer {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 8px;
+  border: 1px solid rgba(90,61,20,0.26);
+  border-radius: 12px;
+  background: rgba(255,255,255,0.24);
+}
+
+.book-footer {
+  justify-content: space-between;
+  flex-wrap: nowrap;
+}
+
+.book-search {
+  flex: 1;
+  min-width: 150px;
+  padding: 7px 10px;
+  border: 1px solid #9b7b4e;
+  border-radius: 9px;
+  background: rgba(255,252,236,0.84);
+  color: var(--ink);
+  font-size: 14px;
+}
+
+.book-btn,
+.discipline-card,
+.skill-list-btn {
+  padding: 7px 10px;
+  border: 1px solid #6b3a13;
+  border-radius: 9px;
+  background: linear-gradient(#fff1c5, #d7b36a);
+  color: #291609;
+  font-weight: 900;
+  cursor: pointer;
+  box-shadow: 0 1px 0 rgba(255,255,255,0.35) inset;
+}
+
+.book-btn.dark {
+  background: linear-gradient(#734589, #3a1a49);
+  color: #ffe8a2;
+  border-color: #d1a650;
+}
+
+.book-page-area {
+  min-height: 0;
+  height: 100%;
+  overflow: hidden;
+  border: 1px solid rgba(90,61,20,0.33);
+  border-radius: 14px;
+  background:
+    linear-gradient(90deg, rgba(0,0,0,0.07), transparent 7%, transparent 93%, rgba(0,0,0,0.07)),
+    repeating-linear-gradient(0deg, rgba(244,230,197,0.96) 0 26px, rgba(231,212,170,0.96) 27px 28px);
+  box-shadow: inset 0 0 24px rgba(82,45,12,0.12);
+}
+
+.book-page {
+  display: none;
+  height: 100%;
+  overflow-y: auto;
+  padding: 14px 18px 16px;
+  animation: pageTurn 260ms ease both;
+}
+
+.book-page.active { display: block; }
+
+@keyframes pageTurn {
+  from { opacity: 0; transform: translateX(22px) rotateY(-5deg); }
+  to { opacity: 1; transform: translateX(0) rotateY(0); }
+}
+
+.item-title {
+  margin: 0 0 8px;
+  color: var(--purple);
+  font-size: clamp(22px, 3.4vw, 32px);
+  border-bottom: 2px solid rgba(97,60,23,0.34);
+  padding-bottom: 5px;
+}
+
+.category {
+  display: inline-block;
+  margin: 4px 0 12px;
+  padding: 4px 9px;
+  border: 1px solid rgba(90,61,20,0.32);
+  border-radius: 999px;
+  background: rgba(255,255,255,0.28);
+  color: #5a3a1a;
+  font-weight: 900;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 12px;
+}
+
+p, li, td, th {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: clamp(13px, 2.2vw, 16px);
+  line-height: 1.45;
+}
+
+.discipline-grid,
+.skill-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(155px, 1fr));
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.discipline-card {
+  min-height: 78px;
+  background: rgba(255,255,255,0.27);
+  text-align: left;
+}
+
+.discipline-card strong {
+  display: block;
+  color: var(--purple);
+  font-size: 18px;
+  margin-bottom: 4px;
+}
+
+.skill-list-btn {
+  width: 100%;
+  background: rgba(255,255,255,0.32);
+  color: #3b1d45;
+  text-align: left;
+}
+
+.skill-list-btn small {
+  display: block;
+  color: #5a3a1a;
+  font-weight: 700;
+  margin-top: 3px;
+}
+
+.field-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 8px;
+  background: rgba(255,255,255,0.20);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.field-table th {
+  width: 150px;
+  color: #3f214b;
+  text-align: left;
+  vertical-align: top;
+}
+
+.field-table th,
+.field-table td {
+  padding: 7px 8px;
+  border-bottom: 1px solid rgba(90,61,20,0.18);
+}
+
+.preserve-lines {
+  white-space: pre-wrap;
+}
+
+.page-count {
+  color: #5a3a1a;
+  font-weight: 900;
+  font-family: Arial, Helvetica, sans-serif;
+}
+</style>
+</head>
+<body>
+  <div class="embedded-book">
+    <div class="book-toolbar">
+      <button class="book-btn dark" onclick="goToPage('skills_index')">Skills Index</button>
+      <input id="searchBox" class="book-search" placeholder="Search warrior skills..." oninput="searchPages()">
+      <button class="book-btn" onclick="prevPage()">Previous</button>
+      <button class="book-btn dark" onclick="nextPage()">Next</button>
+    </div>
+    <main class="book-page-area">
+      
+<section class="book-page active" id="skills_index">
+  <h2 class="item-title">Warrior Skills Index</h2>
+  <div class="category">Broken down by Discipline</div>
+  <div class="discipline-grid">
+    <button class="discipline-card" onclick="goToPage('discipline_general')"><strong>General</strong>10 skills</button>
+<button class="discipline-card" onclick="goToPage('discipline_defense')"><strong>Defense</strong>8 skills</button>
+<button class="discipline-card" onclick="goToPage('discipline_hand_to_hand')"><strong>Hand-to-Hand</strong>5 skills</button>
+<button class="discipline-card" onclick="goToPage('discipline_slashing')"><strong>Slashing</strong>2 skills</button>
+<button class="discipline-card" onclick="goToPage('discipline_piercing')"><strong>Piercing</strong>1 skill</button>
+<button class="discipline-card" onclick="goToPage('discipline_blunt')"><strong>Blunt</strong>1 skill</button>
+<button class="discipline-card" onclick="goToPage('discipline_projectile')"><strong>Projectile</strong>5 skills</button>
+<button class="discipline-card" onclick="goToPage('discipline_thrown')"><strong>Thrown</strong>5 skills</button>
+<button class="discipline-card" onclick="goToPage('discipline_all_melee')"><strong>All Melee</strong>2 skills</button>
+<button class="discipline-card" onclick="goToPage('discipline_all_melee_weapons')"><strong>All Melee Weapons</strong>1 skill</button>
+<button class="discipline-card" onclick="goToPage('discipline_all_disciplines')"><strong>All Disciplines</strong>1 skill</button>
+<button class="discipline-card" onclick="goToPage('discipline_all')"><strong>All</strong>1 skill</button>
+<button class="discipline-card" onclick="goToPage('discipline_melee_all')"><strong>Melee: All</strong>1 skill</button>
+<button class="discipline-card" onclick="goToPage('discipline_ranged_all')"><strong>Ranged: All</strong>1 skill</button>
+<button class="discipline-card" onclick="goToPage('discipline_general_this_skill_is_temporarily_disabled_until_further_notice')"><strong>General
+
+
+THIS SKILL IS TEMPORARILY DISABLED UNTIL FURTHER NOTICE</strong>1 skill</button>
+  </div>
+</section>
+
+<section class="book-page" id="discipline_general">
+  <h2 class="item-title">General</h2>
+  <div class="category">Warrior Skill Discipline</div>
+  <div class="skill-grid">
+    <button class="skill-list-btn" onclick="goToPage('skill_blind_fighting')">Blind-Fighting<small>Free | Attack Roll vs 12 AC: Accumulate 3 successes ...</small></button>
+<button class="skill-list-btn" onclick="goToPage('skill_charge')">Charge<small>Free | Attack Roll vs 11 AC: Accumulate 3 successes ...</small></button>
+<button class="skill-list-btn" onclick="goToPage('skill_combat_reflexes')">Combat Reflexes<small>Free | Alternate between Attack and Defense rolls vs...</small></button>
+<button class="skill-list-btn" onclick="goToPage('skill_dodge')">Dodge<small>Free | Defense Roll vs 12 Attack: Accumulate 3 succe...</small></button>
+<button class="skill-list-btn" onclick="goToPage('skill_improved_mutagenic_training')">Improved Mutagenic Training<small>Free | Must abstain from Magic for 24 hours before a...</small></button>
+<button class="skill-list-btn" onclick="goToPage('skill_mobility')">Mobility<small>Free | Defense Roll vs 13 Attack Roll: Accumulate 3 ...</small></button>
+<button class="skill-list-btn" onclick="goToPage('skill_mounted_combat')">Mounted Combat<small>Free | Attack Roll vs 12 AC: Accumulate 3 successes ...</small></button>
+<button class="skill-list-btn" onclick="goToPage('skill_mutagenic_training')">Mutagenic Training<small>Free | Must abstain from Magic for 24 hours before a...</small></button>
+<button class="skill-list-btn" onclick="goToPage('skill_the_right_stuff')">The Right Stuff<small>Free | Attack Roll vs 12 AC: Accumulate 3 successes ...</small></button>
+<button class="skill-list-btn" onclick="goToPage('skill_trample')">Trample<small>Free | Attack Roll vs 14 AC: Accumulate 3 successes ...</small></button>
+  </div>
+</section>
+
+<section class="book-page" id="discipline_defense">
+  <h2 class="item-title">Defense</h2>
+  <div class="category">Warrior Skill Discipline</div>
+  <div class="skill-grid">
+    <button class="skill-list-btn" onclick="goToPage('skill_challenging_roar')">Challenging Roar<small>2 Spirit | Attack Roll vs 13 AC: Accumulate 3 successes ...</small></button>
+<button class="skill-list-btn" onclick="goToPage('skill_defensive_stance')">Defensive Stance<small>Free | Defense Roll vs 13 Attack Roll: Accumulate 3 ...</small></button>
+<button class="skill-list-btn" onclick="goToPage('skill_improved_counter')">Improved Counter<small>Free | Defense Roll vs 13 Attack Roll: Accumulate 3 ...</small></button>
+<button class="skill-list-btn" onclick="goToPage('skill_inspiring_shout')">Inspiring Shout<small>2 Spirit | Attack Roll vs 13 AC: Accumulate 3 successes ...</small></button>
+<button class="skill-list-btn" onclick="goToPage('skill_intercept')">Intercept<small>1 Spirit | Defense Roll vs 13 Attack Roll: Accumulate 3 ...</small></button>
+<button class="skill-list-btn" onclick="goToPage('skill_parry')">Parry<small>Free | Defense Roll vs 14 Attack Roll: Accumulate 3 ...</small></button>
+<button class="skill-list-btn" onclick="goToPage('skill_signature_defense')">Signature Defense<small>Free | Defense Roll vs 12 Attack Roll: Accumulate 3 ...</small></button>
+<button class="skill-list-btn" onclick="goToPage('skill_spell_cutter')">Spell-Cutter<small>2 mind | Defense Roll vs 14 Attack Roll: Accumulate 3 ...</small></button>
+  </div>
+</section>
+
+<section class="book-page" id="discipline_hand_to_hand">
+  <h2 class="item-title">Hand-to-Hand</h2>
+  <div class="category">Warrior Skill Discipline</div>
+  <div class="skill-grid">
+    <button class="skill-list-btn" onclick="goToPage('skill_grapple')">Grapple<small>Free | Attack Roll vs 13 AC: Accumulate 3 successes ...</small></button>
+<button class="skill-list-btn" onclick="goToPage('skill_improved_grapple')">Improved Grapple<small>Free | Attack Roll vs 16 AC: Accumulate 3 successes ...</small></button>
+<button class="skill-list-btn" onclick="goToPage('skill_improved_unarmed_strike')">Improved Unarmed Strike<small>Free | Attack Roll vs 13 AC: Accumulate 3 successes ...</small></button>
+<button class="skill-list-btn" onclick="goToPage('skill_stunning_fist')">Stunning Fist<small>Free | Attack Roll vs 14 AC: Accumulate 3 successes ...</small></button>
+<button class="skill-list-btn" onclick="goToPage('skill_unarmed_strike')">Unarmed Strike<small>Free | Attack Roll vs 12 AC: Accumulate 3 successes ...</small></button>
+  </div>
+</section>
+
+<section class="book-page" id="discipline_slashing">
+  <h2 class="item-title">Slashing</h2>
+  <div class="category">Warrior Skill Discipline</div>
+  <div class="skill-grid">
+    <button class="skill-list-btn" onclick="goToPage('skill_bleeding_strike')">Bleeding strike<small>Free | Attack Roll vs 13 AC: Accumulate 3 successes ...</small></button>
+<button class="skill-list-btn" onclick="goToPage('skill_riposte')">Riposte<small>Free | Attack Roll vs 13 AC: Accumulate 3 successes ...</small></button>
+  </div>
+</section>
+
+<section class="book-page" id="discipline_piercing">
+  <h2 class="item-title">Piercing</h2>
+  <div class="category">Warrior Skill Discipline</div>
+  <div class="skill-grid">
+    <button class="skill-list-btn" onclick="goToPage('skill_impale')">Impale<small>Free | Attack Roll vs 14 AC: Accumulate 3 successes ...</small></button>
+  </div>
+</section>
+
+<section class="book-page" id="discipline_blunt">
+  <h2 class="item-title">Blunt</h2>
+  <div class="category">Warrior Skill Discipline</div>
+  <div class="skill-grid">
+    <button class="skill-list-btn" onclick="goToPage('skill_shatter_armor')">Shatter Armor<small>Free | Attack Roll vs 14 AC: Accumulate 3 successes ...</small></button>
+  </div>
+</section>
+
+<section class="book-page" id="discipline_projectile">
+  <h2 class="item-title">Projectile</h2>
+  <div class="category">Warrior Skill Discipline</div>
+  <div class="skill-grid">
+    <button class="skill-list-btn" onclick="goToPage('skill_penetrate')">Penetrate<small>Free | Attack Roll vs 13 AC: Accumulate 3 successes ...</small></button>
+<button class="skill-list-btn" onclick="goToPage('skill_point_blank_shot')">Point Blank Shot<small>Free | Attack Roll vs 12 AC: Accumulate 3 successes ...</small></button>
+<button class="skill-list-btn" onclick="goToPage('skill_precise_shot')">Precise Shot<small>Free | Attack Roll vs 13 AC: Accumulate 3 successes ...</small></button>
+<button class="skill-list-btn" onclick="goToPage('skill_rapid_shot')">Rapid Shot<small>-3 to attack | Attack Roll vs 14 AC: Accumulate 3 successes ...</small></button>
+<button class="skill-list-btn" onclick="goToPage('skill_spectral_arrow')">Spectral Arrow<small>1 Spirit | Attack Roll vs 13 AC: Accumulate 3 successes ...</small></button>
+  </div>
+</section>
+
+<section class="book-page" id="discipline_thrown">
+  <h2 class="item-title">Thrown</h2>
+  <div class="category">Warrior Skill Discipline</div>
+  <div class="skill-grid">
+    <button class="skill-list-btn" onclick="goToPage('skill_bombard')">Bombard<small>-3 to attack | Attack Roll vs 13 AC: Accumulate 3 successes ...</small></button>
+<button class="skill-list-btn" onclick="goToPage('skill_great_throw')">Great Throw<small>Free | Attack Roll vs 12 AC: Accumulate 3 successes ...</small></button>
+<button class="skill-list-btn" onclick="goToPage('skill_point_blank_shot')">Point Blank Shot<small>Free | Attack Roll vs 12 AC: Accumulate 3 successes ...</small></button>
+<button class="skill-list-btn" onclick="goToPage('skill_precise_shot')">Precise Shot<small>Free | Attack Roll vs 13 AC: Accumulate 3 successes ...</small></button>
+<button class="skill-list-btn" onclick="goToPage('skill_returning')">Returning<small>1 Spirit for entire scene | Attack Roll vs 12 AC: Accumulate 3 successes ...</small></button>
+  </div>
+</section>
+
+<section class="book-page" id="discipline_all_melee">
+  <h2 class="item-title">All Melee</h2>
+  <div class="category">Warrior Skill Discipline</div>
+  <div class="skill-grid">
+    <button class="skill-list-btn" onclick="goToPage('skill_power_attack')">Power Attack<small>-3 to attack | Attack Roll vs 13 AC: Accumulate 3 successes ...</small></button>
+<button class="skill-list-btn" onclick="goToPage('skill_sunder')">Sunder<small>Free | Attack Roll vs 13 AC: Accumulate 3 successes ...</small></button>
+  </div>
+</section>
+
+<section class="book-page" id="discipline_all_melee_weapons">
+  <h2 class="item-title">All Melee Weapons</h2>
+  <div class="category">Warrior Skill Discipline</div>
+  <div class="skill-grid">
+    <button class="skill-list-btn" onclick="goToPage('skill_imbued_defense')">Imbued Defense<small>1 Spirit | Skill Check vs DC 12: Accumulate 3 successes ...</small></button>
+  </div>
+</section>
+
+<section class="book-page" id="discipline_all_disciplines">
+  <h2 class="item-title">All Disciplines</h2>
+  <div class="category">Warrior Skill Discipline</div>
+  <div class="skill-grid">
+    <button class="skill-list-btn" onclick="goToPage('skill_improved_critical')">Improved Critical<small>Free | Attack Roll vs 13 AC: Accumulate 3 successes ...</small></button>
+  </div>
+</section>
+
+<section class="book-page" id="discipline_all">
+  <h2 class="item-title">All</h2>
+  <div class="category">Warrior Skill Discipline</div>
+  <div class="skill-grid">
+    <button class="skill-list-btn" onclick="goToPage('skill_signature_weapon')">Signature Weapon<small>Free | Attack Roll vs 12 AC: Accumulate 3 successes ...</small></button>
+  </div>
+</section>
+
+<section class="book-page" id="discipline_melee_all">
+  <h2 class="item-title">Melee: All</h2>
+  <div class="category">Warrior Skill Discipline</div>
+  <div class="skill-grid">
+    <button class="skill-list-btn" onclick="goToPage('skill_quick_draw')">Quick Draw<small>Free | Attack Roll vs 13 AC: Accumulate 3 successes ...</small></button>
+  </div>
+</section>
+
+<section class="book-page" id="discipline_ranged_all">
+  <h2 class="item-title">Ranged: All</h2>
+  <div class="category">Warrior Skill Discipline</div>
+  <div class="skill-grid">
+    <button class="skill-list-btn" onclick="goToPage('skill_quick_draw')">Quick Draw<small>Free | Attack Roll vs 13 AC: Accumulate 3 successes ...</small></button>
+  </div>
+</section>
+
+<section class="book-page" id="discipline_general_this_skill_is_temporarily_disabled_until_further_notice">
+  <h2 class="item-title">General
+
+
+THIS SKILL IS TEMPORARILY DISABLED UNTIL FURTHER NOTICE</h2>
+  <div class="category">Warrior Skill Discipline</div>
+  <div class="skill-grid">
+    <button class="skill-list-btn" onclick="goToPage('skill_ride_by_attack')">Ride By Attack<small>Free | Attack Roll vs 13 AC: Accumulate 3 successes ...</small></button>
+  </div>
+</section>
+
+<section class="book-page" id="skill_bleeding_strike">
+  <h2 class="item-title">Bleeding strike</h2>
+  <div class="category">Slashing</div>
+  <table class="field-table">
+    <tr><th>Discipline</th><td>Slashing</td></tr><tr><th>Description</th><td class="preserve-lines">You know where to strike the enemy to inflict maximum wounds and gashing, uncontrolled bleeding.
+   When attacking with a slashing weapon you may attempt to perform a Bleeding Strike, must be declared before the roll to hit is made. If the hit is successful, the opponent will take damage as normal for the weapon, and must pass a DC 10 check or start to loose 1 Body per round until some form of healing is applied. Multiple bleeding wounds are cumulative.
+   Does not effect undead or constructs like Golems.</td></tr><tr><th>Auto Hit</th><td>No</td></tr><tr><th>Friendly Fire</th><td>No</td></tr><tr><th>Cost</th><td>Free</td></tr><tr><th>Duration</th><td>Until healing applied</td></tr><tr><th>Learn</th><td class="preserve-lines">Attack Roll vs 13 AC: Accumulate 3 successes (5 rolls per day)</td></tr><tr><th>Who Can Learn</th><td class="preserve-lines">Power Attack, Sunder, +1 Combat Modifier from Rank</td></tr>
+  </table>
+</section>
+
+<section class="book-page" id="skill_blind_fighting">
+  <h2 class="item-title">Blind-Fighting</h2>
+  <div class="category">General</div>
+  <table class="field-table">
+    <tr><th>Discipline</th><td>General</td></tr><tr><th>Description</th><td class="preserve-lines">Through months of training blindfolded you know how to fight in melee without being able to see your foe, relying on other senses both natural and preternatural.
+   Any negative modifier for attacking an invisible, or unseen opponent is ignored by a Warrior who has this skill, the Warrior must be aware of the presence of the obscured enemy, even if they are unable to see them using normal means (eg, they saw someone cast Caceus), once they are aware they can target the invisible/unseen foe as normal with melee, ranged, or spell attacks.</td></tr><tr><th>Auto Hit</th><td>N/A</td></tr><tr><th>Friendly Fire</th><td>N/A</td></tr><tr><th>Cost</th><td>Free</td></tr><tr><th>Duration</th><td>Always active</td></tr><tr><th>Learn</th><td class="preserve-lines">Attack Roll vs 12 AC: Accumulate 3 successes (5 rolls per day)</td></tr><tr><th>Who Can Learn</th><td class="preserve-lines">Any</td></tr>
+  </table>
+</section>
+
+<section class="book-page" id="skill_bombard">
+  <h2 class="item-title">Bombard</h2>
+  <div class="category">Thrown</div>
+  <table class="field-table">
+    <tr><th>Discipline</th><td>Thrown</td></tr><tr><th>Description</th><td class="preserve-lines">You throw your weapons with supernatural speed, your hands becoming a blurring whirl of flesh and metal.
+   You may make an extra attack in your turn with a thrown weapon. But each attack takes a -3 penalty to hit. This is cumulative with Haste&#x27;s extra attack, but ALL three attacks would suffer a -3 to hit. These extra attacks may be aimed at different targets, each target must be declared BEFORE rolling for any attacks, if you do not, the attacks will automatically target the same enemy.</td></tr><tr><th>Auto Hit</th><td>No</td></tr><tr><th>Friendly Fire</th><td>N/A</td></tr><tr><th>Cost</th><td>-3 to attack</td></tr><tr><th>Duration</th><td>attack</td></tr><tr><th>Learn</th><td class="preserve-lines">Attack Roll vs 13 AC: Accumulate 3 successes (5 rolls per day)</td></tr><tr><th>Who Can Learn</th><td class="preserve-lines">Point Blank Shot: Thrown,  +1 Combat Modifier from Rank.</td></tr>
+  </table>
+</section>
+
+<section class="book-page" id="skill_challenging_roar">
+  <h2 class="item-title">Challenging Roar</h2>
+  <div class="category">Defense</div>
+  <table class="field-table">
+    <tr><th>Discipline</th><td>Defense</td></tr><tr><th>Description</th><td class="preserve-lines">You have learned how to use your words and body language to challenge foes into focusing their attention on you, though it only works on creatures smart enough to be taunted.
+DC 12 check to all enemies within a 10ft radius from the caster. Any creature that fails is forced to target the caster. Enemies with lower than 3 mind are immune to this effect. Does not break Defensive Stance</td></tr><tr><th>Auto Hit</th><td>Yes</td></tr><tr><th>Friendly Fire</th><td>No</td></tr><tr><th>Cost</th><td>2 Spirit</td></tr><tr><th>Duration</th><td>1 round</td></tr><tr><th>Learn</th><td class="preserve-lines">Attack Roll vs 13 AC: Accumulate 3 successes (5 rolls per day)</td></tr><tr><th>Who Can Learn</th><td class="preserve-lines">All</td></tr>
+  </table>
+</section>
+
+<section class="book-page" id="skill_charge">
+  <h2 class="item-title">Charge</h2>
+  <div class="category">General</div>
+  <table class="field-table">
+    <tr><th>Discipline</th><td>General</td></tr><tr><th>Description</th><td class="preserve-lines">The rider is able to incense their mount into a frenzy, causing them to lash out with teeth, claw, tails or hooves at their enemies.
+   Your mount gains an extra attack drawn from it&#x27;s repertoire of attacks. A mount with no listed attacks gain an attack which causes 2 Body damage.</td></tr><tr><th>Auto Hit</th><td>No</td></tr><tr><th>Friendly Fire</th><td>N/A</td></tr><tr><th>Cost</th><td>Free</td></tr><tr><th>Duration</th><td>While mounted</td></tr><tr><th>Learn</th><td class="preserve-lines">Attack Roll vs 11 AC: Accumulate 3 successes (5 rolls per day)</td></tr><tr><th>Who Can Learn</th><td class="preserve-lines">Mounted Combat,</td></tr>
+  </table>
+</section>
+
+<section class="book-page" id="skill_combat_reflexes">
+  <h2 class="item-title">Combat Reflexes</h2>
+  <div class="category">General</div>
+  <table class="field-table">
+    <tr><th>Discipline</th><td>General</td></tr><tr><th>Description</th><td class="preserve-lines">You react faster than normal in a fight.
+   You gain +10 to your Initiative Roll.</td></tr><tr><th>Auto Hit</th><td>N/A</td></tr><tr><th>Friendly Fire</th><td>N/A</td></tr><tr><th>Cost</th><td>Free</td></tr><tr><th>Duration</th><td>Initiative roll</td></tr><tr><th>Learn</th><td class="preserve-lines">Alternate between Attack and Defense rolls vs 13 (Trainer decides how to start): Accumulate 3 successes (5 rolls per day)</td></tr><tr><th>Who Can Learn</th><td class="preserve-lines">Mobility, Quick Draw for at least 1 weapon category.</td></tr>
+  </table>
+</section>
+
+<section class="book-page" id="skill_defensive_stance">
+  <h2 class="item-title">Defensive Stance</h2>
+  <div class="category">Defense</div>
+  <table class="field-table">
+    <tr><th>Discipline</th><td>Defense</td></tr><tr><th>Description</th><td class="preserve-lines">Through rigorous discipline you have honed your body and weapon to be prepared for any incoming attack against you or your allies. Also allows you to become an obstacle to block enemy movements.
+Take a Defensive posture. You are unable to attack (or cast damaging spells) but this grants you access to abilities in the defensive tree. Any enemy attempting to pass within 10ft of you must pass a DC 10 or be barred from going any further.
+Does NOT trigger against teleportation skills/spells</td></tr><tr><th>Auto Hit</th><td>No</td></tr><tr><th>Friendly Fire</th><td>No</td></tr><tr><th>Cost</th><td>Free</td></tr><tr><th>Duration</th><td>Until Canceled</td></tr><tr><th>Learn</th><td class="preserve-lines">Defense Roll vs 13 Attack Roll: Accumulate 3 successes (5 rolls per day)</td></tr><tr><th>Who Can Learn</th><td class="preserve-lines">Body 5</td></tr>
+  </table>
+</section>
+
+<section class="book-page" id="skill_dodge">
+  <h2 class="item-title">Dodge</h2>
+  <div class="category">General</div>
+  <table class="field-table">
+    <tr><th>Discipline</th><td>General</td></tr><tr><th>Description</th><td class="preserve-lines">You are adept at avoiding blows, a foe&#x27;s weapon cutting through air where your neck used to be.
+   On your action, instead of making any attacks or casting spells you can declare Dodge as an action, this will give you +2 to your Combat Roll to Defend. You must be aware of the attacker to claim this bonus, an invisible foe, one who is hidden, or if you are blinded (see Blind Fighting) will render this skill ineffective.</td></tr><tr><th>Auto Hit</th><td>N/A</td></tr><tr><th>Friendly Fire</th><td>N/A</td></tr><tr><th>Cost</th><td>Free</td></tr><tr><th>Duration</th><td>1 Turn</td></tr><tr><th>Learn</th><td class="preserve-lines">Defense Roll vs 12 Attack: Accumulate 3 successes (5 rolls per day)</td></tr><tr><th>Who Can Learn</th><td class="preserve-lines">All</td></tr>
+  </table>
+</section>
+
+<section class="book-page" id="skill_grapple">
+  <h2 class="item-title">Grapple</h2>
+  <div class="category">Hand-to-Hand</div>
+  <table class="field-table">
+    <tr><th>Discipline</th><td>Hand-to-Hand</td></tr><tr><th>Description</th><td class="preserve-lines">Versed in skills of  wrestling, sumo wrestling, and non lethal methods of subduing an opponent, you know how to hold a target in a way that causes no damage to them, yet holds them immobile, all while keeping yourself safe from the enemies weapons.
+   By making a successful Hand-to-Hand attack on an opponent you can elect to begin a Grapple instead of dealing damage. The target is held grappled and immobile until the start of your next turn, where you may choose to continue the grapple using another attack roll against the target or release them to take any other action.
+Grappled targets are unable to attack or cast spells/use skills which require movements. They may attempt to break the grapple by spending their turn to make an attack action against you , if they win, they deal damage as normal and break the hold. While grappled they are still able to move enough to attempt to avoid incoming blows.
+Can only Grapple enemies of the same size or smaller than yourself</td></tr><tr><th>Auto Hit</th><td>No</td></tr><tr><th>Friendly Fire</th><td>N/A</td></tr><tr><th>Cost</th><td>Free</td></tr><tr><th>Duration</th><td>1 turn</td></tr><tr><th>Learn</th><td class="preserve-lines">Attack Roll vs 13 AC: Accumulate 3 successes (5 rolls per day)</td></tr><tr><th>Who Can Learn</th><td class="preserve-lines">Improved Unarmed Combat</td></tr>
+  </table>
+</section>
+
+<section class="book-page" id="skill_great_throw">
+  <h2 class="item-title">Great Throw</h2>
+  <div class="category">Thrown</div>
+  <table class="field-table">
+    <tr><th>Discipline</th><td>Thrown</td></tr><tr><th>Description</th><td class="preserve-lines">You are able to throw anything that you can pick up and accurately use it as a weapon.
+   You may use any melee weapon as a thrown weapon, dealing damage as normal for their type. Improvised objects used as weapons will deal damage dependent on size (see Telekinesis for a table)</td></tr><tr><th>Auto Hit</th><td>No</td></tr><tr><th>Friendly Fire</th><td>N/A</td></tr><tr><th>Cost</th><td>Free</td></tr><tr><th>Duration</th><td>1 Attack</td></tr><tr><th>Learn</th><td class="preserve-lines">Attack Roll vs 12 AC: Accumulate 3 successes (5 rolls per day)</td></tr><tr><th>Who Can Learn</th><td class="preserve-lines">All</td></tr>
+  </table>
+</section>
+
+<section class="book-page" id="skill_imbued_defense">
+  <h2 class="item-title">Imbued Defense</h2>
+  <div class="category">All Melee Weapons</div>
+  <table class="field-table">
+    <tr><th>Discipline</th><td>All Melee Weapons</td></tr><tr><th>Description</th><td class="preserve-lines">By imparting your will into your weapon you trigger an increased resistance to magical influences.
+  If you are wielding a weapon of the chosen Discipline, you can spend 1 Spirit to infuse the weapon, this imparts a +2 to any one DC check to resist any magical spell or attack, this action can be made out of turn and in response to a magical or physical attack, but it must be declared and Spirit spent before the DC roll is made. You MUST be aware of the attack and you MUST have the weapon drawn.
+   You can take this Skill multiple times, each time applying to a new Weapon Discipline.</td></tr><tr><th>Auto Hit</th><td>N/A</td></tr><tr><th>Friendly Fire</th><td>N/A</td></tr><tr><th>Cost</th><td>1 Spirit</td></tr><tr><th>Duration</th><td>1 DC resist roll</td></tr><tr><th>Learn</th><td class="preserve-lines">Skill Check vs DC 12: Accumulate 3 successes (5 rolls per day)</td></tr><tr><th>Who Can Learn</th><td class="preserve-lines">Quick Draw for chosen Discipline</td></tr>
+  </table>
+</section>
+
+<section class="book-page" id="skill_impale">
+  <h2 class="item-title">Impale</h2>
+  <div class="category">Piercing</div>
+  <table class="field-table">
+    <tr><th>Discipline</th><td>Piercing</td></tr><tr><th>Description</th><td class="preserve-lines">By running through your enemy you can hold them immobile on the end of your weapon so you can look them in the eye.
+   Before rolling to attack you can declare an Impale attack. If the attack hits it deals damage as usual and the enemy must make a DC 10 check or be stunned and immobile until the beginning of your next turn</td></tr><tr><th>Auto Hit</th><td>No</td></tr><tr><th>Friendly Fire</th><td>N/A</td></tr><tr><th>Cost</th><td>Free</td></tr><tr><th>Duration</th><td>1 Turn</td></tr><tr><th>Learn</th><td class="preserve-lines">Attack Roll vs 14 AC: Accumulate 3 successes (5 rolls per day)</td></tr><tr><th>Who Can Learn</th><td class="preserve-lines">Power Attack, Sunder, +1 Combat Modifier from Rank</td></tr>
+  </table>
+</section>
+
+<section class="book-page" id="skill_improved_counter">
+  <h2 class="item-title">Improved Counter</h2>
+  <div class="category">Defense</div>
+  <table class="field-table">
+    <tr><th>Discipline</th><td>Defense</td></tr><tr><th>Description</th><td class="preserve-lines">You know how to punish attacks made against you.
+When defending with a Signature Defense weapon, your Counter Range increases from 20, to 19-20</td></tr><tr><th>Auto Hit</th><td>No</td></tr><tr><th>Friendly Fire</th><td>N/A</td></tr><tr><th>Cost</th><td>Free</td></tr><tr><th>Duration</th><td>Always Active</td></tr><tr><th>Learn</th><td class="preserve-lines">Defense Roll vs 13 Attack Roll: Accumulate 3 successes (5 rolls per day)</td></tr><tr><th>Who Can Learn</th><td class="preserve-lines">+1 Combat Modifier from Rank, Signature Defense</td></tr>
+  </table>
+</section>
+
+<section class="book-page" id="skill_improved_critical">
+  <h2 class="item-title">Improved Critical</h2>
+  <div class="category">All Disciplines</div>
+  <table class="field-table">
+    <tr><th>Discipline</th><td>All Disciplines</td></tr><tr><th>Description</th><td class="preserve-lines">You know how to hit an enemy where it hurts using your signature weapons.
+   When attacking with a Signature Weapon, your Critical Range increases from 20, to 19-20. This Skill may be learned multiple times, each time applying to a different Signature Weapon in a different Discipline.</td></tr><tr><th>Auto Hit</th><td>No</td></tr><tr><th>Friendly Fire</th><td>N/A</td></tr><tr><th>Cost</th><td>Free</td></tr><tr><th>Duration</th><td>While using Signature Weapon</td></tr><tr><th>Learn</th><td class="preserve-lines">Attack Roll vs 13 AC: Accumulate 3 successes (5 rolls per day)</td></tr><tr><th>Who Can Learn</th><td class="preserve-lines">+1 Combat Modifier from Rank. Signature Weapon with chosen category.</td></tr>
+  </table>
+</section>
+
+<section class="book-page" id="skill_improved_grapple">
+  <h2 class="item-title">Improved Grapple</h2>
+  <div class="category">Hand-to-Hand</div>
+  <table class="field-table">
+    <tr><th>Discipline</th><td>Hand-to-Hand</td></tr><tr><th>Description</th><td class="preserve-lines">You have studied tactics and trained hard to immobilize opponents many times your size.
+   You may attempt a Grapple against ANY size opponent.</td></tr><tr><th>Auto Hit</th><td>No</td></tr><tr><th>Friendly Fire</th><td>N/A</td></tr><tr><th>Cost</th><td>Free</td></tr><tr><th>Duration</th><td>1 turn</td></tr><tr><th>Learn</th><td class="preserve-lines">Attack Roll vs 16 AC: Accumulate 3 successes (5 rolls per day)</td></tr><tr><th>Who Can Learn</th><td class="preserve-lines">Improved Unarmed Combat, grapple, Combat Modifier +3 from Rank</td></tr>
+  </table>
+</section>
+
+<section class="book-page" id="skill_improved_mutagenic_training">
+  <h2 class="item-title">Improved Mutagenic Training</h2>
+  <div class="category">General</div>
+  <table class="field-table">
+    <tr><th>Discipline</th><td>General</td></tr><tr><th>Description</th><td class="preserve-lines">You have furthered your ability to utilize potions, and are skilled in using them in combat.
+   If the imbiber has not cast spells this battle, and is not the recipient of an ongoing beneficial spell, they may imbibe another potion per battle (in addition to the bonus 1 from the standard Mutagenic Training skill) for a total of 3 potions per battle. You can also use a potion as a free action on your turn. Any casting of a spell will cancel any ongoing effects of imbibed potions taken under Mutagenic Training.
+   Casting of Obtestor Armis, Provectus Armis and Obtestor Arma do not count towards ending the bonuses of Mutagenic Training.</td></tr><tr><th>Auto Hit</th><td>N/A</td></tr><tr><th>Friendly Fire</th><td>N/A</td></tr><tr><th>Cost</th><td>Free</td></tr><tr><th>Duration</th><td>Always Active (until spell is cast)</td></tr><tr><th>Learn</th><td class="preserve-lines">Must abstain from Magic for 24 hours before attempting to learn. Attack Roll vs 14 AC: Accumulate 3 successes (5 rolls per day)</td></tr><tr><th>Who Can Learn</th><td class="preserve-lines">Mutagenic Training, must know a total of 8+ Warrior Skills from any Category</td></tr>
+  </table>
+</section>
+
+<section class="book-page" id="skill_improved_unarmed_strike">
+  <h2 class="item-title">Improved Unarmed Strike</h2>
+  <div class="category">Hand-to-Hand</div>
+  <table class="field-table">
+    <tr><th>Discipline</th><td>Hand-to-Hand</td></tr><tr><th>Description</th><td class="preserve-lines">Your mastery over Hand-to-Hand combat is unsurpassed, having mastered multiple forms of combat. Your body is more lethal than many weapons and you have trained to fight with weapons that enhance your natural bodily strikes.
+   Your unarmed strikes now deal 2 Body Damage, and any weapon that is classified as &quot;Hand-to-Hand&quot; (such a knuckle dusters or punch daggers) or natural weaponry such as Claws and Fangs, deal +1 Body of damage.
+If used with a weapon that does not normally do Body damage, the +1 is applied to the relevant stat damage (eg. Mind for Falsa Arma, Spirit for Spiritus Lamina).</td></tr><tr><th>Auto Hit</th><td>No</td></tr><tr><th>Friendly Fire</th><td>N/A</td></tr><tr><th>Cost</th><td>Free</td></tr><tr><th>Duration</th><td>Attack</td></tr><tr><th>Learn</th><td class="preserve-lines">Attack Roll vs 13 AC: Accumulate 3 successes (5 rolls per day)</td></tr><tr><th>Who Can Learn</th><td class="preserve-lines">Unarmed Strike</td></tr>
+  </table>
+</section>
+
+<section class="book-page" id="skill_inspiring_shout">
+  <h2 class="item-title">Inspiring Shout</h2>
+  <div class="category">Defense</div>
+  <table class="field-table">
+    <tr><th>Discipline</th><td>Defense</td></tr><tr><th>Description</th><td class="preserve-lines">You have learned how to lead by example and inspire others through your posturing and words to remain stalwart and resolved in the face of danger.
+Allies behind you gain +1 AC and +1 to DC rolls for 1 turn. Does not break Defensive Stance</td></tr><tr><th>Auto Hit</th><td>Yes</td></tr><tr><th>Friendly Fire</th><td>Yes</td></tr><tr><th>Cost</th><td>2 Spirit</td></tr><tr><th>Duration</th><td>1 round</td></tr><tr><th>Learn</th><td class="preserve-lines">Attack Roll vs 13 AC: Accumulate 3 successes (5 rolls per day)</td></tr><tr><th>Who Can Learn</th><td class="preserve-lines">Challenging Roar
+--------------------------------------------------------------------------------------------------------------------</td></tr>
+  </table>
+</section>
+
+<section class="book-page" id="skill_intercept">
+  <h2 class="item-title">Intercept</h2>
+  <div class="category">Defense</div>
+  <table class="field-table">
+    <tr><th>Discipline</th><td>Defense</td></tr><tr><th>Description</th><td class="preserve-lines">Preparing for the worst, your combat senses are heightened. You can devote your full effort to beating an enemy&#x27;s attack before it reaches an ally. The effort taken to intercept prevents you from taking any measures to stop or block the attack, making it auto-hit you. Must be in defensive stance. You can intercept a blow or spell that hits an ally. You take all damage and effects of the attack or spell used. Cannot be used to block AoE damage</td></tr><tr><th>Auto Hit</th><td>Yes</td></tr><tr><th>Friendly Fire</th><td>No</td></tr><tr><th>Cost</th><td>1 Spirit</td></tr><tr><th>Duration</th><td>Once per round</td></tr><tr><th>Learn</th><td class="preserve-lines">Defense Roll vs 13 Attack Roll: Accumulate 3 successes (5 rolls per day)</td></tr><tr><th>Who Can Learn</th><td class="preserve-lines">Defensive Stance</td></tr>
+  </table>
+</section>
+
+<section class="book-page" id="skill_mobility">
+  <h2 class="item-title">Mobility</h2>
+  <div class="category">General</div>
+  <table class="field-table">
+    <tr><th>Discipline</th><td>General</td></tr><tr><th>Description</th><td class="preserve-lines">You are quick on your feet, able to evade incoming blows and shots while moving quickly through the battlefield.
+   If you move at your maximum speed in a turn, using your entire action to move, you gain +2 to your Combat Rolls to dodge and avoid incoming attacks and spells until the beginning of your next turn.</td></tr><tr><th>Auto Hit</th><td>N/A</td></tr><tr><th>Friendly Fire</th><td>N/A</td></tr><tr><th>Cost</th><td>Free</td></tr><tr><th>Duration</th><td>1 turn</td></tr><tr><th>Learn</th><td class="preserve-lines">Defense Roll vs 13 Attack Roll: Accumulate 3 successes (5 rolls per day)</td></tr><tr><th>Who Can Learn</th><td class="preserve-lines">Dodge, Move speed of 30ft or more</td></tr>
+  </table>
+</section>
+
+<section class="book-page" id="skill_mounted_combat">
+  <h2 class="item-title">Mounted Combat</h2>
+  <div class="category">General</div>
+  <table class="field-table">
+    <tr><th>Discipline</th><td>General</td></tr><tr><th>Description</th><td class="preserve-lines">You are skilled in fighting from a mount, such as a horse, centaur or dragon.
+   You suffer no negative consequences from fighting from a mounted position (melee or ranged), even on a horse at full gallop. You may make DC checks (difficulty set by the DM) to regain control your steed in combat if they fall under the influence of enemy force. Such as calming a steed that is subject to Fear spell, or gliding their wounded dragon to a soft landing instead of plummeting from the skies.
+   Mounted Combat is required to use other Warrior Skills from a mounted position.</td></tr><tr><th>Auto Hit</th><td>N/A</td></tr><tr><th>Friendly Fire</th><td>N/A</td></tr><tr><th>Cost</th><td>Free</td></tr><tr><th>Duration</th><td>Always active</td></tr><tr><th>Learn</th><td class="preserve-lines">Attack Roll vs 12 AC: Accumulate 3 successes (5 rolls per day)</td></tr><tr><th>Who Can Learn</th><td class="preserve-lines">Must have a creature able to be ridden into combat, each type of mount must be learnt separately.</td></tr>
+  </table>
+</section>
+
+<section class="book-page" id="skill_mutagenic_training">
+  <h2 class="item-title">Mutagenic Training</h2>
+  <div class="category">General</div>
+  <table class="field-table">
+    <tr><th>Discipline</th><td>General</td></tr><tr><th>Description</th><td class="preserve-lines">Through strict training and abstinence from magical influences, your body has adapted to tolerate multiple potions safely within your system.
+   If the imbiber has not cast any spells this battle, and is not under the influence of any beneficial spells, they may imbibe an extra potion (for a total of 2). If the imbiber casts a spell after the second potion. The effects of any imbibed potion will end.
+   Casting of Obtestor Armis, Provectus Armis and Obtestor Arma do not count towards ending the bonuses of Mutagenic Training.</td></tr><tr><th>Auto Hit</th><td>N/A</td></tr><tr><th>Friendly Fire</th><td>N/A</td></tr><tr><th>Cost</th><td>Free</td></tr><tr><th>Duration</th><td>Always Active (until spell is cast)</td></tr><tr><th>Learn</th><td class="preserve-lines">Must abstain from Magic for 24 hours before attempting to learn. Attack Roll vs 13 AC: Accumulate 3 successes (5 rolls per day)</td></tr><tr><th>Who Can Learn</th><td class="preserve-lines">Must know at least 3 Warrior Skills from any Discipline.</td></tr>
+  </table>
+</section>
+
+<section class="book-page" id="skill_parry">
+  <h2 class="item-title">Parry</h2>
+  <div class="category">Defense</div>
+  <table class="field-table">
+    <tr><th>Discipline</th><td>Defense</td></tr><tr><th>Description</th><td class="preserve-lines">Through rigorous training you have learned how to punish attackers who are unable to breach your defenses.
+Must be in defensive stance. If the melee attacks don&#x27;t beat your AC you can redirect half damage back to the attacker.</td></tr><tr><th>Auto Hit</th><td>Yes</td></tr><tr><th>Friendly Fire</th><td>No</td></tr><tr><th>Cost</th><td>Free</td></tr><tr><th>Duration</th><td>Always active</td></tr><tr><th>Learn</th><td class="preserve-lines">Defense Roll vs 14 Attack Roll: Accumulate 3 successes (5 rolls per day)</td></tr><tr><th>Who Can Learn</th><td class="preserve-lines">Defensive Stance, +1 Combat Modifier from Rank</td></tr>
+  </table>
+</section>
+
+<section class="book-page" id="skill_penetrate">
+  <h2 class="item-title">Penetrate</h2>
+  <div class="category">Projectile</div>
+  <table class="field-table">
+    <tr><th>Discipline</th><td>Projectile</td></tr><tr><th>Description</th><td class="preserve-lines">You are able to put supernatural force into your shot. The shot passing through your enemy into foes behind.
+   If you deal enough damage to drop a foe with damage excess, you may make a free attack against another target in behind the target in a direct line away from your position. On a successful hit, the extra damage is applied to the new target. This may repeat until either you fail to kill a target or you run out of targets in range.
+   Example, you hit an enemy for a 5 Body attack, they only have 3 Body remaining, you may now make an extra attack against another target to deal the remaining 2 Body damage.</td></tr><tr><th>Auto Hit</th><td>No</td></tr><tr><th>Friendly Fire</th><td>No</td></tr><tr><th>Cost</th><td>Free</td></tr><tr><th>Duration</th><td>Always Active</td></tr><tr><th>Learn</th><td class="preserve-lines">Attack Roll vs 13 AC: Accumulate 3 successes (5 rolls per day)</td></tr><tr><th>Who Can Learn</th><td class="preserve-lines">Precise Shot, +1 Combat Modifier from Rank</td></tr>
+  </table>
+</section>
+
+<section class="book-page" id="skill_point_blank_shot">
+  <h2 class="item-title">Point Blank Shot</h2>
+  <div class="category">Projectile, Thrown</div>
+  <table class="field-table">
+    <tr><th>Discipline</th><td>Projectile, Thrown</td></tr><tr><th>Description</th><td class="preserve-lines">You are skilled at making well-placed shots with ranged weapons at targets at close range, while remaining mobile enough to avoid attacking blows.
+   You are able to make ranged attacks at enemies who are in melee combat distance with you without suffering negative modifiers or fear of being attacked back.
+   May be learned twice, but for another Discipline.</td></tr><tr><th>Auto Hit</th><td>No</td></tr><tr><th>Friendly Fire</th><td>N/A</td></tr><tr><th>Cost</th><td>Free</td></tr><tr><th>Duration</th><td>Always active</td></tr><tr><th>Learn</th><td class="preserve-lines">Attack Roll vs 12 AC: Accumulate 3 successes (5 rolls per day)</td></tr><tr><th>Who Can Learn</th><td class="preserve-lines">All</td></tr>
+  </table>
+</section>
+
+<section class="book-page" id="skill_power_attack">
+  <h2 class="item-title">Power Attack</h2>
+  <div class="category">All Melee</div>
+  <table class="field-table">
+    <tr><th>Discipline</th><td>All Melee</td></tr><tr><th>Description</th><td class="preserve-lines">You are able to make exceptionally powerful attacks against your opponent at the expense of accuracy.
+   Before rolling to hit you must declare the use of this Skill, your attack suffers a -3 to hit roll, but you increase the damage dealt on a successful hit by +1 Body
+If used with a weapon that does not normally do Body damage, the +1 is applied to the relevant stat damage (Mind for Falsa Arma, Spirit for Spiritus Lamina).
+   This may be learned multiple times, each time applying to a different Discipline.</td></tr><tr><th>Auto Hit</th><td>No</td></tr><tr><th>Friendly Fire</th><td>N/A</td></tr><tr><th>Cost</th><td>-3 to attack</td></tr><tr><th>Duration</th><td>Single attack</td></tr><tr><th>Learn</th><td class="preserve-lines">Attack Roll vs 13 AC: Accumulate 3 successes (5 rolls per day)</td></tr><tr><th>Who Can Learn</th><td class="preserve-lines">Body 5+</td></tr>
+  </table>
+</section>
+
+<section class="book-page" id="skill_precise_shot">
+  <h2 class="item-title">Precise Shot</h2>
+  <div class="category">Projectile, Thrown</div>
+  <table class="field-table">
+    <tr><th>Discipline</th><td>Projectile, Thrown</td></tr><tr><th>Description</th><td class="preserve-lines">You are skilled at timing and aiming your shots. Allowing you to strike a weak point on your enemy, or to hit a weapon out of your enemies hands, or maybe even activate a hard-to-reach buttons
+   You may make &quot;trick shots&quot; you can attempt to strike an enemy&#x27;s weapon to disarm them (enemy makes DC 10 check to keep hold of their weapon) cause extra damage (-3 to hit roll and deal +1 Body damage) or strike far off small stationary targets with ease (DM definition).
+If used with a weapon that does not normally do Body damage, the +1 is applied to the relevant stat damage (Mind for Falsa Arma, Spirit for Spiritus Lamina).</td></tr><tr><th>Auto Hit</th><td>No</td></tr><tr><th>Friendly Fire</th><td>N/A</td></tr><tr><th>Cost</th><td>Free</td></tr><tr><th>Duration</th><td>Single Shot</td></tr><tr><th>Learn</th><td class="preserve-lines">Attack Roll vs 13 AC: Accumulate 3 successes (5 rolls per day)</td></tr><tr><th>Who Can Learn</th><td class="preserve-lines">Point Blank Shot</td></tr>
+  </table>
+</section>
+
+<section class="book-page" id="skill_quick_draw">
+  <h2 class="item-title">Quick Draw</h2>
+  <div class="category">Melee: All, Ranged: All</div>
+  <table class="field-table">
+    <tr><th>Discipline</th><td>Melee: All, Ranged: All</td></tr><tr><th>Description</th><td class="preserve-lines">You draw your weapon with startling speed, often having a weapon in hand before you are even aware of a threat.
+
+   You draw your weapon automatically on start of combat (Initiative Roll) so you will not be considered unarmed even if caught by surprise. You may also cast Blood Weapon or Summon Weapon as a free action on any turn, leaving you able to cast a second spell or carry out any other action. The use of this Skill to cast Blood Weapon or Summon weapon does not break the &quot;Warriors Code&quot; for Mutagenic Training or Mage Slayer.
+   This Skill may be learned multiple times, each time applying to a different weapon category.</td></tr><tr><th>Auto Hit</th><td>N/A</td></tr><tr><th>Friendly Fire</th><td>N/A</td></tr><tr><th>Cost</th><td>Free</td></tr><tr><th>Duration</th><td>Instant</td></tr><tr><th>Learn</th><td class="preserve-lines">Attack Roll vs 13 AC: Accumulate 3 successes (5 rolls per day)</td></tr><tr><th>Who Can Learn</th><td class="preserve-lines">All</td></tr>
+  </table>
+</section>
+
+<section class="book-page" id="skill_rapid_shot">
+  <h2 class="item-title">Rapid Shot</h2>
+  <div class="category">Projectile</div>
+  <table class="field-table">
+    <tr><th>Discipline</th><td>Projectile</td></tr><tr><th>Description</th><td class="preserve-lines">You use your ranged weapons with supernatural speed
+   You may make an extra attack in your turn with a ranged weapon. But each attack takes a -3 to attack rolls. This is cumulative with Haste&#x27;s extra attack, but ALL three attacks would suffer -3 to attack roll. These extra attacks may be aimed at different targets, each target must be declared BEFORE rolling for any attacks, if you do not, the attacks will automatically target the same enemy.</td></tr><tr><th>Auto Hit</th><td>No</td></tr><tr><th>Friendly Fire</th><td>N/A</td></tr><tr><th>Cost</th><td>-3 to attack</td></tr><tr><th>Duration</th><td>Single turn</td></tr><tr><th>Learn</th><td class="preserve-lines">Attack Roll vs 14 AC: Accumulate 3 successes (5 rolls per day)</td></tr><tr><th>Who Can Learn</th><td class="preserve-lines">Point Blank Shot: Projectiles required, +1 Combat Modifier from Rank</td></tr>
+  </table>
+</section>
+
+<section class="book-page" id="skill_returning">
+  <h2 class="item-title">Returning</h2>
+  <div class="category">Thrown</div>
+  <table class="field-table">
+    <tr><th>Discipline</th><td>Thrown</td></tr><tr><th>Description</th><td class="preserve-lines">Your Mastery over thrown weapons is such that the spirit of a weapon will seek to return to your hands.
+   A thrown weapon will immediately return to your hand after the resolution of the attack roll unless it is impeded by some outside force</td></tr><tr><th>Auto Hit</th><td>N/A</td></tr><tr><th>Friendly Fire</th><td>N/A</td></tr><tr><th>Cost</th><td>1 Spirit for entire scene</td></tr><tr><th>Duration</th><td>End of scene</td></tr><tr><th>Learn</th><td class="preserve-lines">Attack Roll vs 12 AC: Accumulate 3 successes (5 rolls per day)</td></tr><tr><th>Who Can Learn</th><td class="preserve-lines">Great Throw</td></tr>
+  </table>
+</section>
+
+<section class="book-page" id="skill_ride_by_attack">
+  <h2 class="item-title">Ride By Attack</h2>
+  <div class="category">General
+
+
+THIS SKILL IS TEMPORARILY DISABLED UNTIL FURTHER NOTICE</div>
+  <table class="field-table">
+    <tr><th>Discipline</th><td>General
+
+
+THIS SKILL IS TEMPORARILY DISABLED UNTIL FURTHER NOTICE</td></tr><tr><th>Description</th><td class="preserve-lines">You are skilled at making fast attacks from the back of a moving mount.
+   When mounted on a steed and charge toward an opponent to make a single attack, after your attack, your mount may move the remainder of it&#x27;s movement away from the target. (For example a dragon with 150ft fly speed, moves 50 ft to close with an enemy, you attack, the dragon is then able to move it&#x27;s remaining 100 ft to safely fly you away from the enemy)</td></tr><tr><th>Auto Hit</th><td>No</td></tr><tr><th>Friendly Fire</th><td>N/A</td></tr><tr><th>Cost</th><td>Free</td></tr><tr><th>Duration</th><td>Single attack</td></tr><tr><th>Learn</th><td class="preserve-lines">Attack Roll vs 13 AC: Accumulate 3 successes (5 rolls per day)</td></tr><tr><th>Who Can Learn</th><td class="preserve-lines">Mounted Combat</td></tr>
+  </table>
+</section>
+
+<section class="book-page" id="skill_riposte">
+  <h2 class="item-title">Riposte</h2>
+  <div class="category">Slashing</div>
+  <table class="field-table">
+    <tr><th>Discipline</th><td>Slashing</td></tr><tr><th>Description</th><td class="preserve-lines">You turn aside your enemy&#x27;s clumsy blows to slide in a quick slash underneath their defence.
+   If an enemy attacks you and rolls a Nat 1 on their attack, you may initiate a quick counter attack as if you had rolled a Nat20 on your defence roll. You must be within range of your Slashing weapon to be able to make this counter attack. The attack roll is resolved as normal according to the counter-attack rules. Must be using a Slashing weapon to take advantage of this Skill.</td></tr><tr><th>Auto Hit</th><td>No</td></tr><tr><th>Friendly Fire</th><td>N/A</td></tr><tr><th>Cost</th><td>Free</td></tr><tr><th>Duration</th><td>Always Active</td></tr><tr><th>Learn</th><td class="preserve-lines">Attack Roll vs 13 AC: Accumulate 3 successes (5 rolls per day)</td></tr><tr><th>Who Can Learn</th><td class="preserve-lines">Quickdraw: Slashing</td></tr>
+  </table>
+</section>
+
+<section class="book-page" id="skill_shatter_armor">
+  <h2 class="item-title">Shatter Armor</h2>
+  <div class="category">Blunt</div>
+  <table class="field-table">
+    <tr><th>Discipline</th><td>Blunt</td></tr><tr><th>Description</th><td class="preserve-lines">Your powerful blows are able to crush Armor as easily as it does skulls.
+   Declare a Shatter Armour attack before rolling. If the attack hits, it deals damage to the target as normal and the Attacker makes a DC check equal to the AC of the target. If passed it destroys the armour of the target (or in some other way render it ineffective).</td></tr><tr><th>Auto Hit</th><td>No</td></tr><tr><th>Friendly Fire</th><td>N/A</td></tr><tr><th>Cost</th><td>Free</td></tr><tr><th>Duration</th><td>Until Armor repaired/resummoned</td></tr><tr><th>Learn</th><td class="preserve-lines">Attack Roll vs 14 AC: Accumulate 3 successes (5 rolls per day)</td></tr><tr><th>Who Can Learn</th><td class="preserve-lines">Power Attack, Sunder, +2 Combat Modifier from Rank</td></tr>
+  </table>
+</section>
+
+<section class="book-page" id="skill_signature_defense">
+  <h2 class="item-title">Signature Defense</h2>
+  <div class="category">Defense</div>
+  <table class="field-table">
+    <tr><th>Discipline</th><td>Defense</td></tr><tr><th>Description</th><td class="preserve-lines">Extensive and focused training has allowed you to use your chosen weapon as an effective defensive tool.
+Choose one weapon type (not Discipline), for example Swords, Axes, Spears, Whips, punches, kicks, natural weapons etc. Any defense attempt made while wielding a weapon of that type will gain a +1 to defense roll.</td></tr><tr><th>Auto Hit</th><td>No</td></tr><tr><th>Friendly Fire</th><td>N/A</td></tr><tr><th>Cost</th><td>Free</td></tr><tr><th>Duration</th><td>Always Active</td></tr><tr><th>Learn</th><td class="preserve-lines">Defense Roll vs 12 Attack Roll: Accumulate 3 successes (5 rolls per day)</td></tr><tr><th>Who Can Learn</th><td class="preserve-lines">All</td></tr>
+  </table>
+</section>
+
+<section class="book-page" id="skill_signature_weapon">
+  <h2 class="item-title">Signature Weapon</h2>
+  <div class="category">All</div>
+  <table class="field-table">
+    <tr><th>Discipline</th><td>All</td></tr><tr><th>Description</th><td class="preserve-lines">Extensive and focused training has allowed your skill with your chosen weapon to extend beyond your peers.
+   Chose one weapon type (not Discipline), for example Swords, Axes, Spears, Whips, punches, kicks, natural weapons etc. Any attack made by a weapon of that type will gain a +1 to attack roll.
+   This may be taken only once per Discipline, but may be learned again in a second or subsequent Discipline. Example: Signature Weapon Sword and Signature Weapon Axe is not permissible as they are both Slashing Discipline. However Signature Weapon Sword and Signature Weapon Spear is permissible as Spear is Piercing Discipline.</td></tr><tr><th>Auto Hit</th><td>No</td></tr><tr><th>Friendly Fire</th><td>N/A</td></tr><tr><th>Cost</th><td>Free</td></tr><tr><th>Duration</th><td>Always active</td></tr><tr><th>Learn</th><td class="preserve-lines">Attack Roll vs 12 AC: Accumulate 3 successes (5 rolls per day)</td></tr><tr><th>Who Can Learn</th><td class="preserve-lines">All</td></tr>
+  </table>
+</section>
+
+<section class="book-page" id="skill_spectral_arrow">
+  <h2 class="item-title">Spectral Arrow</h2>
+  <div class="category">Projectile</div>
+  <table class="field-table">
+    <tr><th>Discipline</th><td>Projectile</td></tr><tr><th>Description</th><td class="preserve-lines">By drawing back an empty bow, you form a glowing spectral arrow using your Will.
+   Your Spectral Arrow is able to hit ethereal, intangible, gaseous or otherwise non-physical targets, including spirits possessing another body. The arrow deals no damage to physical targets, but deals it&#x27;s Body damage rating to the target&#x27;s Mind if they are non-physical. The archer must be aware of the target, and must declare a Spectral Shot before the attack is rolled.</td></tr><tr><th>Auto Hit</th><td>No</td></tr><tr><th>Friendly Fire</th><td>N/A</td></tr><tr><th>Cost</th><td>1 Spirit</td></tr><tr><th>Duration</th><td>1 Attack</td></tr><tr><th>Learn</th><td class="preserve-lines">Attack Roll vs 13 AC: Accumulate 3 successes (5 rolls per day)</td></tr><tr><th>Who Can Learn</th><td class="preserve-lines">Point Blank Shot, +1 Combat Modifier from Rank</td></tr>
+  </table>
+</section>
+
+<section class="book-page" id="skill_spell_cutter">
+  <h2 class="item-title">Spell-Cutter</h2>
+  <div class="category">Defense</div>
+  <table class="field-table">
+    <tr><th>Discipline</th><td>Defense</td></tr><tr><th>Description</th><td class="preserve-lines">Through meticulous and careful practice, you have honed your skills to slice through the very essence of magic and even reflect some energy back.
+Must be in defensive stance. You slash at a non auto-hit spell sending it back to the attacker. You must beat the casters Attack roll to send it back.</td></tr><tr><th>Auto Hit</th><td>No</td></tr><tr><th>Friendly Fire</th><td>No</td></tr><tr><th>Cost</th><td>2 mind</td></tr><tr><th>Duration</th><td>Once per Combat</td></tr><tr><th>Learn</th><td class="preserve-lines">Defense Roll vs 14 Attack Roll: Accumulate 3 successes (5 rolls per day)</td></tr><tr><th>Who Can Learn</th><td class="preserve-lines">Defensive Stance, Parry</td></tr>
+  </table>
+</section>
+
+<section class="book-page" id="skill_stunning_fist">
+  <h2 class="item-title">Stunning Fist</h2>
+  <div class="category">Hand-to-Hand</div>
+  <table class="field-table">
+    <tr><th>Discipline</th><td>Hand-to-Hand</td></tr><tr><th>Description</th><td class="preserve-lines">You know how to strike people in vulnerable areas.
+   You may declare, before you roll, that one of your Hand-to-Hand attacks is to be a Stunning Fist attack (may also be feet, elbow, knee, etc.), if this attack hits AND causes damage, the target must make a DC 10 check or be stunned for 1 turn.</td></tr><tr><th>Auto Hit</th><td>No</td></tr><tr><th>Friendly Fire</th><td>N/A</td></tr><tr><th>Cost</th><td>Free</td></tr><tr><th>Duration</th><td>1 turn</td></tr><tr><th>Learn</th><td class="preserve-lines">Attack Roll vs 14 AC: Accumulate 3 successes (5 rolls per day)</td></tr><tr><th>Who Can Learn</th><td class="preserve-lines">Improved Unarmed Strike. +1 Combat Modifier from Rank</td></tr>
+  </table>
+</section>
+
+<section class="book-page" id="skill_sunder">
+  <h2 class="item-title">Sunder</h2>
+  <div class="category">All Melee</div>
+  <table class="field-table">
+    <tr><th>Discipline</th><td>All Melee</td></tr><tr><th>Description</th><td class="preserve-lines">You can follow through with powerful attacks.
+   If you deal enough damage to drop a foe with damage excess, you may make a free attack against another target in your melee range, using the same modifiers as the initial attack. On a successful hit, the extra damage is applied to the new target. This may repeat until either you fail to kill a target or you run out of targets in melee range.
+   Example, you hit an enemy for a 5 Body attack, they only have 3 Body remaining, you may now make an extra attack against another target to deal the remaining 2 Body damage
+   You may learn these Skill multiple times, each time allowing you to use Sunder with a different Discipline.</td></tr><tr><th>Auto Hit</th><td>No</td></tr><tr><th>Friendly Fire</th><td>N/A</td></tr><tr><th>Cost</th><td>Free</td></tr><tr><th>Duration</th><td>Always Active</td></tr><tr><th>Learn</th><td class="preserve-lines">Attack Roll vs 13 AC: Accumulate 3 successes (5 rolls per day)</td></tr><tr><th>Who Can Learn</th><td class="preserve-lines">Power Attack, Body 5</td></tr>
+  </table>
+</section>
+
+<section class="book-page" id="skill_the_right_stuff">
+  <h2 class="item-title">The Right Stuff</h2>
+  <div class="category">General</div>
+  <table class="field-table">
+    <tr><th>Discipline</th><td>General</td></tr><tr><th>Description</th><td class="preserve-lines">Tuck-and-roll baby, tuck and roll.
+   A Warrior with The Right Stuff may voluntarily allow themselves to be thrown using Throw Creature or similar ability or spell. Such a thrown Warrior will take no damage from the throw and may move act normally on their next turn. To qualify as willing, you must forgo any dodge chances or DC checks to resist being thrown.</td></tr><tr><th>Auto Hit</th><td>No</td></tr><tr><th>Friendly Fire</th><td>N/A</td></tr><tr><th>Cost</th><td>Free</td></tr><tr><th>Duration</th><td>1 turn</td></tr><tr><th>Learn</th><td class="preserve-lines">Attack Roll vs 12 AC: Accumulate 3 successes (5 rolls per day)</td></tr><tr><th>Who Can Learn</th><td class="preserve-lines">Anyone</td></tr>
+  </table>
+</section>
+
+<section class="book-page" id="skill_trample">
+  <h2 class="item-title">Trample</h2>
+  <div class="category">General</div>
+  <table class="field-table">
+    <tr><th>Discipline</th><td>General</td></tr><tr><th>Description</th><td class="preserve-lines">You are skilled at using your mount to knock down your enemy.
+   If your mount lands 2 or more hits on the enemy, you may attempt to knock them prone to the floor. Only works against foes that are no larger than the mount, and only mounts with 2 or more attacks may attempt this. The enemy must make a DC10 check or be knocked prone to the floor, and any defence rolls made by the prone target are at a -2 penalty until they stand up (free action on their next turn).
+This Skill does not need to be declared to take effect. Any time your mount hits the same enemy twice in one round, this takes effect.</td></tr><tr><th>Auto Hit</th><td>Special</td></tr><tr><th>Friendly Fire</th><td>N/A</td></tr><tr><th>Cost</th><td>Free</td></tr><tr><th>Duration</th><td>Attack</td></tr><tr><th>Learn</th><td class="preserve-lines">Attack Roll vs 14 AC: Accumulate 3 successes (5 rolls per day)</td></tr><tr><th>Who Can Learn</th><td class="preserve-lines">+1 Combat Bonus from Rank, Mounted Combat, Charge</td></tr>
+  </table>
+</section>
+
+<section class="book-page" id="skill_unarmed_strike">
+  <h2 class="item-title">Unarmed Strike</h2>
+  <div class="category">Hand-to-Hand</div>
+  <table class="field-table">
+    <tr><th>Discipline</th><td>Hand-to-Hand</td></tr><tr><th>Description</th><td class="preserve-lines">Through a mixture of Martial Arts training, street fighting techniques and military doctrine, you have mastered the art of turning your empty fists, feet and every part of your body into a weapon.
+   Your unarmed strikes will deal 1 Body damage. This can also trigger any touch-based abilities, such as the Lich&#x27;s Life Drain. You may choose to deal &quot;non lethal&quot; damage to a target with your unarmed attacks, knocking it unconscious if it reaches or drops below 0 Body instead of killing it.</td></tr><tr><th>Auto Hit</th><td>No</td></tr><tr><th>Friendly Fire</th><td>No</td></tr><tr><th>Cost</th><td>Free</td></tr><tr><th>Duration</th><td>Always Active</td></tr><tr><th>Learn</th><td class="preserve-lines">Attack Roll vs 12 AC: Accumulate 3 successes (5 rolls per day)</td></tr><tr><th>Who Can Learn</th><td class="preserve-lines">All</td></tr>
+  </table>
+</section>
+
+    </main>
+    <footer class="book-footer">
+      <button class="book-btn" onclick="goToPage('skills_index')">Index</button>
+      <button class="book-btn" onclick="prevPage()">← Back</button>
+      <button class="book-btn dark" onclick="nextPage()">Next →</button>
+      <span id="pageCount" class="page-count">Page 1</span>
+    </footer>
+  </div>
+  <script>
+let allPages = [];
+let filteredPages = [];
+let currentPage = 0;
+
+function initBook() {
+  allPages = Array.from(document.querySelectorAll(".book-page"));
+  filteredPages = allPages.slice();
+  showPage(0);
+}
+
+function showPage(index) {
+  if (filteredPages.length === 0) {
+    allPages.forEach(p => p.classList.remove("active"));
+    document.getElementById("pageCount").textContent = "No pages";
+    return;
+  }
+  if (index < 0) index = filteredPages.length - 1;
+  if (index >= filteredPages.length) index = 0;
+  currentPage = index;
+  allPages.forEach(p => p.classList.remove("active"));
+  filteredPages[currentPage].classList.add("active");
+  document.getElementById("pageCount").textContent = "Page " + (currentPage + 1) + " of " + filteredPages.length;
+}
+
+function goToPage(id) {
+  const page = document.getElementById(id);
+  if (!page) return;
+  filteredPages = allPages.slice();
+  const index = filteredPages.indexOf(page);
+  showPage(index >= 0 ? index : 0);
+}
+
+function nextPage() { showPage(currentPage + 1); }
+function prevPage() { showPage(currentPage - 1); }
+
+function searchPages() {
+  const q = document.getElementById("searchBox").value.trim().toLowerCase();
+  if (!q) {
+    filteredPages = allPages.slice();
+  } else {
+    filteredPages = allPages.filter(page => page.textContent.toLowerCase().includes(q));
+  }
+  showPage(0);
+}
+
+window.addEventListener("DOMContentLoaded", initBook);
+</script>
+</body>
+</html>

@@ -1,0 +1,4 @@
+{
+  "embedded_image_references": 54,
+  "note": "monsters.html now contains image data directly so it can show images even if the images folder is not uploaded."
+}

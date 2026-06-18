@@ -1,0 +1,15 @@
+{
+  "added_left_tabs": [
+    "Dice System",
+    "How to Use DM Tool"
+  ],
+  "added_pages": [
+    "dice_system.html",
+    "how_to_use_dm_tool.html"
+  ],
+  "cover_clickable": true,
+  "removed_open_the_tome_button": true,
+  "cover_title": "Fallen Gate DM Tool",
+  "cover_subtitle": "Prowler Version by MisterRileyD",
+  "book_height": "clamp(760px, 92vh, 1050px)"
+}

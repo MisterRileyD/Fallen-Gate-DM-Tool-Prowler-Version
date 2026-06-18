@@ -1,0 +1,20 @@
+{
+  "image_files_after_fix": 67,
+  "renamed_images_to_safe_paths": 67,
+  "abyssal_beholder_image_present": true,
+  "void_dragon_image_present": true,
+  "example_safe_names": [
+    "20-abyssal-uropian-mob.webp",
+    "20-indo-uropian-mob.webp",
+    "abyss-horror.webp",
+    "abyssal-beholder.webp",
+    "abyssal-cube.webp",
+    "adult-shocker-lizard.webp",
+    "baby-shocker-lizard.webp",
+    "balor.webp",
+    "bene-acedia-demifiend-of-sloth.webp",
+    "bene-gastrimargia-demifiend-of-gluttony.webp",
+    "bene-luxuria-demifiend-of-lust-left-arms.webp",
+    "bene-luxuria-demifiend-of-lust-right-arms.webp"
+  ]
+}

@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Fallen Gate Dice System</title>
+  <style>
+:root {
+  --page-bg: #f4e6c5;
+  --page-line: #e7d4aa;
+  --ink: #24170e;
+  --purple: #4d245d;
+  --gold: #c99739;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  color: var(--ink);
+  font-family: Georgia, "Times New Roman", serif;
+  background:
+    linear-gradient(90deg, rgba(0,0,0,0.10), transparent 7%, transparent 93%, rgba(0,0,0,0.10)),
+    repeating-linear-gradient(0deg, var(--page-bg) 0 26px, var(--page-line) 27px 28px);
+  overflow: hidden;
+}
+
+.embedded-book {
+  height: 100%;
+  padding: 8px;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  gap: 6px;
+}
+
+.book-toolbar,
+.book-footer {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 8px;
+  border: 1px solid rgba(90,61,20,0.26);
+  border-radius: 12px;
+  background: rgba(255,255,255,0.24);
+}
+
+.book-footer {
+  justify-content: space-between;
+  flex-wrap: nowrap;
+}
+
+.book-search {
+  flex: 1;
+  min-width: 150px;
+  padding: 7px 10px;
+  border: 1px solid #9b7b4e;
+  border-radius: 9px;
+  background: rgba(255,252,236,0.84);
+  color: var(--ink);
+  font-size: 14px;
+}
+
+.book-btn,
+.index-card {
+  padding: 7px 10px;
+  border: 1px solid #6b3a13;
+  border-radius: 9px;
+  background: linear-gradient(#fff1c5, #d7b36a);
+  color: #291609;
+  font-weight: 900;
+  cursor: pointer;
+  box-shadow: 0 1px 0 rgba(255,255,255,0.35) inset;
+}
+
+.book-btn.dark {
+  background: linear-gradient(#734589, #3a1a49);
+  color: #ffe8a2;
+  border-color: #d1a650;
+}
+
+.book-page-area {
+  min-height: 0;
+  height: 100%;
+  overflow: hidden;
+  border: 1px solid rgba(90,61,20,0.33);
+  border-radius: 14px;
+  background:
+    linear-gradient(90deg, rgba(0,0,0,0.07), transparent 7%, transparent 93%, rgba(0,0,0,0.07)),
+    repeating-linear-gradient(0deg, rgba(244,230,197,0.96) 0 26px, rgba(231,212,170,0.96) 27px 28px);
+  box-shadow: inset 0 0 24px rgba(82,45,12,0.12);
+}
+
+.book-page {
+  display: none;
+  height: 100%;
+  overflow-y: auto;
+  padding: 14px 18px 16px;
+  animation: pageTurn 260ms ease both;
+}
+
+.book-page.active { display: block; }
+
+@keyframes pageTurn {
+  from { opacity: 0; transform: translateX(22px) rotateY(-5deg); }
+  to { opacity: 1; transform: translateX(0) rotateY(0); }
+}
+
+.item-title {
+  margin: 0 0 8px;
+  color: var(--purple);
+  font-size: clamp(22px, 3.4vw, 32px);
+  border-bottom: 2px solid rgba(97,60,23,0.34);
+  padding-bottom: 5px;
+}
+
+.category {
+  display: inline-block;
+  margin: 4px 0 12px;
+  padding: 4px 9px;
+  border: 1px solid rgba(90,61,20,0.32);
+  border-radius: 999px;
+  background: rgba(255,255,255,0.28);
+  color: #5a3a1a;
+  font-weight: 900;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 12px;
+}
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(155px, 1fr));
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.index-card {
+  min-height: 78px;
+  background: rgba(255,255,255,0.27);
+  text-align: left;
+}
+
+.index-card strong {
+  display: block;
+  color: var(--purple);
+  font-size: 18px;
+  margin-bottom: 4px;
+}
+
+.rule-text {
+  white-space: pre-wrap;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: clamp(13px, 2.2vw, 16px);
+  line-height: 1.48;
+  padding: 10px 12px;
+  border: 1px solid rgba(90,61,20,0.20);
+  border-radius: 10px;
+  background: rgba(255,255,255,0.22);
+}
+
+.page-count {
+  color: #5a3a1a;
+  font-weight: 900;
+  font-family: Arial, Helvetica, sans-serif;
+}
+</style>
+</head>
+<body>
+  <div class="embedded-book">
+    <div class="book-toolbar">
+      <button class="book-btn dark" onclick="goToPage('book_index')">Dice Index</button>
+      <input id="searchBox" class="book-search" placeholder="Search dice rules..." oninput="searchPages()">
+      <button class="book-btn" onclick="prevPage()">Previous</button>
+      <button class="book-btn dark" onclick="nextPage()">Next</button>
+    </div>
+    <main class="book-page-area">
+      
+<section class="book-page active" id="book_index">
+  <h2 class="item-title">Dice System</h2>
+  <div class="category">Fallen Gate Rule Book</div>
+  <div class="card-grid">
+    <button class="index-card" onclick="goToPage('section_0')"><strong>Main Stats</strong>Rules page</button>
+<button class="index-card" onclick="goToPage('section_1')"><strong>Combat Modifier</strong>Rules page</button>
+<button class="index-card" onclick="goToPage('section_2')"><strong>Low Stat Effects and Death</strong>Rules page</button>
+<button class="index-card" onclick="goToPage('section_3')"><strong>Combat Dice</strong>Rules page</button>
+<button class="index-card" onclick="goToPage('section_4')"><strong>Critical Fails and Automatic Hits</strong>Rules page</button>
+<button class="index-card" onclick="goToPage('section_5')"><strong>Combat Specifics</strong>Rules page</button>
+<button class="index-card" onclick="goToPage('section_6')"><strong>1s, 20s, and AC</strong>Rules page</button>
+<button class="index-card" onclick="goToPage('section_7')"><strong>Curses, Judgements, Magic, and Potions</strong>Rules page</button>
+<button class="index-card" onclick="goToPage('section_8')"><strong>Recovery and Out-of-Combat Magic</strong>Rules page</button>
+  </div>
+</section>
+
+<section class="book-page" id="section_0">
+  <h2 class="item-title">Main Stats</h2>
+  <div class="category">Dice System</div>
+  <div class="rule-text">MAIN STATS
+
+Body: Body represents your overall health, strength, and constitution. This is your &quot;Hit Points&quot; stat, and is usually reduced by taking damage and by casting Blood Spells.
+
+Mind: Mind represents your intelligence, how much mana you have, and your ability to learn certain spells. These are your &quot;Spell-Points&quot; which are usually expended to cast most spells and is reduced by attacks which target your intelligence and alertness.
+
+Spirit: Your soul represents the ability to empathize, your healing strength, along with your courage. This you your measure of inner strength, it is used to boost healing spells (expend 2 Spirit to restore 1 extra Body) and by attacks which cause fear or self-doubt.</div>
+</section>
+
+<section class="book-page" id="section_1">
+  <h2 class="item-title">Combat Modifier</h2>
+  <div class="category">Dice System</div>
+  <div class="rule-text">COMBAT MODIFIER
+
+Combat Modifier: Bonus Points based on Rank that are added to your Combat Roll due to your prowess and skill in battle with spells, weapons or even unarmed combat.
+1. Points are added to the Attacker&#x27;s Combat Roll when performing a physical or magical attack.
+2. Points are added to the Defender&#x27;s Combat Roll when defending against a physical or magical attack.
+
+COMBAT MODIFIER DOES NOT MODIFY DC ROLLS
+
+Combat Modifier is determined by your Rank found in ⁠ranks-and-stats on Discord
+
+Combat Modifier &#x27;In-Use&#x27; Example:
+Attacker Rank is Dark Knight with Combat Modifier of +2
+Defender Rank is a Praetorian with Combat Modifier of +4
+1. Dark Knight performs a Combat Roll to attack and makes a 7
+2. Praetorian performs a Combat Roll to defend and makes a 6
+3. Dark Knight has modifier of +1; 7 + 2 = 9
+4. Praetorian has modifier of +3; 6 + 4 = 10
+5. Dark Knight’s attack misses and Praetorian emotes successfully defending against the attack.</div>
+</section>
+
+<section class="book-page" id="section_2">
+  <h2 class="item-title">Low Stat Effects and Death</h2>
+  <div class="category">Dice System</div>
+  <div class="rule-text">LOW STAT EFFECTS
+
+If a stat is reduced to zero in combat, it can have certain effects:
+
+Body: If your Body is reduced to zero in combat, you are too injured to continue and thus out of the battle unless you are healed.
+
+Mind: If your Mind is reduced to zero in combat, you become light-headed or so mentally drained that you collapse from mental exhaustion and thus out of the battle unless you are refreshed.
+
+Spirit: If your Spirit is drained, you will lose all hope or faith that the battle can be won and retreat. The battle is declared over, and you have lost.
+
+NOTE: You cannot lower a stat to 0 via spell use.
+
+Example: Calling upon Blood Magic until your body stat is 0 is not allowed. The most you could lower that stat to is 1.
+
+DEATH
+
+Once you are at 0 on one or more stats, you are incapacitated. Any further attack will render you as Dead. At that point, only resurrection-type spells can bring you back, i.e., Anastasis (Resurrection), Corpus Reformationis (The Body of Reformation), Ortus Phoenix (Rise of the Phoenix).</div>
+</section>
+
+<section class="book-page" id="section_3">
+  <h2 class="item-title">Combat Dice</h2>
+  <div class="category">Dice System</div>
+  <div class="rule-text">COMBAT DICE
+
+TERMS
+Armor Class (AC): Strength of natural/donned armor worn. The Attacker&#x27;s Combat Roll must meet or exceed the Defender&#x27;s AC during a physical attack. If the Attacker doesn’t beat the Defender&#x27;s AC, the attack fails. If the Attacker meets or exceeds the AC, the Defender will Combat Roll to dodge the attack.
+Initiative Roll: Determines who takes action first in an encounter using /roll100 (d100).
+Combat Roll: Determines the outcome of an attack using /roll20 (d20).
+Difficulty Class (DC) Roll: In certain circumstances, the Defender is required to make a DC Roll once an attack is successful to avoid further collateral damage using /roll20 (d20).
+
+Combat starts by everyone making an Initiative Roll. The person with the higher roll starts the round with an action.
+
+Initiative Roll Example:
+1. Demon A and Demon B engage in combat.
+2. Both Demon A and Demon B make an Initiative Roll.
+3. Demon A uses /roll and makes a 62.
+4. Demon B uses /roll and makes a 48.
+5. Demon A attacks first.
+
+General Combat Example:
+1. Demon A casts a spell at Demon B.
+2. Demon A uses /roll20 to attack and makes a 3.
+3. Demon B uses /roll20 to defend and makes a 5.
+4. Demon B avoids the attack.
+
+The Order and ‘Emoting Rhythm’ of a Combat Encounter:
+1. The Attacker emotes an attack, leaving the outcome open ended.
+2. The Attacker posts the spell description; specifically damage the spell will cause and any other info the DM needs, i.e., Auto Hit, DC Roll requirements, etc.
+3. The Attacker makes a Combat Roll.
+4. The Defender makes a Combat Roll.
+5. Bonuses/Buffs are applied and a winner is determined.
+6. If the Attacker wins and the spell or action also has a DC associated with it, the Defender then uses a /roll20 to beat the DC.
+7. The &#x27;Victor&#x27; of the roll emotes the results.
+8. Both the Attacker and Defender post their revised stats as a result of the encounter.</div>
+</section>
+
+<section class="book-page" id="section_4">
+  <h2 class="item-title">Critical Fails and Automatic Hits</h2>
+  <div class="category">Dice System</div>
+  <div class="rule-text">CRITICAL FAILS AND AUTOMATIC HITS ON COMBAT ROLL
+
+YOU ARE THE ATTACKER
+
+Automatic Hit: Attacker rolls a twenty (20) on a Combat Roll.
+1. Attack hits regardless of Combat Modifiers, Defender&#x27;s AC, or defense roll.
+2. Damage from the ability is doubled.
+3. If the attack has a DC condition, the Defender automatically fails the DC Roll as well.
+
+YOU ARE THE DEFENDER
+
+Counter Strike: Defender rolls a twenty (20) on a Combat Roll.
+1. Defender can ‘counter strike’ the Attacker.
+2. Counter strikes must be similar to the attack initiated; if the Attacker performs a physical attack, then the Defender must counter likewise. If the Attacker casts a spell, the Defender can choose to deflect their spell back at the Attacker.
+3. Defender will act as the Attacker during the counter strike and follow the normal order of the combat encounter.
+
+Example 1; Physical/Weapons
+1. Attacker throws a spear at the Defender rolls a 7.
+2. Defender rolls a 20.
+3. Attacker misses and the Defender may counter strike IF they are able to counter with a similar physical attack. In this instance, the Attacker struck from a distance, the Defender must posses a weapon to counter from a distance.
+4. Initial Attacker defends as normal against the counter attack.
+
+Example 2; Spells
+1. Attacker casts &#x27;Lightning&#x27; and rolls a 10.
+2. Defender rolls a 20.
+3. Spell is deflected back to the Attacker and will Auto Hit the Attacker as listed in the Spell Description, Defender buffs are not added to the attack roll.
+4. Attacker will DC Roll to avoid any lasting effects from the spell (when applicable).
+
+NOTE: The DM of the RP has final say on all determinations/rulings regarding counter strikes!</div>
+</section>
+
+<section class="book-page" id="section_5">
+  <h2 class="item-title">Combat Specifics</h2>
+  <div class="category">Dice System</div>
+  <div class="rule-text">COMBAT SPECIFICS
+
+TAKING DAMAGE
+If struck with an attack you take damage to any of the one or more of your three stats, as prescribed in each character&#x27;s Special Abilities or Weapon Description (physical attacks) or Spell Description (magical attacks).
+
+Psychic attacks would target your Mind . . . a bite or sword attack or a fireball would damage your Body . . . a fear spell however would attack your Spirit.
+
+RULING ON TIE ROLLS
+1. In the event of a tie roll between two people of equal rank, the Attacker wins.
+2. In the event there is a tie roll between two people not of equal rank, the person with the higher Rank wins.
+NOTE: ‘Higher Rank’ means the person with the higher stats listed in ⁠ranks-and-stats on Discord. This principle also applies to Players vs. Monsters.
+
+ARMOR AC AND HOW IT WORKS
+When you are NOT wearing armor, any Attacker’s Combat Roll from a physical attack that beats your Combat Roll to defend will land.
+Example when not wearing armor:
+1. Attacker uses /roll20 and makes a 4.
+2. Defender uses /roll20 and make a 3 to avoid the attack.
+3. Attacker’s roll wins, therefore their physical attack hits the Defender.
+
+When wearing armor, the total combined number of the Attacker&#x27;s Combat Roll plus all Combat Modifiers must be equal or higher than the AC score it order for the attack to penetrate the armor.
+
+Example when wearing armor:
+1. Defender is wearing armor giving them an AC of 7 (AC: 7).
+1. Attacker uses /roll20 and makes a 4.
+2. Attacker’s roll did not overcome the Defender’s AC: 7, therefore the attack fails UNLESS the Attacker’s Combat Modifiers make the final total of their roll equal or higher than the Defender’s AC: 7.
+
+REMINDER: Armor does NOT protect you from magic, only physical attacks.</div>
+</section>
+
+<section class="book-page" id="section_6">
+  <h2 class="item-title">1s, 20s, and AC</h2>
+  <div class="category">Dice System</div>
+  <div class="rule-text">1s, 20s and AC
+How do rolling Nat 1s, Nat 20s, and AC interact with each other?
+
+Failing to hit the AC ends the attack. No roll to defend is made.
+Rolling a Nat 20 to hit ends the action and resolves the attack at double damage, etc. no roll to defend is made.
+Rolling a Nat 1 to attack ends the action. No roll to defend is made.
+
+You can only counter when you roll a Nat 20 on a roll to defend. Under the above circumstances, no roll to defend is made. No counter attack is possible.</div>
+</section>
+
+<section class="book-page" id="section_7">
+  <h2 class="item-title">Curses, Judgements, Magic, and Potions</h2>
+  <div class="category">Dice System</div>
+  <div class="rule-text">RULES CONCERNING CURSES/JUDGEMENTS MAGIC AND POTIONS
+
+ CURSES/JUDGEMENTS
+Curse Magic and Judgement Magic follow the same rules. Due to the powerful nature of these types of spells, only one person a day can be affected by a Curse or Judgment spell.
+
+’Once-A-Day’ use of Curse/Judgement Example:
+1. Archangel A casts &quot;Occidere Judicii&quot; Judgement against Demon B.
+2. Judgement spell is an Auto Hit with a DC attribute of 11 (DC: 7)
+3. Demon B makes a DC using /roll20 and gets an 8, thus beating a DC: 7, therefore Demon B avoided the Judgement.
+4. Archangel A (or any other Family member) cannot cast any more Judgements for 24 hours.
+5. One (1) Curse is still available to cast, but Archangel A cannot be the one to cast it.
+
+NOTE: One (1) Curse and one (1) Judgement TOTAL in a 24 hour period; this means that if anyone in the Family casts a Curse, then no other Curses can be cast by anyone in the Family for 24 hours. Also, the person who cast the Curse cannot cast a Judgement for the 24 hour period either.
+
+POTIONS
+Potions are quite powerful and because of this along with their magical effects, cannot be used one after another. Therefore, one (1) potion per 24 hours is the rule.
+
+Potions can be used to restore Mind and/or Body and/or Spirit from a score of zero (0) IF the potion is crafted to do so.
+Undead characters and creatures, such as Vampire and Lich player characters, can consume all potions except Refresh and Healing potions.</div>
+</section>
+
+<section class="book-page" id="section_8">
+  <h2 class="item-title">Recovery and Out-of-Combat Magic</h2>
+  <div class="category">Dice System</div>
+  <div class="rule-text">REGENERATING BODY, MIND, AND SPIRIT AFTER BATTLE AND WHEN USING MAGIC OUT OF COMBAT
+
+Initiate: 12 Hour Recovery Time for all stats.
+Acolyte: 12 Hour Recovery Time for all stats.
+
+Centurion: 10 Hour Recovery Time for all stats.
+
+Sentinel 8 Hour Recovery Time for all stats.
+Dark Warden 8 Hour Recovery Time for all stats
+
+Dark Watcher: 6 Hour Recovery Time for all stats.
+Dark Knight: 6 Hour Recovery Time for all stats.
+Custodian: 6 Hour Recovery Time for all stats.
+
+Baron/ Baroness: 4 Hour Recovery Time for all stats.
+Knight Captain: 4 Hour Recovery Time for all stats.
+
+Margrave: 1 Hour Recovery Time for all stats.
+Marquess: 1 Hour Recovery Time for all stats.
+Marshall: 1 Hour Recovery Time for all Stats.
+
+Praetorian: 30 Minute Recovery Time for all stats.
+
+Keeper of Knowledge: 5 Minute Recovery Time for all stats.
+High Priest/ess: 5 Minute Recovery Time for all stats.
+Princess of Darkness: 5 Minute Recovery Time for all stats.
+
+The Triumvirate: Instantly recovery out of battle.
+
+For example:
+1. Praetorian 1 and Praetorian 2 have finished combat.
+2. Praetorian 1 is at 19/20/20
+3. Praetorian 2 is at 3/7/20
+4. 30 minutes later, both Praetorian are back at 20/20/20
+
+USING MAGIC OUT OF COMBAT
+
+When using magical abilities out of battle, you still must account for your use of Body / Mind / Spirit points. Your recovery time is based on the rank chart listed above.</div>
+</section>
+
+    </main>
+    <footer class="book-footer">
+      <button class="book-btn" onclick="goToPage('book_index')">Index</button>
+      <button class="book-btn" onclick="prevPage()">← Back</button>
+      <button class="book-btn dark" onclick="nextPage()">Next →</button>
+      <span id="pageCount" class="page-count">Page 1</span>
+    </footer>
+  </div>
+  <script>
+let allPages = [];
+let filteredPages = [];
+let currentPage = 0;
+
+function initBook() {
+  allPages = Array.from(document.querySelectorAll(".book-page"));
+  filteredPages = allPages.slice();
+  showPage(0);
+}
+
+function showPage(index) {
+  if (filteredPages.length === 0) {
+    allPages.forEach(p => p.classList.remove("active"));
+    document.getElementById("pageCount").textContent = "No pages";
+    return;
+  }
+  if (index < 0) index = filteredPages.length - 1;
+  if (index >= filteredPages.length) index = 0;
+  currentPage = index;
+  allPages.forEach(p => p.classList.remove("active"));
+  filteredPages[currentPage].classList.add("active");
+  document.getElementById("pageCount").textContent = "Page " + (currentPage + 1) + " of " + filteredPages.length;
+}
+
+function goToPage(id) {
+  const page = document.getElementById(id);
+  if (!page) return;
+  filteredPages = allPages.slice();
+  const index = filteredPages.indexOf(page);
+  showPage(index >= 0 ? index : 0);
+}
+
+function nextPage() { showPage(currentPage + 1); }
+function prevPage() { showPage(currentPage - 1); }
+
+function searchPages() {
+  const q = document.getElementById("searchBox").value.trim().toLowerCase();
+  if (!q) {
+    filteredPages = allPages.slice();
+  } else {
+    filteredPages = allPages.filter(page => page.textContent.toLowerCase().includes(q));
+  }
+  showPage(0);
+}
+
+window.addEventListener("DOMContentLoaded", initBook);
+</script>
+</body>
+</html>

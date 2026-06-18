@@ -1,0 +1,1130 @@
+<!DOCTYPE html>
+<!-- Website template by freewebsitetemplates.com -->
+<head>
+	<title>Fallen Gate DM Tool</title>
+	<script type="text/javascript" src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+	<script type="text/javascript" src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+	<script src="./datafile.js"></script>
+	<meta charset="utf-8">
+	<style>
+		.stat {
+			width:30px;
+			text-align: center;
+		}
+		
+		pre {
+			width:100%;
+			white-space: pre-wrap;       /* Since CSS 2.1 */
+			white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
+			white-space: -pre-wrap;      /* Opera 4-6 */
+			white-space: -o-pre-wrap;    /* Opera 7 */
+			word-wrap: break-word;       /* Internet Explorer 5.5+ */
+		}
+		
+		img {
+			width:300px;
+			max-width:98%;
+		}
+		
+		b {
+			font-weight:900;
+			font-size: large;
+		}
+		
+		/*i {
+			font-weight:900;
+			color: red;
+		}*/
+		
+		td {
+			white-space:nowrap;
+		}
+		
+		/* Style the tab */
+.tab {
+  overflow: hidden;
+  border-bottom: 1px solid #ccc;
+  background-color: none;
+}
+
+div.header {
+	width:100%;
+	text-align: center;
+	font-size: xx-large;
+	background-color: #6C3483;
+}
+div.subheader {
+	width:100%;
+	text-align: center;
+	font-size: large;
+	border-bottom: 1px dashed black;
+	border-top: 1px dashed black;
+	padding: 5px;
+	background-color: #ccc;
+	
+}
+div.dark_magic:after {
+	content: 'Ψ══𝓓𝓪𝓻𝓴 𝓜𝓪𝓰𝓲𝓬══Ψ';
+}
+div.necromancy:after {
+	content: '💀-Necromancy';
+}
+div.blood_magic:after {
+	content: '🩸-Blood Magic';
+}
+div.hellfire_magic:after {
+	content: '🔥-Hellfire Magic';
+}
+div.shadow_magic:after {
+	content: '🖤-Shadow Magic';
+}
+div.curse_magic:after {
+	content: '🤬-Curse Magic';
+}
+div.fleshcrafting:after {
+	content: '🥩-Fleshcrafting';
+}
+div.chaos_magic:after {
+	content: '💢-Chaos Magic';
+}
+div.neutral_magic:after {
+	content: 'Ψ══𝓝𝓮𝓾𝓽𝓻𝓪𝓵 𝓜𝓪𝓰𝓲𝓬══Ψ';
+}
+div.illusion_magic:after {
+	content: '🌀-Illusion Magic';
+}
+div.elemental_magic:after {
+	content: '🪨-Elemental Magic';
+}
+div.spatial_magic:after {
+	content: '💫-Spatial Magic';
+}
+div.conjuration_magic:after {
+	content: '🐇-Conjuration Magic';
+}
+div.transmutation:after {
+	content: '🐛-Transmutation';
+}
+div.summoning:after {
+	content: '🐉-Summoning';
+}
+div.light_magic:after {
+	content: 'Ψ══𝓛𝓲𝓰𝓱𝓽 𝓜𝓪𝓰𝓲𝓬══Ψ';
+}
+div.holy_fire:after {
+	content: '🔥-Holy Fire';
+}
+div.light_magic2:after {
+	content: '✨-Light Magic';
+}
+div.judgement:after {
+	content: '🔱-Judgement';
+}
+div.healing:after {
+	content: '🩹-Healing';
+}
+div.special_abilities:after {
+	content: 'Ψ═𝓢𝓹𝓮𝓬𝓲𝓪𝓵 𝓐𝓫𝓲𝓵𝓲𝓽𝓲𝓮𝓼═Ψ';
+}
+div.psionics:after {
+	content: '🧠-Psionics Abilities';
+}
+div.vampire:after {
+	content: '🦇-Vampire Abilities';
+}
+div.demonic:after {
+	content: '👿-Demonic Abilities';
+}
+div.angelic:after {
+	content: '🪶-Angelic Abilities';
+}
+div.lycan:after {
+	content: '🐺-Lycan Abilities';
+}
+div.dragonic:after {
+	content: '🐲-Draconic Abilities';
+}
+
+.chatlog__markdown{max-width:100%;line-height:1.3;overflow-wrap:break-word}
+.chatlog__content{padding-right:1rem;font-size:0.95rem;word-wrap:break-word}
+.chatlog__message{display:grid;grid-template-columns:auto 1fr;padding:0.15rem 0;direction:ltr;unicode-bidi:bidi-override}
+
+span.red {
+	color: red;
+	content:❌ No;
+}
+
+span.red.after {
+	content:❌;
+}
+
+span.green {
+	color: green;
+}
+
+
+/* Style the buttons inside the tab */
+.tab button {
+  background-color: inherit;
+  float: left;
+  border-bottom: none;
+  outline: none;
+  cursor: pointer;
+  padding: 14px 16px;
+  transition: 0.3s;
+  font-size: 17px;
+}
+
+/* Change background color of buttons on hover */
+.tab button:hover {
+  background-color: #ddd;
+}
+
+/* Create an active/current tablink class */
+.tab button.active {
+  background-color: #ccc;
+}
+
+/* Style the tab content */
+.tabcontent {
+  display: none;
+  padding: 6px 12px;
+  border: 1px solid #ccc;
+  border-top: none;
+  height: 85vh;
+}
+
+
+html,body{background-color:#ffffff;color:#23262a;font-family:"gg sans","Helvetica Neue",Helvetica,Arial,sans-serif;font-size:14px;font-weight:500;scroll-behavior:smooth}a{color:#0068e0;text-decoration:none}a:hover{text-decoration:underline}img{object-fit:contain;image-rendering:high-quality;image-rendering:-webkit-optimize-contrast}.preamble{display:grid;grid-template-columns:auto 1fr;max-width:100%;padding:1rem}.preamble__guild-icon-container{grid-column:1}.preamble__guild-icon{max-width:88px;max-height:88px}.preamble__entries-container{grid-column:2;margin-left:1rem}.preamble__entry{margin-bottom:0.15rem;color:#2f3136;font-size:1.4rem}.preamble__entry--small{font-size:1rem}.chatlog{padding:1rem 0;width:100%;border-top:1px solid #eceeef;border-bottom:1px solid #eceeef}.chatlog__message-group{margin-bottom:1rem}.chatlog__message-container{background-color:transparent;transition:background-color 1s ease}.chatlog__message-container--highlighted{background-color:rgba(114,137,218,0.2)}.chatlog__message-container--pinned{background-color:rgba(249,168,37,0.05)}.chatlog__message{display:grid;grid-template-columns:auto 1fr;padding:0.15rem 0;direction:ltr;unicode-bidi:bidi-override}.chatlog__message:hover{background-color:#fafafa}.chatlog__message:hover .chatlog__short-timestamp{display:block}.chatlog__message-aside{grid-column:1;width:72px;padding:0.15rem 0.15rem 0 0.15rem;text-align:center}.chatlog__reply-symbol{height:10px;margin:6px 4px 4px 36px;border-left:2px solid #c7ccd1;border-top:2px solid #c7ccd1;border-radius:8px 0 0 0}.chatlog__avatar{width:40px;height:40px;border-radius:50%}.chatlog__short-timestamp{display:none;color:#5e6772;font-size:0.75rem;font-weight:500;direction:ltr;unicode-bidi:bidi-override}.chatlog__message-primary{grid-column:2;min-width:0}.chatlog__reply{display:flex;margin-bottom:0.15rem;align-items:center;color:#5f5f60;font-size:0.875rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.chatlog__reply-avatar{width:16px;height:16px;margin-right:0.25rem;border-radius:50%}.chatlog__reply-author{margin-right:0.3rem;font-weight:600}.chatlog__reply-content{overflow:hidden;text-overflow:ellipsis}.chatlog__reply-link{cursor:pointer}.chatlog__reply-link *{display:inline;pointer-events:none}.chatlog__reply-link .chatlog__markdown-quote{display:inline}.chatlog__reply-link .chatlog__markdown-pre{display:inline}.chatlog__reply-link:hover{color:#2f3136}.chatlog__reply-link:hover *:not(.chatlog__markdown-spoiler){color:inherit}.chatlog__reply-edited-timestamp{margin-left:0.25rem;color:#5e6772;font-size:0.75rem;font-weight:500;direction:ltr;unicode-bidi:bidi-override}.chatlog__system-notification-icon{width:18px;height:18px}.chatlog__system-notification-author{font-weight:600;color:#2f3136}.chatlog__system-notification-content{color:#5e6772}.chatlog__system-notification-link{font-weight:500;color:#2f3136}.chatlog__system-notification-timestamp{margin-left:0.3rem;color:#5e6772;font-size:0.75rem;font-weight:500;direction:ltr;unicode-bidi:bidi-override}.chatlog__system-notification-timestamp a{color:inherit}.chatlog__header{margin-bottom:0.1rem}.chatlog__author{font-weight:600;color:#2f3136}.chatlog__author-tag{position:relative;top:-0.1rem;margin-left:0.3rem;padding:0.05rem 0.3rem;border-radius:3px;background-color:#5865F2;color:#ffffff;font-size:0.625rem;font-weight:500;line-height:1.3}.chatlog__timestamp{margin-left:0.3rem;color:#5e6772;font-size:0.75rem;font-weight:500;direction:ltr;unicode-bidi:bidi-override}.chatlog__timestamp a{color:inherit}.chatlog__content{padding-right:1rem;font-size:0.95rem;word-wrap:break-word}.chatlog__edited-timestamp{margin-left:0.15rem;color:#5e6772;font-size:0.75rem;font-weight:500}.chatlog__attachment{position:relative;width:fit-content;margin-top:0.3rem;border-radius:3px;overflow:hidden}.chatlog__attachment--hidden{cursor:pointer;box-shadow:0 0 1px 1px rgba(0,0,0,0.1)}.chatlog__attachment--hidden *{pointer-events:none}.chatlog__attachment-spoiler-caption{display:none;position:absolute;left:50%;top:50%;z-index:999;padding:0.4rem 0.8rem;border-radius:20px;transform:translate(-50%,-50%);background-color:rgba(0,0,0,0.9);color:#dcddde;font-size:0.9rem;font-weight:600;letter-spacing:0.05rem}.chatlog__attachment--hidden .chatlog__attachment-spoiler-caption{display:block}.chatlog__attachment--hidden:hover .chatlog__attachment-spoiler-caption{color:#fff}.chatlog__attachment-media{max-width:45vw;max-height:500px;vertical-align:top;border-radius:3px}.chatlog__attachment--hidden .chatlog__attachment-media{filter:blur(44px)}.chatlog__attachment-generic{max-width:520px;width:100%;height:40px;padding:10px;border:1px solid #ebedef;border-radius:3px;background-color:#f2f3f5;overflow:hidden}.chatlog__attachment--hidden .chatlog__attachment-generic{filter:blur(44px)}.chatlog__attachment-generic-icon{float:left;width:30px;height:100%;margin-right:10px}.chatlog__attachment-generic-size{color:#72767d;font-size:12px}.chatlog__attachment-generic-name{overflow:hidden;white-space:nowrap;text-overflow:ellipsis}.chatlog__embed{display:flex;margin-top:0.3rem;max-width:520px}.chatlog__embed-color-pill{flex-shrink:0;width:0.25rem;border-top-left-radius:3px;border-bottom-left-radius:3px}.chatlog__embed-color-pill--default{background-color:rgba(227,229,232,1)}.chatlog__embed-content-container{display:flex;flex-direction:column;padding:0.5rem 0.6rem;border:1px solid rgba(204,204,204,0.3);border-top-right-radius:3px;border-bottom-right-radius:3px;background-color:rgba(249,249,249,0.3)}.chatlog__embed-content{display:flex;width:100%}.chatlog__embed-text{flex:1}.chatlog__embed-author-container{display:flex;margin-bottom:0.5rem;align-items:center}.chatlog__embed-author-icon{width:20px;height:20px;margin-right:0.5rem;border-radius:50%}.chatlog__embed-author{color:#4f545c;font-size:0.875rem;font-weight:600;direction:ltr;unicode-bidi:bidi-override}.chatlog__embed-author-link{color:#4f545c}.chatlog__embed-title{margin-bottom:0.5rem;color:#4f545c;font-size:0.875rem;font-weight:600}.chatlog__embed-description{color:#2e3338;font-weight:500;font-size:0.85rem}.chatlog__embed-fields{display:flex;flex-wrap:wrap;gap:0 0.5rem}.chatlog__embed-field{flex:0;min-width:100%;max-width:506px;padding-top:0.6rem;font-size:0.875rem}.chatlog__embed-field--inline{flex:1;flex-basis:auto;min-width:50px}.chatlog__embed-field-name{margin-bottom:0.2rem;color:#36393e;font-weight:600}.chatlog__embed-field-value{color:#2e3338;font-weight:500}.chatlog__embed-thumbnail{flex:0;max-width:80px;max-height:80px;margin-left:1.2rem;border-radius:3px}.chatlog__embed-images{display:grid;margin-top:0.6rem;grid-template-columns:repeat(2,1fr);gap:0.25rem}.chatlog__embed-images--single{display:block}.chatlog__embed-image{object-fit:cover;object-position:center;max-width:500px;max-height:400px;width:100%;height:100%;border-radius:3px}.chatlog__embed-footer{margin-top:0.6rem;color:#2e3338}.chatlog__embed-footer-icon{width:20px;height:20px;margin-right:0.2rem;border-radius:50%;vertical-align:middle}.chatlog__embed-footer-text{vertical-align:middle;font-size:0.75rem;font-weight:500}.chatlog__embed-invite-container{min-width:320px;padding:0.6rem 0.7rem;border:1px solid rgba(204,204,204,0.3);border-radius:3px;background-color:rgba(249,249,249,0.3)}.chatlog__embed-invite-title{margin:0 0 0.8rem 0;color:#4f5660;font-size:0.75rem;font-weight:700;text-transform:uppercase}.chatlog__embed-invite{display:flex}.chatlog__embed-invite-guild-icon{width:50px;height:50px;border-radius:0.85rem}.chatlog__embed-invite-info{margin-left:1rem}.chatlog__embed-invite-guild-name{color:#36393e;font-weight:600}.chatlog__embed-invite-guild-name a{color:inherit}.chatlog__embed-invite-channel-icon{width:18px;height:18px;vertical-align:bottom}.chatlog__embed-invite-channel-name{font-size:0.9rem;font-weight:600}.chatlog__embed-generic-image{object-fit:contain;object-position:left;max-width:45vw;max-height:500px;vertical-align:top;border-radius:3px}.chatlog__embed-generic-video{object-fit:contain;object-position:left;max-width:45vw;max-height:500px;vertical-align:top;border-radius:3px}.chatlog__embed-generic-gifv{object-fit:contain;object-position:left;max-width:45vw;max-height:500px;vertical-align:top;border-radius:3px}.chatlog__embed-spotify{border:0}.chatlog__embed-youtube-container{margin-top:0.6rem}.chatlog__embed-youtube{border:0;border-radius:3px}.chatlog__sticker{width:180px;height:180px}.chatlog__sticker--media{max-width:100%;max-height:100%}.chatlog__reactions{display:flex}.chatlog__reaction{display:flex;margin:0.35rem 0.1rem 0.1rem 0;padding:0.125rem 0.375rem;border:1px solid transparent;border-radius:8px;background-color:#f2f3f5;align-items:center}.chatlog__reaction:hover{border:1px solid rgba(0,0,0,0.2);background-color:white}.chatlog__reaction-count{min-width:9px;margin-left:0.35rem;color:#4f5660;font-size:0.875rem}.chatlog__reaction:hover .chatlog__reaction-count{color:#2e3338}.chatlog__markdown{max-width:100%;line-height:1.3;overflow-wrap:break-word}.chatlog__markdown-preserve{white-space:pre-wrap}.chatlog__markdown-spoiler{background-color:rgba(0,0,0,0.1);padding:0 2px;border-radius:3px}.chatlog__markdown-spoiler--hidden{cursor:pointer;background-color:#b9bbbe;color:rgba(0,0,0,0)}.chatlog__markdown-spoiler--hidden:hover{background-color:rgba(185,187,190,0.8)}.chatlog__markdown-spoiler--hidden::selection{color:rgba(0,0,0,0)}.chatlog__markdown-quote{display:flex;margin:0.05rem 0}.chatlog__markdown-quote-border{margin-right:0.5rem;border:2px solid #c7ccd1;border-radius:3px}.chatlog__markdown-pre{background-color:#f9f9f9;font-family:"Consolas","Courier New",Courier,monospace;font-size:0.85rem;text-decoration:inherit}.chatlog__markdown-pre--multiline{display:block;margin-top:0.25rem;padding:0.5rem;border:2px solid #f3f3f3;border-radius:5px;color:#657b83}.chatlog__markdown-pre--multiline.hljs{background-color:#f9f9f9;color:#657b83}.chatlog__markdown-pre--inline{display:inline-block;padding:2px;border-radius:3px}.chatlog__markdown-mention{border-radius:3px;padding:0 2px;background-color:rgba(88,101,242,.15);color:#505cdc;font-weight:500}.chatlog__markdown-mention:hover{background-color:#5865f2;color:#ffffff}.chatlog__markdown-timestamp{background-color:rgba(0,0,0,0.1);padding:0 2px;border-radius:3px}.chatlog__emoji{width:1.325rem;height:1.325rem;margin:0 0.06rem;vertical-align:-0.4rem}.chatlog__emoji--small{width:1rem;height:1rem}.chatlog__emoji--large{width:2.8rem;height:2.8rem}.postamble{padding:1.25rem}.postamble__entry{color:#2f3136}
+
+
+
+
+
+
+/* ===== Book Intro Screen ===== */
+#bookIntro {
+	position: fixed;
+	inset: 0;
+	z-index: 9999;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background:
+		radial-gradient(circle at center, rgba(255, 240, 190, 0.18), rgba(0, 0, 0, 0.88) 65%),
+		linear-gradient(135deg, #130918, #24112f 45%, #0b0610);
+	overflow: hidden;
+}
+
+.book-intro-wrap {
+	width: min(92vw, 740px);
+	text-align: center;
+	color: #f7e7b0;
+	perspective: 1600px;
+}
+
+.book-title {
+	margin-bottom: 20px;
+	font-family: Georgia, "Times New Roman", serif;
+	font-size: clamp(32px, 6vw, 64px);
+	letter-spacing: 2px;
+	text-shadow: 0 0 14px rgba(255, 210, 90, 0.65);
+}
+
+.book-stage {
+	position: relative;
+	width: min(86vw, 560px);
+	height: min(62vw, 380px);
+	margin: 0 auto;
+	transform-style: preserve-3d;
+}
+
+.magic-book {
+	position: absolute;
+	inset: 0;
+	transform-style: preserve-3d;
+	filter: drop-shadow(0 30px 24px rgba(0,0,0,0.55));
+}
+
+.book-pages {
+	position: absolute;
+	left: 9%;
+	top: 7%;
+	width: 82%;
+	height: 86%;
+	background:
+		linear-gradient(90deg, rgba(0,0,0,0.16), transparent 12%, transparent 88%, rgba(0,0,0,0.12)),
+		repeating-linear-gradient(0deg, #f4e6c5 0 12px, #edddb9 13px 14px);
+	border: 2px solid #6e5433;
+	border-radius: 12px;
+	box-shadow: inset 0 0 28px rgba(70, 35, 8, 0.28);
+	transform: translateZ(-8px);
+}
+
+.book-spine {
+	position: absolute;
+	left: 8%;
+	top: 6%;
+	width: 34px;
+	height: 88%;
+	background: linear-gradient(90deg, #21101c, #61314f, #1c0d18);
+	border-radius: 10px 3px 3px 10px;
+	z-index: 3;
+	box-shadow: 6px 0 12px rgba(0,0,0,0.35);
+}
+
+.book-cover {
+	position: absolute;
+	left: 8%;
+	top: 6%;
+	width: 84%;
+	height: 88%;
+	transform-origin: left center;
+	transform-style: preserve-3d;
+	background:
+		radial-gradient(circle at 50% 38%, rgba(255,220,100,0.16), transparent 26%),
+		linear-gradient(135deg, #391b42, #1a0d22 58%, #070309);
+	border: 3px solid #b88934;
+	border-left: 12px solid #5a2a62;
+	border-radius: 14px 18px 18px 14px;
+	box-shadow:
+		inset 0 0 30px rgba(255, 220, 120, 0.12),
+		inset 0 0 0 3px rgba(255, 215, 120, 0.18),
+		0 24px 34px rgba(0,0,0,0.55);
+	transition: transform 1.25s cubic-bezier(.2,.8,.2,1), filter 1.1s ease;
+	z-index: 5;
+}
+
+.book-cover::before {
+	content: "";
+	position: absolute;
+	inset: 22px;
+	border: 2px solid rgba(236, 190, 87, 0.72);
+	border-radius: 10px;
+	box-shadow: 0 0 18px rgba(255, 201, 80, 0.28);
+}
+
+.cover-symbol {
+	position: absolute;
+	left: 50%;
+	top: 42%;
+	transform: translate(-50%, -50%);
+	font-size: clamp(62px, 12vw, 110px);
+	text-shadow: 0 0 22px rgba(255, 218, 101, 0.78);
+}
+
+.cover-subtitle {
+	position: absolute;
+	left: 50%;
+	bottom: 52px;
+	transform: translateX(-50%);
+	width: 82%;
+	font-family: Georgia, "Times New Roman", serif;
+	font-size: clamp(18px, 3vw, 28px);
+	font-weight: 800;
+	letter-spacing: 1px;
+	color: #ffe8a2;
+	text-shadow: 0 2px 8px rgba(0,0,0,0.85);
+}
+
+.book-opening .book-cover {
+	transform: rotateY(-118deg);
+	filter: brightness(1.18);
+}
+
+.book-opening .book-pages {
+	animation: pageGlow 1.2s ease forwards;
+}
+
+@keyframes pageGlow {
+	0% { box-shadow: inset 0 0 28px rgba(70, 35, 8, 0.28); }
+	55% { box-shadow: inset 0 0 28px rgba(70, 35, 8, 0.28), 0 0 55px rgba(255, 215, 105, 0.85); }
+	100% { box-shadow: inset 0 0 28px rgba(70, 35, 8, 0.28), 0 0 22px rgba(255, 215, 105, 0.35); }
+}
+
+.open-book-btn {
+	margin-top: 26px;
+	padding: 14px 28px;
+	border: 2px solid #d6a23d;
+	border-radius: 999px;
+	background: linear-gradient(135deg, #6c3483, #2b1037);
+	color: #ffe8a2;
+	font-size: 20px;
+	font-weight: 800;
+	cursor: pointer;
+	box-shadow: 0 0 18px rgba(214, 162, 61, 0.32);
+	transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.open-book-btn:hover {
+	transform: translateY(-2px);
+	box-shadow: 0 0 28px rgba(214, 162, 61, 0.55);
+}
+
+.book-hint {
+	margin-top: 14px;
+	font-size: 14px;
+	color: rgba(255, 232, 162, 0.8);
+}
+
+.book-hidden {
+	display: none !important;
+}
+
+.dm-tool-hidden {
+	display: none;
+}
+
+.dm-tool-show {
+	animation: toolFadeIn 0.55s ease both;
+}
+
+@keyframes toolFadeIn {
+	from {
+		opacity: 0;
+		transform: scale(0.985);
+	}
+	to {
+		opacity: 1;
+		transform: scale(1);
+	}
+}
+
+	</style>
+	<script>
+		optionString = "";
+		data={}
+		function init() {
+	data = window.FALLEN_GATE_DATA || {};
+
+	if (!data.ranks || !data.dragons || !data.monsters) {
+		console.error("datafile.js is missing ranks, dragons, or monsters.");
+		alert("Data file did not load correctly. Check datafile.js.");
+		return;
+	}
+
+	optionString = "";
+	optionString += "<option>Select</option><optgroup label='Ranks'>";
+
+	Object.keys(data['ranks']).forEach(function (rank) {
+		optionString += "<option value='ranks!!" + rank + "'>" + rank + "</option>";
+	});
+
+	optionString += "</optgroup><optgroup label='Dragons'>";
+
+	Object.keys(data['dragons']).forEach(function (dragon) {
+		optionString += "<option value='dragons!!" + dragon + "'>" + dragon + "</option>";
+	});
+
+	optionString += "</optgroup><optgroup label='Monsters'>";
+
+	Object.keys(data['monsters']).forEach(function (monster) {
+		if (data['monsters'][monster]['active'] == 1) {
+			optionString += "<option value='monsters!!" + monster + "'>" + monster + "</option>";
+		}
+	});
+
+	optionString += "</optgroup>";
+
+	document.getElementById('addBtn').disabled = false;
+}
+		
+		function addRow() {
+			var name = prompt("Enter the character name");
+			var tableRef = document.getElementById('party').getElementsByTagName('tbody')[0];
+			rC = tableRef.rows.length
+			var newRow = tableRef.insertRow(rC);
+			newRow.id = "row_"+rC
+			myHTMLContent = `<td><input type='text' id='name_`+rC+`' value='`+name+`'/></td>
+			<td><select id='type_select_`+rC+`' onchange='setType(`+rC+`, this.value)'>`+optionString+`</select><input type="hidden" id='type_`+rC+`'/></td>
+			<td><button onclick='adjustStat("body",`+rC+`,1)' tabindex=-1>+</button><input type='text' class='stat' id='body_`+rC+`' onchange='summarize();'/><button onclick='adjustStat("body",`+rC+`,-1)' tabindex=-1>-</button></td>
+			<td><button onclick='adjustStat("mind",`+rC+`,1)' tabindex=-1>+</button><input type='text' class='stat' id='mind_`+rC+`' onchange='summarize();'/><button onclick='adjustStat("mind",`+rC+`,-1)' tabindex=-1>-</button></td>
+			<td><button onclick='adjustStat("spirit",`+rC+`,1)' tabindex=-1>+</button><input type='text' class='stat' id='spirit_`+rC+`' onchange='summarize();'/><button onclick='adjustStat("spirit",`+rC+`,-1)' tabindex=-1>-</button></td>
+			<td><input type='text' class='stat' id='ac_`+rC+`' onchange='summarize();'/></td>
+			<td><input type='text' class='stat' id='bonus_`+rC+`' onchange='summarize();'/></td>
+			<td><input type='text' class='stat' id='init_`+rC+`' onchange='summarize();'/></td>
+			<td><input type='text' id='notes_`+rC+`'/></td>
+			<td><input type='checkbox' id='loot_`+rC+`' onchange='summarize();'/>
+			`.trim()
+			newRow.innerHTML = myHTMLContent;
+			const rect = canvas.getBoundingClientRect();
+			const x = rect.left;
+			const y = rect.top;
+			if (!playerColors[name.toLowerCase()]) {
+				playerColors[name.toLowerCase()] = getRandomColor();
+			}
+			circles.push({ x, y, name, owner: name, note: '' });
+			drawGrid();
+		}
+		
+		function adjustStat(stat, row, change) {
+			element = document.getElementById(stat+"_"+row);
+			currentValue = parseInt(element.value);
+			newValue = currentValue + change;
+			element.value = newValue;
+			summarize();
+		}
+		
+		function getStatElement(name, number) {
+			return document.getElementById(name+"_"+number);
+		}
+		
+		function getStat(name, number) {
+			value = (getStatElement(name, number).value ? getStatElement(name, number).value : 0)
+			return value
+		}
+		
+		function setType(row, value) {
+			if (value === "Select") { return; }
+			b = getStatElement("body", row);
+			m = getStatElement("mind", row);
+			s = getStatElement("spirit", row);
+			bn = getStatElement("bonus", row);
+			ac = getStatElement("ac", row);
+			[type, key] = value.split("!!");
+			character = data[type][key];
+			getStatElement("type", row).value = value;
+			b.value = character['body']
+			m.value = character['mind']
+			s.value = character['spirit'];
+			("ac" in character ? ac.value = character['ac'] : ac.value = 0);
+			("bonus" in character ? bn.value = character['bonus'] : bn.value = 0);
+			summarize();
+		}
+		
+		monsterList = [];
+		fighterList = []
+		lootList = []
+		function summarize() {
+			summary = [];
+			monsterList = [];
+			fighterList = [];
+			lootList = [];
+			var tableRef = document.getElementById('party').getElementsByTagName('tbody')[0];
+			rC = tableRef.rows.length
+			for (x=1; x<rC; x++) {
+				[type, key] = getStat("type", x).toString().split("!!");
+				if (getStat("body", x)>0 && getStat("mind", x)>0 && getStat("spirit", x)>0 && getStat('init',x)>0) {
+					summary.push({
+						"type":getStat("type",x),
+						"body":getStat("body", x),
+						"mind":getStat("mind", x),
+						"spirit":getStat("spirit", x),
+						"bonus":getStat("bonus", x),
+						"ac":getStat("ac", x),
+						"name":getStat("name", x),
+						"init":getStat('init',x),
+						"rowID": x,
+						"effects": getStat('notes',x)
+					});
+				}
+				circles[x-1].body = getStat("body", x);
+				circles[x-1].mind = getStat("mind", x);
+				circles[x-1].spirit = getStat("spirit", x);
+				circles[x-1].init = getStat("init", x);
+				if (type.toLowerCase() == "monsters") {
+					monsterList.push({
+						"type":getStat("type",x),
+						"name":getStat("name", x),
+						"loot": data['monsters'][key]['treasure'],
+						"loot_rolls": data['monsters'][key]["loot_rolls"],
+						"body": getStat("body", x),
+						"mind": getStat("mind", x),
+						"spirit": getStat("spirit", x)
+					})
+				}
+				if (type.toLowerCase() == "ranks" && document.getElementById("loot_"+x).checked) {
+					lootList.push(getStat("name", x))
+				}
+				if (type.toLowerCase() == "ranks" || type.toLowerCase() == "dragons") {
+					fighterList.push({
+						"type":getStat("type",x),
+						"body":getStat("body", x),
+						"mind":getStat("mind", x),
+						"spirit":getStat("spirit", x),
+						"bonus":getStat("bonus", x),
+						"ac":getStat("ac", x),
+						"name":getStat("name", x),
+						"init":getStat('init',x)
+					})
+				}
+			}
+			html = ""
+			summary.sort((a,b)=>a.init-b.init).reverse().forEach(function (entity) {
+				html+=entity['name']+":&emsp;"+entity['body']+" | "+entity['mind']+" | "+entity['spirit']+" | "+entity['ac']+" | "+entity['bonus']+" | "+ entity['effects']+"<br/>";
+			})
+			document.getElementById('summaryArea').innerHTML = html
+			drawGrid();
+		}
+		
+		function compare(a, b) {
+			if ( a.init < b.init ){
+				return -1;
+			}
+			if ( a.init > b.init ){
+				return 1;
+			}
+			return 0;
+		}
+		
+		function openPage(evt, page) {
+			var i, tabcontent, tablinks;
+			tabcontent = document.getElementsByClassName("tabcontent");
+			for (i = 0; i < tabcontent.length; i++) {
+				tabcontent[i].style.display = "none";
+			}
+			tablinks = document.getElementsByClassName("tablinks");
+			for (i = 0; i < tablinks.length; i++) {
+				tablinks[i].className = tablinks[i].className.replace(" active", "");
+			}
+			document.getElementById(page).style.display = "block";
+			evt.currentTarget.className += " active";
+		}
+		
+		function shuffle(array) {
+			for (let i = array.length - 1; i > 0; i--) {
+				const j = Math.floor(Math.random() * (i + 1));
+				[array[i], array[j]] = [array[j], array[i]];
+			}
+			return array;
+		}
+		
+		function splitLoot() {
+			lootSummary = {}
+			loot = [];
+			html=""
+			looters = lootList.slice()
+			looters = shuffle(looters)
+			monsterList.forEach(function (entity) {
+				if (entity['body']>0) {return;}
+				t=entity["loot_rolls"];
+				for (y=0; y<t; y++) {
+					item = entity['loot'][Math.floor(Math.random()*entity['loot'].length)];
+					for (x=0; x<item['amount']; x++) {
+						loot.push(item['name']);
+						//html+="<li>"+item['name']+"</li>"
+					}
+				}
+			});
+			//html+="</u>"
+			loot = shuffle(loot);
+			loot.forEach(function (item) {
+				if (looters.length == 0) { looters = lootList.slice(); looters = shuffle(looters); }
+				person = looters.shift();
+				html+=item+": "+person+"<br/>"
+				if (!(person in lootSummary)) {
+					lootSummary[person] = {};
+				}
+				if (!(item in lootSummary[person])) {
+					lootSummary[person][item] = 0
+				}
+				lootSummary[person][item] += 1
+			});
+			document.getElementById('lootAreaFullList').innerHTML = "<h3>Full List</h3>"+html;
+			document.getElementById('lootAreaByPerson').innerHTML = "<h3>By Person</h3>"+prettyPrint(lootSummary);
+		}
+		
+		function getRandom(type) {
+			document.getElementById('randomResult').innerHTML = ""
+			document.getElementById('randomTime').innerHTML = ""
+			document.getElementById('copyBtn').style.display = 'none';
+			theArray = fighterList
+			if (type == 'monster') {
+				theArray = monsterList
+			}
+			selection = theArray[Math.floor(Math.random()*theArray.length)];
+			document.getElementById('randomResult').innerHTML = selection.name
+			document.getElementById('randomTime').innerHTML = new Date().toLocaleTimeString()
+			document.getElementById('copyBtn').style.display = 'inline';
+		}
+		
+		function prettyPrint(obj) {
+			output = "<ul>";
+			for (person in obj) {
+				output+= "<li>"+person+": <ul>";
+				for (item in obj[person]) {
+					output += "<li>"+item+": "+obj[person][item]+"</li>"
+				}
+				output+="</ul></li>"
+			}
+			output+="</ul>"
+			return output
+		}
+		
+		function resizeIframe(obj) {
+			obj.style.height = obj.contentWindow.document.body.scrollHeight + 'px';
+		}
+	</script>
+</head>
+<body onload="init()">
+
+<div id="bookIntro">
+	<div class="book-intro-wrap">
+		<div class="book-title">Fallen Gate DM Tool</div>
+
+		<div class="book-stage">
+			<div class="magic-book">
+				<div class="book-pages"></div>
+				<div class="book-spine"></div>
+				<div class="book-cover">
+					<div class="cover-symbol">♆</div>
+					<div class="cover-subtitle">Dungeon Master Tome</div>
+				</div>
+			</div>
+		</div>
+
+		<button class="open-book-btn" onclick="startDMTool()">Open the Tome</button>
+		<div class="book-hint">Click to open the book and begin the encounter.</div>
+	</div>
+</div>
+
+<div id="dmToolApp" class="dm-tool-app dm-tool-hidden">
+
+<div style='width:100%;'>
+	<div style='width:50%; float:left;'><b>Event Name:</b> <input type='text' id='eventName'/></div>
+	<div style='width:50%; float:right; text-align:right;'><b>Discord Message ID:</b> <input type='text' id='discordMessageID'/></div>
+</div>
+<div style='float:left; width:64vw; height:98vh; overflow: auto;'>
+<h4>Battle Participants</h4>
+<button onclick="addRow()" id='addBtn' disabled>Add</button>
+<table id="party">
+	<tr>
+		<th>Name</th>
+		<th>Type</th>
+		<th>Body</th>
+		<th>Mind</th>
+		<th>Spirit</th>
+		<th>AC</th>
+		<th>Bonus</th>
+		<th>Init<br/>Roll</th>
+		<th>Effects</th>
+		<th>Gets<br/>Loot</th>
+	</tr>
+</table>
+<br/>
+<hr/>
+<h4>Tools</h4>
+<button onclick="getRandom('fighter');">Select Random Player/Ally</button>
+&nbsp;
+<button onclick="getRandom('monster');">Select Random Monster</button>
+&nbsp;
+<span id='randomResult'></span><button id='copyBtn' style='border:none; background:none; display:none;' onclick='navigator.clipboard.writeText(document.getElementById("randomResult").innerHTML);'>&#128464;</button>
+<span id='randomTime' style='float:right;'></span>
+<br/>
+<hr/>
+<h4>Battle Summary <div style='float:right'><button onclick='syncToDiscord()'>Share to Discord</button></div></h4>
+<div id="summaryArea"></div>
+</br>
+<hr/>
+<h4>Map</h4>
+<div class="dm-controls" id="dmControls">
+  <label>Grid Width: <input type="number" id="gridWidth" value="10" min="1" /></label>
+  <label>Grid Height: <input type="number" id="gridHeight" value="10" min="1" /></label>
+  <button onclick="resizeGrid()">Update Grid</button>
+</div>
+<canvas id="mapCanvas" width="800" height="800"></canvas>
+<h4>Loot</h4>
+<button onclick="splitLoot()">Show/Divide Loot</button>
+<br/>
+<div style='width:48%; float:left;' id="lootAreaByPerson"></div>
+<div style='width:48%; float:right;' id="lootAreaFullList"></div>
+</br>
+</div>
+<div style='float:right; width:34vw;height:98vh; overflow-y: scroll'>
+<h4>Info</h4>
+<div class="tab">
+  <button class="tablinks" onclick="openPage(event, 'Cover')" id="defaultOpen">Cover</button>
+  <button class="tablinks" onclick="openPage(event, 'MonsterGuide')">Monster Guide</button>
+  <button class="tablinks" onclick="openPage(event, 'Spellbooks')">Spellbook</button>
+  <button class="tablinks" onclick="openPage(event, 'WarriorSkills')">Warrior Skills</button>
+</div>
+
+<div id="Cover" class="tabcontent" style="display:block">
+<center>
+<h2>Fallen Gate ♆Castle♆</h2>
+<img src = "https://cdn.discordapp.com/icons/1153395278016163840/17386634eb5f1480edc1271ca0701cf0.webp"/>
+</center>
+<h4>Steps</h4>
+<ol>
+<li>Enter a name for your event.</li>
+<li>Click the "Add" button to add a new player, monster, or dragon to the encounter.</li>
+<li>Select the type of monster, dragon, or the player's rank.</li>
+<li>Adjust the stat values (Body, Mind, Spirit, Bonus) and add any AC.</li>
+<li>Select if the player is eligible for the loot split. (Our general rule is that the DM does not earn loot from any encounters that they manage.)</li>
+<li>After the Init Rolls have been made, enter those values for all the players and monsters. This should populate the Map and the Battle Summary section with all of the current stats displayed and be in the correct turn order.</li>
+<li>As the event unfolds, update the stats as player/monsters take damage and use spells. The updated stat values should be displayed in the Battle Summary section. If a stat value falls to zero, that player/monster will be removed from the Battle Summary section.</li>
+<li>As the event unfolds, click and drag the characters on the map to show the current positions.</li>
+<li>Use the Battle Summary and Map sections to keep track of the encounter.</li>
+<li>If you need to share the encounter, copy the Battle Summary manually or take a screenshot of the map.</li>
+<li>After the event is over, click the "Show/Divide Loot" button to generate the loot drops for all the monsters that have a body stat equal to zero. The loot will also be split among the players eligible for loot. (randomly)</li>
+</ol>
+</div>
+
+<div id="MonsterGuide" class="tabcontent">
+	<iframe name='monsterFrame' class='content' style='width:100%; height:100%' src='./monsters.html' frameborder="0" scrolling="yes" ></iframe>
+</div>
+<div id="Spellbooks" class="tabcontent">
+		<iframe name='spellbookFrame' class='content' style='width:100%; height:100%' src='./spellbook.html' frameborder="0" scrolling="yes" ></iframe>
+</div>
+<div id="WarriorSkills" class="tabcontent">
+		<iframe name='warriorSkillsFrame' class='content' style='width:100%; height:100%' src='./skills.html' frameborder="0" scrolling="yes" ></iframe>
+</div>	
+</div>
+</div>
+<script>
+const canvas = document.getElementById('mapCanvas');
+const ctx = canvas.getContext('2d');
+const usernameInput = document.getElementById('username') || { value: 'dm' };
+const dmControls = document.getElementById('dmControls');
+const legendBox = document.getElementById('legend');
+const noteList = document.getElementById('noteList');
+const gridWidthInput = document.getElementById('gridWidth');
+const gridHeightInput = document.getElementById('gridHeight');
+let gridWidth = 10;
+let gridHeight = 10;
+let cellWidth = canvas.width / gridWidth;
+let cellHeight = canvas.height / gridHeight;
+let circles = [];
+let playerColors = {};
+let draggingCircle = null;
+let activeDM = null;
+function checkDM() {
+  const username = usernameInput.value.trim();
+  const lower = username.toLowerCase();
+  if (lower === "dm") {
+    if (activeDM && activeDM !== username) {
+      alert("Only one DM is allowed! The current DM is: " + activeDM);
+      usernameInput.value = "";
+      dmControls.style.display = "none";
+      return;
+    }
+    activeDM = username;
+    dmControls.style.display = "block";
+  } else {
+    dmControls.style.display = "none";
+    if (!playerColors[lower]) {
+      playerColors[lower] = getRandomColor();
+    }
+  }
+}
+function getRandomColor() {
+  const letters = '456789ABCD';
+  let color = '#';
+  for (let i = 0; i < 6; i++) {
+    color += letters[Math.floor(Math.random() * letters.length)];
+  }
+  return color;
+}
+function drawGrid() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  cellWidth = canvas.width / gridWidth;
+  cellHeight = canvas.height / gridHeight;
+  ctx.strokeStyle = '#ddd';
+  ctx.lineWidth = 1
+  for (let i = 0; i <= gridWidth; i++) {
+    let x = i * cellWidth;
+    ctx.beginPath();
+    ctx.moveTo(x, 0);
+    ctx.lineTo(x, canvas.height);
+    ctx.stroke();
+  }
+  for (let i = 0; i <= gridHeight; i++) {
+    let y = i * cellHeight;
+    ctx.beginPath();
+    ctx.moveTo(0, y);
+    ctx.lineTo(canvas.width, y);
+    ctx.stroke();
+  }
+  for (const circle of circles) {
+    const owner = circle.owner.toLowerCase();
+    //const color = owner === 'dm' ? 'blue' : (playerColors[owner] || 'gray');
+	const color = playerColors[owner]
+    ctx.beginPath();
+    ctx.fillStyle = color;
+	if (!circle.init) {
+		continue;
+	}
+	if (circle.body && circle.body <= 0) {
+		//ctx.fillRect(circle.x, circle.y, 20, 20)
+		ctx.strokeStyle = color
+		ctx.lineWidth = 2
+		ctx.moveTo(circle.x-8, circle.y-8);
+		ctx.lineTo(circle.x+8, circle.y+8);
+		ctx.stroke();
+		ctx.moveTo(circle.x-8, circle.y+8);
+		ctx.lineTo(circle.x+8, circle.y-8);
+		ctx.stroke();
+	} else if (circle.mind && circle.mind <= 0) {
+		const x = circle.x
+		const y = circle.y
+		const amplitude = 8;
+		const height = 20;
+		const coils = 3;
+		ctx.beginPath();
+		const coilSpacing = height / coils;
+		const points = 100; // Points per coil for smoothness
+
+		for (let i = 0; i <= coils * points; i++) {
+			const t = i / points; // Normalized position in the coil
+			const dx = amplitude * Math.sin(t * Math.PI * 2); // Horizontal oscillation
+			const dy = t * coilSpacing; // Vertical progression
+			ctx.lineTo(x + dx, y + dy);
+		}
+		ctx.strokeStyle = color;
+		ctx.lineWidth = 2;
+		ctx.stroke();
+	} else if (circle.spirit && circle.spirit <= 0) {
+		ctx.fillRect(circle.x-14, circle.y-10, 28, 20)
+	} else {
+		ctx.arc(circle.x, circle.y, 10, 0, Math.PI * 2);
+		ctx.fill();
+	}
+    //ctx.fillStyle = 'black';
+    ctx.font = '18px sans-serif';
+    //ctx.fillText(circle.label, circle.x + 12, circle.y - 5);
+	ctx.fillText(owner, circle.x + 15, circle.y - 5);
+  }
+  //updateLegend();
+  //updateNotes();
+}
+function updateLegend() {
+  let legendHTML = `<strong>Legend:</strong>`;
+  let uniqueOwners = [...new Set(circles.map(c => c.owner))];
+  uniqueOwners.forEach(owner => {
+    const color = owner.toLowerCase() === 'dm' ? 'blue' : playerColors[owner.toLowerCase()] || 'gray';
+    const count = circles.filter(c => c.owner === owner).length;
+    legendHTML += `<div class="legend-item"><div class="legend-color" style="background:${color}"></div>${owner} — ${count} dot${count !== 1 ? 's' : ''}</div>`;
+  });
+  legendBox.innerHTML = legendHTML;
+}
+function updateNotes() {
+  noteList.innerHTML = '';
+  circles.forEach(c => {
+    const li = document.createElement('li');
+    let text = `${c.label} (${c.owner}): ${c.note || ''}`;
+    if (c.stats) {
+      text += ` [Body: ${c.stats.body}, Mind: ${c.stats.mind}, Spirit: ${c.stats.spirit}, AC: ${c.stats.ac}, Combat Bonus: ${c.stats.bonus}]`;
+    }
+    li.textContent = text;
+    noteList.appendChild(li);
+  });
+}
+function resizeGrid() {
+  gridWidth = parseInt(gridWidthInput.value);
+  gridHeight = parseInt(gridHeightInput.value);
+  drawGrid();
+}
+function getCircleAt(x, y) {
+  return circles.find(c =>
+    Math.sqrt((x - c.x) ** 2 + (y - c.y) ** 2) <= 10
+  );
+}
+function getUserDotCount(user) {
+  return circles.filter(c => c.owner.toLowerCase() === user.toLowerCase()).length;
+}
+function isValidNumber(value) {
+  return /^\d+$/.test(value);
+}
+canvas.addEventListener('contextmenu', function (e) {
+  e.preventDefault();
+  const rawUsername = usernameInput.value.trim();
+  const username = rawUsername.toLowerCase();
+  if (!username) return;
+  const isDM = username === 'dm';
+  const rect = canvas.getBoundingClientRect();
+  const x = e.clientX - rect.left;
+  const y = e.clientY - rect.top;
+  const clicked = getCircleAt(x, y);
+  if (clicked && (isDM || clicked.owner.toLowerCase() === username)) {
+    const action = prompt(`Right-click menu for "${clicked.label}":\n- Type 'remove' to delete\n- Type 'notes' to add/edit notes\n- Type 'stats' to add/edit stats.`);
+    if (!action) return;
+    if (action.toLowerCase() === 'remove') {
+      circles = circles.filter(c => c !== clicked);
+    } else if (action.toLowerCase() === 'notes') {
+      const note = prompt("Enter note:", clicked.note || '');
+      if (note !== null) clicked.note = note;
+    } else if (action.toLowerCase() === 'stats') {
+      clicked.stats = clicked.stats || { body: '', mind: '', spirit: '', ac: '', bonus: '' };
+      let body = prompt("Body (numbers only):", clicked.stats.body);
+      let mind = prompt("Mind (numbers only):", clicked.stats.mind);
+      let spirit = prompt("Spirit (numbers only):", clicked.stats.spirit);
+      let ac = prompt("AC (numbers only):", clicked.stats.ac);
+      let bonus = prompt("Combat Bonus (numbers only):", clicked.stats.bonus);
+      if (isValidNumber(body)) clicked.stats.body = body;
+      if (isValidNumber(mind)) clicked.stats.mind = mind;
+      if (isValidNumber(spirit)) clicked.stats.spirit = spirit;
+      if (isValidNumber(ac)) clicked.stats.ac = ac;
+      if (isValidNumber(bonus)) clicked.stats.bonus = bonus;
+    }
+    drawGrid();
+  }
+});
+canvas.addEventListener('mousedown', function (e) {
+  //if (e.button === 2) return;
+  //draggingCircle = null;
+  //const rawUsername = usernameInput.value.trim();
+  //const username = rawUsername.toLowerCase();
+  //if (!username) return;
+  //const isDM = username === 'dm';
+  const rect = canvas.getBoundingClientRect();
+  const x = e.clientX - rect.left;
+  const y = e.clientY - rect.top;
+  const clicked = getCircleAt(x, y);
+  if (clicked /*&& (isDM || clicked.owner.toLowerCase() === username)*/) {
+    draggingCircle = clicked;
+    return;
+  }
+  /*if (!isDM && getUserDotCount(rawUsername) >= 2) {
+    alert("You can only place 2 dots.");
+    return;
+  }
+  const label = prompt("Label your dot:");
+  if (label) {
+    if (!playerColors[username]) {
+      playerColors[username] = getRandomColor();
+    }
+    circles.push({ x, y, label, owner: rawUsername, note: '' });
+    drawGrid();
+  }*/
+});
+canvas.addEventListener('mousemove', function (e) {
+  if (draggingCircle) {
+    const rect = canvas.getBoundingClientRect();
+    draggingCircle.x = e.clientX - rect.left;
+    draggingCircle.y = e.clientY - rect.top;
+    drawGrid();
+  }
+});
+canvas.addEventListener('mouseup', () => draggingCircle = null);
+canvas.addEventListener('mouseleave', () => draggingCircle = null);
+drawGrid();
+
+const DISCORD_WEBHOOK_URL = "PASTE_YOUR_NEW_DISCORD_WEBHOOK_URL_HERE";
+let eventMessageID = null;
+
+async function syncToDiscord() {
+	const idBox = document.getElementById('discordMessageID');
+
+	if (idBox && idBox.value.trim() !== '') {
+		eventMessageID = idBox.value.trim();
+	}
+
+	if (!DISCORD_WEBHOOK_URL || DISCORD_WEBHOOK_URL.includes("https://discord.com/api/webhooks/1382809889684062298/We1eJedsfCJq11wfDdUU9zmzrQC5JbiUs6JqYgCQHmzBzguMMJE0TPyMCgCQ4VfO93Rt")) {
+		alert("Add your Discord webhook URL in DISCORD_WEBHOOK_URL first.");
+		return;
+	}
+
+	let webhookUrl = DISCORD_WEBHOOK_URL;
+	let method = "POST";
+
+	if (eventMessageID !== null) {
+		method = "PATCH";
+		webhookUrl = DISCORD_WEBHOOK_URL + "/messages/" + eventMessageID;
+
+		try {
+			await fetch(webhookUrl + "?wait=true", {
+				method: "PATCH",
+				headers: {
+					"Content-Type": "application/json"
+				},
+				body: JSON.stringify({
+					content: "Updating...",
+					embeds: [],
+					attachments: []
+				})
+			});
+		} catch (error) {
+			console.error("Could not clear old Discord message:", error);
+		}
+	}
+
+	sendToDiscord(webhookUrl, method);
+}
+
+async function sendToDiscord(webhookUrl, method) {
+	try {
+		const dataURL = canvas.toDataURL("image/png");
+
+		const eventName = document.getElementById('eventName').value || "Fallen Gate Encounter";
+		const summaryText = document.getElementById("summaryArea").innerText.trim() || "No active battle summary yet.";
+
+		const myEmbed = {
+			title: eventName,
+			description: summaryText + "\n\n**Map:**",
+			color: hexToDecimal("#ff0000"),
+			image: {
+				url: "attachment://map.png"
+			},
+			footer: {
+				text: "map grid cells are 5ft x 5ft"
+			}
+		};
+
+		const formData = new FormData();
+		formData.append("payload_json", JSON.stringify({
+			content: "",
+			embeds: [myEmbed]
+		}));
+
+		const binaryString = window.atob(dataURL.split(",")[1]);
+		const arrayBuffer = Uint8Array.from(binaryString, function (c) {
+			return c.charCodeAt(0);
+		});
+		const blob = new Blob([arrayBuffer], { type: "image/png" });
+
+		formData.append("files", blob, "map.png");
+
+		const response = await fetch(webhookUrl + "?wait=true", {
+			method: method,
+			body: formData
+		});
+
+		if (!response.ok) {
+			const errorText = await response.text();
+			throw new Error("Discord error " + response.status + ": " + errorText);
+		}
+
+		const result = await response.json();
+
+		eventMessageID = result.id;
+
+		const idBox = document.getElementById('discordMessageID');
+		if (idBox) {
+			idBox.value = eventMessageID;
+		}
+
+		alert("Sent to Discord.");
+	} catch (error) {
+		console.error("Failed to send to Discord:", error);
+		alert("Failed to send to Discord. Check the console and your webhook URL.");
+	}
+}
+
+function hexToDecimal(hex) {
+	return parseInt(hex.replace("#", ""), 16);
+}
+
+function startDMTool() {
+	const intro = document.getElementById("bookIntro");
+	const app = document.getElementById("dmToolApp");
+
+	if (!intro || !app) {
+		return;
+	}
+
+	intro.classList.add("book-opening");
+
+	setTimeout(function () {
+		intro.classList.add("book-hidden");
+		app.classList.remove("dm-tool-hidden");
+		app.classList.add("dm-tool-show");
+
+		if (typeof drawGrid === "function") {
+			setTimeout(drawGrid, 50);
+		}
+	}, 1250);
+}
+
+</script>
+</body>
+</html>

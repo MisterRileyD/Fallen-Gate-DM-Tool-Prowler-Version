@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>How to Use DM Tool</title>
+  <style>
+:root {
+  --page-bg: #f4e6c5;
+  --page-line: #e7d4aa;
+  --ink: #24170e;
+  --purple: #4d245d;
+  --gold: #c99739;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  color: var(--ink);
+  font-family: Georgia, "Times New Roman", serif;
+  background:
+    linear-gradient(90deg, rgba(0,0,0,0.10), transparent 7%, transparent 93%, rgba(0,0,0,0.10)),
+    repeating-linear-gradient(0deg, var(--page-bg) 0 26px, var(--page-line) 27px 28px);
+  overflow: hidden;
+}
+
+.embedded-book {
+  height: 100%;
+  padding: 8px;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  gap: 6px;
+}
+
+.book-toolbar,
+.book-footer {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 8px;
+  border: 1px solid rgba(90,61,20,0.26);
+  border-radius: 12px;
+  background: rgba(255,255,255,0.24);
+}
+
+.book-footer {
+  justify-content: space-between;
+  flex-wrap: nowrap;
+}
+
+.book-search {
+  flex: 1;
+  min-width: 150px;
+  padding: 7px 10px;
+  border: 1px solid #9b7b4e;
+  border-radius: 9px;
+  background: rgba(255,252,236,0.84);
+  color: var(--ink);
+  font-size: 14px;
+}
+
+.book-btn,
+.index-card {
+  padding: 7px 10px;
+  border: 1px solid #6b3a13;
+  border-radius: 9px;
+  background: linear-gradient(#fff1c5, #d7b36a);
+  color: #291609;
+  font-weight: 900;
+  cursor: pointer;
+  box-shadow: 0 1px 0 rgba(255,255,255,0.35) inset;
+}
+
+.book-btn.dark {
+  background: linear-gradient(#734589, #3a1a49);
+  color: #ffe8a2;
+  border-color: #d1a650;
+}
+
+.book-page-area {
+  min-height: 0;
+  height: 100%;
+  overflow: hidden;
+  border: 1px solid rgba(90,61,20,0.33);
+  border-radius: 14px;
+  background:
+    linear-gradient(90deg, rgba(0,0,0,0.07), transparent 7%, transparent 93%, rgba(0,0,0,0.07)),
+    repeating-linear-gradient(0deg, rgba(244,230,197,0.96) 0 26px, rgba(231,212,170,0.96) 27px 28px);
+  box-shadow: inset 0 0 24px rgba(82,45,12,0.12);
+}
+
+.book-page {
+  display: none;
+  height: 100%;
+  overflow-y: auto;
+  padding: 14px 18px 16px;
+  animation: pageTurn 260ms ease both;
+}
+
+.book-page.active { display: block; }
+
+@keyframes pageTurn {
+  from { opacity: 0; transform: translateX(22px) rotateY(-5deg); }
+  to { opacity: 1; transform: translateX(0) rotateY(0); }
+}
+
+.item-title {
+  margin: 0 0 8px;
+  color: var(--purple);
+  font-size: clamp(22px, 3.4vw, 32px);
+  border-bottom: 2px solid rgba(97,60,23,0.34);
+  padding-bottom: 5px;
+}
+
+.category {
+  display: inline-block;
+  margin: 4px 0 12px;
+  padding: 4px 9px;
+  border: 1px solid rgba(90,61,20,0.32);
+  border-radius: 999px;
+  background: rgba(255,255,255,0.28);
+  color: #5a3a1a;
+  font-weight: 900;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 12px;
+}
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(155px, 1fr));
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.index-card {
+  min-height: 78px;
+  background: rgba(255,255,255,0.27);
+  text-align: left;
+}
+
+.index-card strong {
+  display: block;
+  color: var(--purple);
+  font-size: 18px;
+  margin-bottom: 4px;
+}
+
+p, li, td, th {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: clamp(13px, 2.2vw, 16px);
+  line-height: 1.45;
+}
+
+.note-box {
+  padding: 10px 12px;
+  border: 1px solid rgba(90,61,20,0.25);
+  border-radius: 10px;
+  background: rgba(255,255,255,0.26);
+  font-family: Arial, Helvetica, sans-serif;
+  margin: 8px 0 12px;
+}
+
+.page-count {
+  color: #5a3a1a;
+  font-weight: 900;
+  font-family: Arial, Helvetica, sans-serif;
+}
+</style>
+</head>
+<body>
+  <div class="embedded-book">
+    <div class="book-toolbar">
+      
+      <button class="book-btn dark" onclick="goToPage('book_index')">How to Use DM Tool Index</button>
+      <input id="searchBox" class="book-search" placeholder="Search this book..." oninput="searchPages()">
+      <button class="book-btn" onclick="prevPage()">Previous</button>
+      <button class="book-btn dark" onclick="nextPage()">Next</button>
+    
+    </div>
+    <main class="book-page-area">
+      
+<section class="book-page active" id="book_index">
+  <h2 class="item-title">How to Use DM Tool</h2>
+  <div class="category">Quick Guide</div>
+  <div class="card-grid">
+    <button class="index-card" onclick="goToPage('open_tome')"><strong>Open Tome</strong>Click the book cover to begin</button>
+    <button class="index-card" onclick="goToPage('add_roster')"><strong>Add Roster</strong>Add players, enemies, ranks, and monsters</button>
+    <button class="index-card" onclick="goToPage('turn_order')"><strong>Turn Order</strong>Initiative and Next Turn</button>
+    <button class="index-card" onclick="goToPage('guide_books')"><strong>Guide Books</strong>Monster, spell, skill, and sheet tabs</button>
+  </div>
+</section>
+
+<section class="book-page" id="open_tome">
+  <h2 class="item-title">Open the Tome</h2>
+  <div class="category">Starting</div>
+  <ul>
+    <li>Click the closed book cover on the first screen.</li>
+    <li>The book opens and loads the battle map with the encounter roster.</li>
+    <li>Use the Event Name box to name the encounter before sending it to Discord.</li>
+  </ul>
+</section>
+
+<section class="book-page" id="add_roster">
+  <h2 class="item-title">Add Player / Enemy</h2>
+  <div class="category">Roster</div>
+  <ul>
+    <li>Type a name in the roster row.</li>
+    <li>Choose a rank, dragon, or monster from the Type dropdown.</li>
+    <li>Monster options are grouped by category so you can see where each one belongs.</li>
+    <li>Body, Mind, Spirit, AC, and Combat Mod fill from the selected type.</li>
+  </ul>
+</section>
+
+<section class="book-page" id="turn_order">
+  <h2 class="item-title">Turn Order</h2>
+  <div class="category">Initiative</div>
+  <ul>
+    <li>Set an Init Roll for each combatant.</li>
+    <li>Only combatants with a selected type and initiative join the active turn order.</li>
+    <li>Click Next Turn to move the current turn to the bottom.</li>
+    <li>If Body, Mind, or Spirit reaches 0, that combatant is treated as defeated.</li>
+  </ul>
+</section>
+
+<section class="book-page" id="guide_books">
+  <h2 class="item-title">Guide Books</h2>
+  <div class="category">Tabs</div>
+  <ul>
+    <li>Right tabs open Monster Guide, Spellbook, Warrior Skills, and Character Sheets.</li>
+    <li>Left tabs open Dice System and How to Use DM Tool.</li>
+    <li>Use Close Book to hide the secondary book and return the main tome to full size.</li>
+  </ul>
+</section>
+
+    </main>
+    <footer class="book-footer">
+      <button class="book-btn" onclick="goToPage('book_index')">Index</button>
+      <button class="book-btn" onclick="prevPage()">← Back</button>
+      <button class="book-btn dark" onclick="nextPage()">Next →</button>
+      <span id="pageCount" class="page-count">Page 1</span>
+    </footer>
+  </div>
+  <script>
+let allPages = [];
+let filteredPages = [];
+let currentPage = 0;
+
+function initBook() {
+  allPages = Array.from(document.querySelectorAll(".book-page"));
+  filteredPages = allPages.slice();
+  showPage(0);
+}
+
+function showPage(index) {
+  if (filteredPages.length === 0) {
+    allPages.forEach(p => p.classList.remove("active"));
+    document.getElementById("pageCount").textContent = "No pages";
+    return;
+  }
+  if (index < 0) index = filteredPages.length - 1;
+  if (index >= filteredPages.length) index = 0;
+  currentPage = index;
+  allPages.forEach(p => p.classList.remove("active"));
+  filteredPages[currentPage].classList.add("active");
+  document.getElementById("pageCount").textContent = "Page " + (currentPage + 1) + " of " + filteredPages.length;
+}
+
+function goToPage(id) {
+  const page = document.getElementById(id);
+  if (!page) return;
+  filteredPages = allPages.slice();
+  const index = filteredPages.indexOf(page);
+  showPage(index >= 0 ? index : 0);
+}
+
+function nextPage() { showPage(currentPage + 1); }
+function prevPage() { showPage(currentPage - 1); }
+
+function searchPages() {
+  const q = document.getElementById("searchBox").value.trim().toLowerCase();
+  if (!q) {
+    filteredPages = allPages.slice();
+  } else {
+    filteredPages = allPages.filter(page => page.textContent.toLowerCase().includes(q));
+  }
+  showPage(0);
+}
+
+window.addEventListener("DOMContentLoaded", initBook);
+</script>
+</body>
+</html>
