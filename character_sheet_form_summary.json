@@ -1,0 +1,8 @@
+{
+  "created_form": "character_sheet_form.html",
+  "spell_checkboxes": 284,
+  "warrior_skill_checkboxes": 42,
+  "updated_character_sheets_page_button": true,
+  "form_outputs": "registerFallenGateCharacterSheet('CODE', {...});",
+  "manifest_example": "./character_sheets/RileyD.js"
+}

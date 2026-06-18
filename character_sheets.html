@@ -232,11 +232,37 @@ p, li {
 @media (max-width: 620px) {
   .sheet-grid { grid-template-columns: repeat(2, minmax(90px, 1fr)); }
 }
-  </style>
+  
+.new-sheet-form-btn {
+  background: linear-gradient(#fff1c5, #d7b36a);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #291609;
+  border-color: #6b3a13;
+}
+
+.sheet-form-callout {
+  margin: 10px 0 16px;
+  padding: 12px 14px;
+  border: 1px solid rgba(90,61,20,0.28);
+  border-radius: 12px;
+  background: rgba(255,255,255,0.28);
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: 800;
+}
+
+.sheet-form-callout button {
+  margin-top: 8px;
+}
+
+</style>
 </head>
 <body>
   <div class="embedded-book">
     <div class="book-toolbar">
+      <a class="book-btn new-sheet-form-btn" href="./character_sheet_form.html">Sheet Form</a>
       <button class="book-btn dark" onclick="showSheetIndex()">Sheet Index</button>
       <input id="searchBox" class="book-search" placeholder="Search code, name, spell, skill, item..." oninput="renderSheets()">
       <button class="book-btn dark" onclick="addTypedCode()">Add Code</button>

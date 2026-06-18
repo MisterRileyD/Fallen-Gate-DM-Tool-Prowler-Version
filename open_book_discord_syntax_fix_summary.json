@@ -1,0 +1,9 @@
+{
+  "fixed": "Broken newline inside Discord embed description string",
+  "why_book_button_broke": "The JavaScript syntax error stopped the whole script, so startDMTool() was never created.",
+  "node_syntax_check_passed": true,
+  "node_stderr": "",
+  "changed_files": [
+    "index.html"
+  ]
+}

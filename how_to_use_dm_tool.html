@@ -166,6 +166,22 @@ p, li, td, th {
   margin: 8px 0 12px;
 }
 
+.code-box {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font-family: Consolas, Monaco, monospace;
+  font-size: 13px;
+  padding: 10px 12px;
+  border: 1px solid rgba(90,61,20,0.25);
+  border-radius: 10px;
+  background: rgba(255,255,255,0.35);
+}
+
+a {
+  color: #4d245d;
+  font-weight: 900;
+}
+
 .page-count {
   color: #5a3a1a;
   font-weight: 900;
@@ -176,12 +192,10 @@ p, li, td, th {
 <body>
   <div class="embedded-book">
     <div class="book-toolbar">
-      
-      <button class="book-btn dark" onclick="goToPage('book_index')">How to Use DM Tool Index</button>
+      <button class="book-btn dark" onclick="goToPage('book_index')">How To Index</button>
       <input id="searchBox" class="book-search" placeholder="Search this book..." oninput="searchPages()">
       <button class="book-btn" onclick="prevPage()">Previous</button>
       <button class="book-btn dark" onclick="nextPage()">Next</button>
-    
     </div>
     <main class="book-page-area">
       
@@ -193,6 +207,9 @@ p, li, td, th {
     <button class="index-card" onclick="goToPage('add_roster')"><strong>Add Roster</strong>Add players, enemies, ranks, and monsters</button>
     <button class="index-card" onclick="goToPage('turn_order')"><strong>Turn Order</strong>Initiative and Next Turn</button>
     <button class="index-card" onclick="goToPage('guide_books')"><strong>Guide Books</strong>Monster, spell, skill, and sheet tabs</button>
+    <button class="index-card" onclick="goToPage('character_sheet_features')"><strong>Character Sheets</strong>New sheet form, edit old sheet, and copy code</button>
+    <button class="index-card" onclick="goToPage('character_sheet_steps')"><strong>Making Sheets</strong>Step-by-step sheet workflow</button>
+    <button class="index-card" onclick="goToPage('character_sheet_discord')"><strong>Upload to Discord</strong>Where to upload copied sheet code</button>
   </div>
 </section>
 
@@ -214,6 +231,7 @@ p, li, td, th {
     <li>Choose a rank, dragon, or monster from the Type dropdown.</li>
     <li>Monster options are grouped by category so you can see where each one belongs.</li>
     <li>Body, Mind, Spirit, AC, and Combat Mod fill from the selected type.</li>
+    <li>Use Add Sheet Code to add a saved character sheet by code.</li>
   </ul>
 </section>
 
@@ -236,6 +254,53 @@ p, li, td, th {
     <li>Left tabs open Dice System and How to Use DM Tool.</li>
     <li>Use Close Book to hide the secondary book and return the main tome to full size.</li>
   </ul>
+</section>
+
+<section class="book-page" id="character_sheet_features">
+  <h2 class="item-title">Character Sheet Features</h2>
+  <div class="category">Character Sheets</div>
+  <ul>
+    <li><strong>Sheet Form:</strong> opens the character sheet form.</li>
+    <li><strong>New Sheet:</strong> fill in basic character info, stats, jewelry, weapons, notes, spells, and warrior skills.</li>
+    <li><strong>Edit / Load Existing Sheet:</strong> load an older .js character sheet or pick a sheet already listed in <strong>character_sheets/manifest.js</strong>.</li>
+    <li><strong>Auto Check:</strong> when editing a sheet, the form tries to re-check the matching spells and warrior skills so you do not have to click them all again.</li>
+    <li><strong>Generate JS Sheet:</strong> creates the character sheet code.</li>
+    <li><strong>Copy Output:</strong> copies the finished code so it can be saved or posted.</li>
+  </ul>
+  <div class="note-box">
+    The static website cannot save character sheet files by itself. The form creates the code, then the code must be added to the site files later.
+  </div>
+</section>
+
+<section class="book-page" id="character_sheet_steps">
+  <h2 class="item-title">Making or Editing Character Sheets</h2>
+  <div class="category">Step by Step</div>
+  <ol>
+    <li>Open the <strong>Character Sheets</strong> book.</li>
+    <li>Click <strong>Sheet Form</strong>.</li>
+    <li>For a new character, fill in the form from blank.</li>
+    <li>For an old character, use <strong>Edit / Load Existing Character Sheet</strong>.</li>
+    <li>Choose an already uploaded sheet from the list, or use the file picker to load an older .js sheet.</li>
+    <li>Update the character's Body, Mind, Spirit, Combat Bonus, jewelry, weapons, notes, spells, and warrior skills.</li>
+    <li>Click <strong>Generate JS Sheet</strong>.</li>
+    <li>Click <strong>Copy Output</strong>.</li>
+    <li>Post the copied code to the character sheet Discord channel for it to be added to the DM Tool.</li>
+  </ol>
+</section>
+
+<section class="book-page" id="character_sheet_discord">
+  <h2 class="item-title">Where to Upload Copied Character Sheet Code</h2>
+  <div class="category">Discord Channel</div>
+  <p>Once the generated character sheet code is copied, upload it here:</p>
+  <div class="code-box">https://discord.com/channels/1153395278016163840/1517229941006274710</div>
+  <p>
+    <a href="https://discord.com/channels/1153395278016163840/1517229941006274710" target="_blank" rel="noopener noreferrer">
+      Open Character Sheet Upload Channel
+    </a>
+  </p>
+  <div class="note-box">
+    Upload the copied code there, and MisterRileyD will import it to the character sheet index. Include the character name and sheet code. Example: “RileyD character sheet update — code RILEYD.”
+  </div>
 </section>
 
     </main>

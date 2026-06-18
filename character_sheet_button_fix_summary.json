@@ -1,0 +1,10 @@
+{
+  "fixed_file": "character_sheets.html",
+  "button_added_to_toolbar": true,
+  "button_added_inside_sheet_index_page": true,
+  "opens": "./character_sheet_form.html",
+  "needed_files": [
+    "character_sheets.html",
+    "character_sheet_form.html"
+  ]
+}

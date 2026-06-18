@@ -1,0 +1,7 @@
+{
+  "removed_title_above_book": true,
+  "inside_book_title": "Fallen Gate DM Tool / Prowler Version by MisterRileyD",
+  "inside_book_subtitle": "Dungeon Master Tome",
+  "book_is_still_clickable": true,
+  "shared_page_note": "Static Render pages do not share DM state between browsers without a realtime database/backend."
+}

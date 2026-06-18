@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Fallen Gate Character Sheet Form</title>
+  <style>
+    :root {
+      --page-bg: #f4e6c5;
+      --page-line: #e7d4aa;
+      --ink: #24170e;
+      --purple: #4d245d;
+      --gold: #c99739;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      font-family: Arial, Helvetica, sans-serif;
+      background:
+        linear-gradient(90deg, rgba(0,0,0,0.10), transparent 7%, transparent 93%, rgba(0,0,0,0.10)),
+        repeating-linear-gradient(0deg, var(--page-bg) 0 26px, var(--page-line) 27px 28px);
+      padding: 18px;
+    }
+
+    .wrap {
+      max-width: 1180px;
+      margin: 0 auto;
+      border: 2px solid rgba(90,61,20,0.35);
+      border-radius: 18px;
+      background: rgba(255,255,255,0.30);
+      box-shadow: 0 14px 34px rgba(0,0,0,0.22);
+      padding: 18px;
+    }
+
+    h1, h2, h3 {
+      font-family: Georgia, "Times New Roman", serif;
+      color: var(--purple);
+    }
+
+    h1 {
+      margin: 0 0 6px;
+      font-size: clamp(28px, 4vw, 46px);
+    }
+
+    .subtitle {
+      font-weight: 900;
+      color: #5a3a1a;
+      margin-bottom: 18px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 12px;
+    }
+
+    .section {
+      margin: 14px 0;
+      padding: 14px;
+      border: 1px solid rgba(90,61,20,0.28);
+      border-radius: 14px;
+      background: rgba(255,255,255,0.25);
+    }
+
+    label {
+      font-weight: 900;
+      color: #3a2210;
+      display: block;
+      margin: 0 0 4px;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 9px 10px;
+      border: 1px solid #9b7b4e;
+      border-radius: 10px;
+      background: rgba(255,252,236,0.86);
+      color: var(--ink);
+      font-size: 15px;
+    }
+
+    textarea {
+      min-height: 90px;
+      resize: vertical;
+    }
+
+    .check-tools {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin: 8px 0 12px;
+    }
+
+    button {
+      padding: 9px 12px;
+      border: 1px solid #6b3a13;
+      border-radius: 10px;
+      background: linear-gradient(#fff1c5, #d7b36a);
+      color: #291609;
+      font-weight: 900;
+      cursor: pointer;
+    }
+
+    button.dark {
+      background: linear-gradient(#734589, #3a1a49);
+      color: #ffe8a2;
+      border-color: #d1a650;
+    }
+
+    details {
+      border: 1px solid rgba(90,61,20,0.25);
+      border-radius: 10px;
+      padding: 8px 10px;
+      margin: 8px 0;
+      background: rgba(255,255,255,0.20);
+    }
+
+    summary {
+      font-family: Georgia, "Times New Roman", serif;
+      font-weight: 900;
+      color: var(--purple);
+      cursor: pointer;
+      font-size: 18px;
+    }
+
+    .check-row {
+      display: flex;
+      gap: 8px;
+      align-items: flex-start;
+      font-weight: 700;
+      margin: 6px 0;
+      color: #2f1a0a;
+    }
+
+    .check-row input {
+      width: auto;
+      margin-top: 2px;
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
+      gap: 12px;
+    }
+
+    .output {
+      width: 100%;
+      min-height: 420px;
+      white-space: pre;
+      font-family: Consolas, Monaco, monospace;
+      font-size: 13px;
+    }
+
+    .note {
+      padding: 10px 12px;
+      border-left: 4px solid var(--gold);
+      background: rgba(255,255,255,0.32);
+      border-radius: 10px;
+      margin: 10px 0;
+      font-weight: 700;
+    }
+
+    .small {
+      font-size: 13px;
+      color: #5a3a1a;
+      font-weight: 700;
+    }
+
+    .edit-load-row {
+      display: grid;
+      grid-template-columns: minmax(220px, 1fr) auto auto;
+      gap: 8px;
+      align-items: end;
+    }
+
+    @media (max-width: 760px) {
+      .edit-load-row {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .file-input {
+      background: rgba(255,252,236,0.86);
+      font-weight: 700;
+    }
+
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Fallen Gate Character Sheet Form</h1>
+    <div class="subtitle">Fill this out, check the spells and warrior skills, then generate the character sheet JS file.</div>
+
+    <div class="note">
+      Upload to <a href="https://discord.com/channels/1153395278016163840/1517229941006274710" target="_blank" rel="noopener noreferrer">https://discord.com/channels/1153395278016163840/1517229941006274710</a> and MisterRileyD will import it to the character sheet index.
+    </div>
+
+
+    <div class="section">
+      <h2>Edit / Load Existing Character Sheet</h2>
+      <div class="note">
+        Use this if someone already has a character sheet file. It will fill in the form and re-check the spells and warrior skills that sheet already has.
+      </div>
+
+      <div class="edit-load-row">
+        <div>
+          <label for="existingSheetSelect">Edit a sheet already listed in manifest.js</label>
+          <select id="existingSheetSelect">
+            <option value="">No loaded sheets found yet</option>
+          </select>
+        </div>
+        <button type="button" onclick="loadExistingSheetFromSelect()">Load Selected Sheet</button>
+        <button type="button" onclick="refreshExistingSheetList()">Refresh List</button>
+      </div>
+
+      <div style="margin-top:12px">
+        <label for="oldSheetFile">Or upload/pick an older character sheet .js file</label>
+        <input id="oldSheetFile" class="file-input" type="file" accept=".js,.txt" onchange="loadOldSheetFile(event)">
+        <div class="small">Works with files using <code>registerFallenGateCharacterSheet("CODE", {{...}});</code> or older <code>window.FALLEN_GATE_CHARACTER_SHEETS = {{...}}</code> format.</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Basic Character Information</h2>
+      <div class="grid">
+        <div>
+          <label for="sheetCode">Sheet Code</label>
+          <input id="sheetCode" placeholder="Example: FG001 or RileyD">
+        </div>
+        <div>
+          <label for="fileName">File Name</label>
+          <input id="fileName" placeholder="Example: RileyD.js">
+          <div class="small">Use only letters, numbers, dash, or underscore if possible.</div>
+        </div>
+        <div>
+          <label for="charName">Character Name</label>
+          <input id="charName" placeholder="Character Name">
+        </div>
+        <div>
+          <label for="rank">Rank</label>
+          <select id="rank">
+            <option value="">Choose rank</option>
+            <option value="Initiate">Initiate</option>
+<option value="Acolyte">Acolyte</option>
+<option value="Centurion">Centurion</option>
+<option value="Sentinel">Sentinel</option>
+<option value="Dark Warden">Dark Warden</option>
+<option value="Light Warden">Light Warden</option>
+<option value="Dark Watcher">Dark Watcher</option>
+<option value="Light Watcher">Light Watcher</option>
+<option value="Dark Knight">Dark Knight</option>
+<option value="Light Knight">Light Knight</option>
+<option value="Custodian">Custodian</option>
+<option value="Priest/Priestess">Priest/Priestess</option>
+<option value="Baron/Baroness">Baron/Baroness</option>
+<option value="Knight Captain">Knight Captain</option>
+<option value="Margrave">Margrave</option>
+<option value="Marshall">Marshall</option>
+<option value="Chamberlain">Chamberlain</option>
+<option value="Lictor">Lictor</option>
+<option value="Praetorian">Praetorian</option>
+<option value="Praetorian Prefect">Praetorian Prefect</option>
+<option value="Quarter Master">Quarter Master</option>
+<option value="Legate">Legate</option>
+<option value="Keeper of Knowledge">Keeper of Knowledge</option>
+<option value="High Priest/Priestess">High Priest/Priestess</option>
+<option value="Prince/Princess">Prince/Princess</option>
+<option value="The Triumvirate">The Triumvirate</option>
+<option value="Knight Errant">Knight Errant</option>
+<option value="Seneschal">Seneschal</option>
+<option value="Count/Countess">Count/Countess</option>
+<option value="Exemplar">Exemplar</option>
+<option value="Duke/Duchess">Duke/Duchess</option>
+<option value="Chancellor">Chancellor</option>
+          </select>
+        </div>
+        <div>
+          <label for="typeCode">Type Code</label>
+          <input id="typeCode" placeholder="Example: ranks!!Light Knight">
+        </div>
+        <div>
+          <label for="playerName">Player / Owner Name</label>
+          <input id="playerName" placeholder="Optional">
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Stats</h2>
+      <div class="grid">
+        <div>
+          <label for="body">Body</label>
+          <input id="body" type="number" placeholder="10">
+        </div>
+        <div>
+          <label for="mind">Mind</label>
+          <input id="mind" type="number" placeholder="10">
+        </div>
+        <div>
+          <label for="spirit">Spirit</label>
+          <input id="spirit" type="number" placeholder="10">
+        </div>
+        <div>
+          <label for="bonus">Combat Bonus</label>
+          <input id="bonus" type="number" placeholder="2">
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Inventory</h2>
+      <div class="grid">
+        <div>
+          <label for="jewelry">Jewelry</label>
+          <textarea id="jewelry" placeholder="One per line. Example:
+Ring of Fire Resistance | Ring | Ignores fire burn effect
+Shadow Amulet | Amulet | +1 to shadow checks"></textarea>
+        </div>
+        <div>
+          <label for="weapons">Weapons</label>
+          <textarea id="weapons" placeholder="One per line. Example:
+Holy Vengeance Trident | Trident | 3 Body / 3 Spirit | +2
+Sea Wrath | Trident | Optional damage | Optional bonus"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="two-col">
+      <div class="section">
+        <h2>Spell Checklist</h2>
+        <div class="check-tools">
+          <button type="button" onclick="setChecks('.spell-check', true)">Check All Spells</button>
+          <button type="button" onclick="setChecks('.spell-check', false)">Clear Spells</button>
+        </div>
+        <details open><summary>Neutral Magic — Conjuration Magic (18)</summary><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Armatura Inexpugnabilis Virium (Impregnable Armor of Might)&quot;, &quot;category&quot;: &quot;Conjuration Magic&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;5 mind&quot;}"> <span>Armatura Inexpugnabilis Virium (Impregnable Armor of Might) — 5 mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Aufer Materia (Remove Item)&quot;, &quot;category&quot;: &quot;Conjuration Magic&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;1 Mind&quot;}"> <span>Aufer Materia (Remove Item) — 1 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Cibus et Potio (Create Food and Drink)&quot;, &quot;category&quot;: &quot;Conjuration Magic&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;Free&quot;}"> <span>Cibus et Potio (Create Food and Drink) — Free</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Convivia Victoriae (Victory Feast)&quot;, &quot;category&quot;: &quot;Conjuration Magic&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;1 Mind per person attending the Feast.&quot;}"> <span>Convivia Victoriae (Victory Feast) — 1 Mind per person attending the Feast.</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Difficilis Materia (Difficult Item)&quot;, &quot;category&quot;: &quot;Conjuration Magic&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;2 Mind&quot;}"> <span>Difficilis Materia (Difficult Item) — 2 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Excandescunt Volucres (Flare Birds)&quot;, &quot;category&quot;: &quot;Conjuration Magic&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;1 Mind&quot;}"> <span>Excandescunt Volucres (Flare Birds) — 1 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Geminae Golems (Twin Golems)&quot;, &quot;category&quot;: &quot;Conjuration Magic&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;2 Mind&quot;}"> <span>Geminae Golems (Twin Golems) — 2 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Magiam Detegere (Detect Magic)&quot;, &quot;category&quot;: &quot;Conjuration Magic&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;1 mind&quot;}"> <span>Magiam Detegere (Detect Magic) — 1 mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Magicae Speculum (Magic Mirror)&quot;, &quot;category&quot;: &quot;Conjuration Magic&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;3 Mind&quot;}"> <span>Magicae Speculum (Magic Mirror) — 3 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Manentia (Permanency)&quot;, &quot;category&quot;: &quot;Conjuration Magic&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;Free&quot;}"> <span>Manentia (Permanency) — Free</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Obtestor Arma (Conjure Weapon)&quot;, &quot;category&quot;: &quot;Conjuration Magic&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;0 Mind or 1 Mind&quot;}"> <span>Obtestor Arma (Conjure Weapon) — 0 Mind or 1 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Obtestor Armis (Conjure Armor)&quot;, &quot;category&quot;: &quot;Conjuration Magic&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;1 Mind&quot;}"> <span>Obtestor Armis (Conjure Armor) — 1 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Provectus Armis (Advanced Armor)&quot;, &quot;category&quot;: &quot;Conjuration Magic&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;4 Mind&quot;}"> <span>Provectus Armis (Advanced Armor) — 4 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Scutum Adamantinum (Adamantine Shield)&quot;, &quot;category&quot;: &quot;Conjuration Magic&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;1 Mind&quot;}"> <span>Scutum Adamantinum (Adamantine Shield) — 1 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Securus Materia (Simple Item)&quot;, &quot;category&quot;: &quot;Conjuration Magic&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;Free&quot;}"> <span>Securus Materia (Simple Item) — Free</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Striges Iuniperorum (Witches Broom)&quot;, &quot;category&quot;: &quot;Conjuration Magic&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;Free&quot;}"> <span>Striges Iuniperorum (Witches Broom) — Free</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Telae Adhaerentes (Clinging Webs)&quot;, &quot;category&quot;: &quot;Conjuration Magic&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;2 mind&quot;}"> <span>Telae Adhaerentes (Clinging Webs) — 2 mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Vita Temporaria (Temporary Life)&quot;, &quot;category&quot;: &quot;Conjuration Magic&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;3 Mind&quot;}"> <span>Vita Temporaria (Temporary Life) — 3 Mind</span></label></details><details open><summary>Neutral Magic — Ecomancy (13)</summary><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Ampelos Agria laqueum (Vine Trap)&quot;, &quot;category&quot;: &quot;Ecomancy&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;1 Mind&quot;}"> <span>Ampelos Agria laqueum (Vine Trap) — 1 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Arbor Cor (Arbor Heart)&quot;, &quot;category&quot;: &quot;Ecomancy&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;3 Mind&quot;}"> <span>Arbor Cor (Arbor Heart) — 3 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Camouflage Chamaeleonis (Chameleon Camouflage)&quot;, &quot;category&quot;: &quot;Ecomancy&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;Free&quot;}"> <span>Camouflage Chamaeleonis (Chameleon Camouflage) — Free</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Cortex Manicae (Gauntlets of Bark)&quot;, &quot;category&quot;: &quot;Ecomancy&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;1 Mind&quot;}"> <span>Cortex Manicae (Gauntlets of Bark) — 1 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Ignis Fugit (Fyre Flies)&quot;, &quot;category&quot;: &quot;Ecomancy&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;2 Mind&quot;}"> <span>Ignis Fugit (Fyre Flies) — 2 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Melodiam Sanitatem (Melody of Healing)&quot;, &quot;category&quot;: &quot;Ecomancy&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;2 Spirit&quot;}"> <span>Melodiam Sanitatem (Melody of Healing) — 2 Spirit</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Naturas Iram (Natures Wrath)&quot;, &quot;category&quot;: &quot;Ecomancy&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;4 Mind&quot;}"> <span>Naturas Iram (Natures Wrath) — 4 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Rafflesia - (Parasitic Plant)&quot;, &quot;category&quot;: &quot;Ecomancy&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;3 Mind&quot;}"> <span>Rafflesia - (Parasitic Plant) — 3 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Uniflora Caulis (One Flowered Stem)&quot;, &quot;category&quot;: &quot;Ecomancy&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;1 Mind&quot;}"> <span>Uniflora Caulis (One Flowered Stem) — 1 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Urtica dioica (Thorn Whip)&quot;, &quot;category&quot;: &quot;Ecomancy&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;Mind 1&quot;}"> <span>Urtica dioica (Thorn Whip) — Mind 1</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Venator Sensus (Hunter Sense)&quot;, &quot;category&quot;: &quot;Ecomancy&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;3 Mind&quot;}"> <span>Venator Sensus (Hunter Sense) — 3 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Venenum Spinae (Poison Thorns)&quot;, &quot;category&quot;: &quot;Ecomancy&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;2 Mind&quot;}"> <span>Venenum Spinae (Poison Thorns) — 2 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Vulpes Vociferatio (Vixen Scream)&quot;, &quot;category&quot;: &quot;Ecomancy&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;2 Mind&quot;}"> <span>Vulpes Vociferatio (Vixen Scream) — 2 Mind</span></label></details><details open><summary>Neutral Magic — Elemental Magic (23)</summary><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Aqua est Glacies (Water to Ice)&quot;, &quot;category&quot;: &quot;Elemental Magic&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;1 Mind&quot;}"> <span>Aqua est Glacies (Water to Ice) — 1 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Aquae Crea (Create Water)&quot;, &quot;category&quot;: &quot;Elemental Magic&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;Free&quot;}"> <span>Aquae Crea (Create Water) — Free</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Aquae Proxima (Water Trap)&quot;, &quot;category&quot;: &quot;Elemental Magic&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;2 Mind&quot;}"> <span>Aquae Proxima (Water Trap) — 2 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Circulus Ignis (Ring of Fire)&quot;, &quot;category&quot;: &quot;Elemental Magic&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;3 Mind to manifest, 1 Mind to maintain per round.&quot;}"> <span>Circulus Ignis (Ring of Fire) — 3 Mind to manifest, 1 Mind to maintain per round.</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Comminutio Petra (Shattering Rock)&quot;, &quot;category&quot;: &quot;Elemental Magic&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;2 Mind&quot;}"> <span>Comminutio Petra (Shattering Rock) — 2 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Flatus Ventus (Gust of Wind)&quot;, &quot;category&quot;: &quot;Elemental Magic&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;Free&quot;}"> <span>Flatus Ventus (Gust of Wind) — Free</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Fulmen (Lightning)&quot;, &quot;category&quot;: &quot;Elemental Magic&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;1 Mind&quot;}"> <span>Fulmen (Lightning) — 1 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Fulmen Proxima (Lightning Trap)&quot;, &quot;category&quot;: &quot;Elemental Magic&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;2 Mind&quot;}"> <span>Fulmen Proxima (Lightning Trap) — 2 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Glacies Hasta (Ice Spear)&quot;, &quot;category&quot;: &quot;Elemental Magic&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;Free&quot;}"> <span>Glacies Hasta (Ice Spear) — Free</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Globus Ignis (Ball of Fire)&quot;, &quot;category&quot;: &quot;Elemental Magic&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;1 Mind&quot;}"> <span>Globus Ignis (Ball of Fire) — 1 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Ignis Proxima (Flame Trap)&quot;, &quot;category&quot;: &quot;Elemental Magic&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;2 Mind&quot;}"> <span>Ignis Proxima (Flame Trap) — 2 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Ignus Flagellum (Flame Whip)&quot;, &quot;category&quot;: &quot;Elemental Magic&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;Free&quot;}"> <span>Ignus Flagellum (Flame Whip) — Free</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Lapis Carceris (Stone Prison)&quot;, &quot;category&quot;: &quot;Elemental Magic&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;3 Mind&quot;}"> <span>Lapis Carceris (Stone Prison) — 3 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Natura Furia (Nature&#x27;s Fury)&quot;, &quot;category&quot;: &quot;Elemental Magic&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;3 Mind&quot;}"> <span>Natura Furia (Nature&#x27;s Fury) — 3 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Natura Malum (Nature&#x27;s Catastrophe)&quot;, &quot;category&quot;: &quot;Elemental Magic&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;6 Mind to manifest, 2 Mind per additional round to maintain&quot;}"> <span>Natura Malum (Nature&#x27;s Catastrophe) — 6 Mind to manifest, 2 Mind per additional round to maintain</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Natura Mantellum (Nature&#x27;s Mantle)&quot;, &quot;category&quot;: &quot;Elemental Magic&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;4 Mind&quot;}"> <span>Natura Mantellum (Nature&#x27;s Mantle) — 4 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Parva Ignis (Small Flame)&quot;, &quot;category&quot;: &quot;Elemental Magic&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;Free&quot;}"> <span>Parva Ignis (Small Flame) — Free</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Petra Malleus (Rock Hammer)&quot;, &quot;category&quot;: &quot;Elemental Magic&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;Free&quot;}"> <span>Petra Malleus (Rock Hammer) — Free</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Sphaera Aquae (Sphere of Water)&quot;, &quot;category&quot;: &quot;Elemental Magic&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;2 Mind to manifest, and 1 Mind to maintain.&quot;}"> <span>Sphaera Aquae (Sphere of Water) — 2 Mind to manifest, and 1 Mind to maintain.</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Terra Crea (Create Earth)&quot;, &quot;category&quot;: &quot;Elemental Magic&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;Free&quot;}"> <span>Terra Crea (Create Earth) — Free</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Terra Proxima (Earth Trap)&quot;, &quot;category&quot;: &quot;Elemental Magic&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;2 Mind&quot;}"> <span>Terra Proxima (Earth Trap) — 2 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Vortex (Whirlwind)&quot;, &quot;category&quot;: &quot;Elemental Magic&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;3 Mind&quot;}"> <span>Vortex (Whirlwind) — 3 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Zephyr Arcus (Wind Bow)&quot;, &quot;category&quot;: &quot;Elemental Magic&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;Free&quot;}"> <span>Zephyr Arcus (Wind Bow) — Free</span></label></details><details open><summary>Neutral Magic — Illusion (16)</summary><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Caecus (Invisibility)&quot;, &quot;category&quot;: &quot;Illusion&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;1 Mind&quot;}"> <span>Caecus (Invisibility) — 1 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Disguise Te Ipsum (Disguise Self)&quot;, &quot;category&quot;: &quot;Illusion&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;1 Mind&quot;}"> <span>Disguise Te Ipsum (Disguise Self) — 1 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Falsa Arma (Illusiory Weapon)&quot;, &quot;category&quot;: &quot;Illusion&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;Free&quot;}"> <span>Falsa Arma (Illusiory Weapon) — Free</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Falsa Imago (False Image)&quot;, &quot;category&quot;: &quot;Illusion&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;2 Mind&quot;}"> <span>Falsa Imago (False Image) — 2 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Falsus Construe (False Construct)&quot;, &quot;category&quot;: &quot;Illusion&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;1 Mind&quot;}"> <span>Falsus Construe (False Construct) — 1 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Falsus Mundus (False World)&quot;, &quot;category&quot;: &quot;Illusion&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;3 Mind&quot;}"> <span>Falsus Mundus (False World) — 3 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Intellectus Commotus (Mind Quake)&quot;, &quot;category&quot;: &quot;Illusion&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;3 Mind&quot;}"> <span>Intellectus Commotus (Mind Quake) — 3 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Lux Refulgeo (Light Flash)&quot;, &quot;category&quot;: &quot;Illusion&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;1 Mind&quot;}"> <span>Lux Refulgeo (Light Flash) — 1 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Mens Florens (Mind Bloom)&quot;, &quot;category&quot;: &quot;Illusion&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;4 Spirit&quot;}"> <span>Mens Florens (Mind Bloom) — 4 Spirit</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Pulsus Lucis (Pulse of Light)&quot;, &quot;category&quot;: &quot;Illusion&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;2 Mind&quot;}"> <span>Pulsus Lucis (Pulse of Light) — 2 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Sensus Obrue (Overwhelm Senses)&quot;, &quot;category&quot;: &quot;Illusion&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;1 Mind&quot;}"> <span>Sensus Obrue (Overwhelm Senses) — 1 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Speculum Imaginum (Mirror Image)&quot;, &quot;category&quot;: &quot;Illusion&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;See spell description&quot;}"> <span>Speculum Imaginum (Mirror Image) — See spell description</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Subtilis Speculator (Subtle Spy)&quot;, &quot;category&quot;: &quot;Illusion&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;Free&quot;}"> <span>Subtilis Speculator (Subtle Spy) — Free</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Sympatheticus Damnum (Sympathetic Damage)&quot;, &quot;category&quot;: &quot;Illusion&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;1 Mind&quot;}"> <span>Sympatheticus Damnum (Sympathetic Damage) — 1 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Tacitum (Quiet)&quot;, &quot;category&quot;: &quot;Illusion&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;2 Mind&quot;}"> <span>Tacitum (Quiet) — 2 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Verum Timor (True Fear)&quot;, &quot;category&quot;: &quot;Illusion&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;1 Mind&quot;}"> <span>Verum Timor (True Fear) — 1 Mind</span></label></details><details open><summary>Neutral Magic — Phantasmal (11)</summary><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Armatura Ectoplasmatia (Ecto Plasma Armor)&quot;, &quot;category&quot;: &quot;Phantasmal&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;3 Spirit&quot;}"> <span>Armatura Ectoplasmatia (Ecto Plasma Armor) — 3 Spirit</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Fulmen Phantasmalis (Phantom Bolt)&quot;, &quot;category&quot;: &quot;Phantasmal&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;3 Spirit for the first bolt, 2 Spirit per subsequent bolt&quot;}"> <span>Fulmen Phantasmalis (Phantom Bolt) — 3 Spirit for the first bolt, 2 Spirit per subsequent bolt</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Iter Spiritus (Ghost Walk)&quot;, &quot;category&quot;: &quot;Phantasmal&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;3 Spirit per turn&quot;}"> <span>Iter Spiritus (Ghost Walk) — 3 Spirit per turn</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Manus Magistri (Hands of the Master)&quot;, &quot;category&quot;: &quot;Phantasmal&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;1 Spirit&quot;}"> <span>Manus Magistri (Hands of the Master) — 1 Spirit</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Manus Phantasmalis (Phantasmal Hand)&quot;, &quot;category&quot;: &quot;Phantasmal&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;1 Spirit per Round&quot;}"> <span>Manus Phantasmalis (Phantasmal Hand) — 1 Spirit per Round</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Medicina Etherea (Ethereal Mend)&quot;, &quot;category&quot;: &quot;Phantasmal&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;2 Spirit&quot;}"> <span>Medicina Etherea (Ethereal Mend) — 2 Spirit</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Nova Spectralis (Spectral Nova)&quot;, &quot;category&quot;: &quot;Phantasmal&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;5 Spirit&quot;}"> <span>Nova Spectralis (Spectral Nova) — 5 Spirit</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Phantasma Custos (Spectral Guardian)&quot;, &quot;category&quot;: &quot;Phantasmal&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;5 Spirit&quot;}"> <span>Phantasma Custos (Spectral Guardian) — 5 Spirit</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Spiritus Explorator (Spectral Reconnaissance)&quot;, &quot;category&quot;: &quot;Phantasmal&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;5 Spirit&quot;}"> <span>Spiritus Explorator (Spectral Reconnaissance) — 5 Spirit</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Spiritus Lamina (Spirit blade)&quot;, &quot;category&quot;: &quot;Phantasmal&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;Free&quot;}"> <span>Spiritus Lamina (Spirit blade) — Free</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Spiritus Loquere (Spirit Speak)&quot;, &quot;category&quot;: &quot;Phantasmal&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;Free&quot;}"> <span>Spiritus Loquere (Spirit Speak) — Free</span></label></details><details open><summary>Neutral Magic — Spatial Magic (14)</summary><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Caeli Portae (Heaven&#x27;s Gates)&quot;, &quot;category&quot;: &quot;Spatial Magic&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;2 Mind (1 Mind to maintain)&quot;}"> <span>Caeli Portae (Heaven&#x27;s Gates) — 2 Mind (1 Mind to maintain)</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Contritio Gravitas (Crushing Gravity)&quot;, &quot;category&quot;: &quot;Spatial Magic&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;2 mind to manifest, and 1 mind to maintain per round.&quot;}"> <span>Contritio Gravitas (Crushing Gravity) — 2 mind to manifest, and 1 mind to maintain per round.</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Dimensio Vulnus (Dimension slash)&quot;, &quot;category&quot;: &quot;Spatial Magic&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;2 Mind&quot;}"> <span>Dimensio Vulnus (Dimension slash) — 2 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Eversio Spatii (Spatial Collapse)&quot;, &quot;category&quot;: &quot;Spatial Magic&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;2 Mind&quot;}"> <span>Eversio Spatii (Spatial Collapse) — 2 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Ianuae (Teleport)&quot;, &quot;category&quot;: &quot;Spatial Magic&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;1 Mind&quot;}"> <span>Ianuae (Teleport) — 1 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Magicae Ostium (Magic Door)&quot;, &quot;category&quot;: &quot;Spatial Magic&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;1 Mind&quot;}"> <span>Magicae Ostium (Magic Door) — 1 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Oculi Veritatis (Eyes of Truth)&quot;, &quot;category&quot;: &quot;Spatial Magic&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;2 Mind every two rounds/minutes&quot;}"> <span>Oculi Veritatis (Eyes of Truth) — 2 Mind every two rounds/minutes</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Ostium (Portal)&quot;, &quot;category&quot;: &quot;Spatial Magic&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;Free&quot;}"> <span>Ostium (Portal) — Free</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Pila Ex Spatio (Ball of Space)&quot;, &quot;category&quot;: &quot;Spatial Magic&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;4 Mind/2 to Maintain&quot;}"> <span>Pila Ex Spatio (Ball of Space) — 4 Mind/2 to Maintain</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Planum Ambula (Planes Walk)&quot;, &quot;category&quot;: &quot;Spatial Magic&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;Free&quot;}"> <span>Planum Ambula (Planes Walk) — Free</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Resolvo (Dispell)&quot;, &quot;category&quot;: &quot;Spatial Magic&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;2 Mind&quot;}"> <span>Resolvo (Dispell) — 2 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Scutum (Shield)&quot;, &quot;category&quot;: &quot;Spatial Magic&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;1 Mind per round/minute&quot;}"> <span>Scutum (Shield) — 1 Mind per round/minute</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Stella Mantellum (Star Mantle)&quot;, &quot;category&quot;: &quot;Spatial Magic&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;3 Mind&quot;}"> <span>Stella Mantellum (Star Mantle) — 3 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Trabs Astra (A Beam of Stars)&quot;, &quot;category&quot;: &quot;Spatial Magic&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;2 Mind initially / Then 1 Mind to maintain.&quot;}"> <span>Trabs Astra (A Beam of Stars) — 2 Mind initially / Then 1 Mind to maintain.</span></label></details><details open><summary>Neutral Magic — Summoning (20)</summary><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Abyssus Kraken (Abyssal Kraken)&quot;, &quot;category&quot;: &quot;Summoning&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;Variable 6 Mind, one summoner- Tentacles do 1/1/1 Damage grapple DC 10 3 Mind, two summoners- Tentacles do 2/2/2 Damage grapple DC 15 2 Mind, three summoners- Tentacles do 3/3/3 damage grapple DC 15&quot;}"> <span>Abyssus Kraken (Abyssal Kraken) — Variable 6 Mind, one summoner- Tentacles do 1/1/1 Damage grapple DC 10 3 Mind, two summoners- Tentacles do 2/2/2 Damage grapple DC 15 2 Mind, three summoners- Tentacles do 3/3/3 damage grapple DC 15</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Angelus Cadens (Fallen Angels)&quot;, &quot;category&quot;: &quot;Summoning&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;Split evenly between casters Cherub – 2 Mind (1 round) Warden – 4 Mind (2 rounds) Seraph – 6 Mind (3 rounds)&quot;}"> <span>Angelus Cadens (Fallen Angels) — Split evenly between casters Cherub – 2 Mind (1 round) Warden – 4 Mind (2 rounds) Seraph – 6 Mind (3 rounds)</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Arbor Ascendens (Rising Wood)&quot;, &quot;category&quot;: &quot;Summoning&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;Split evenly between casters Saporling- 2 mind Warden- 4 mind Treant- 6 mind&quot;}"> <span>Arbor Ascendens (Rising Wood) — Split evenly between casters Saporling- 2 mind Warden- 4 mind Treant- 6 mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Aula Reginae (The Queen’s Court)&quot;, &quot;category&quot;: &quot;Summoning&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;Split evenly between casters Sprite – 2 Mind (1 round) Envoy – 4 Mind (2 rounds) Aspect – 6 Mind (3 rounds)&quot;}"> <span>Aula Reginae (The Queen’s Court) — Split evenly between casters Sprite – 2 Mind (1 round) Envoy – 4 Mind (2 rounds) Aspect – 6 Mind (3 rounds)</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Custos Magicae (Guardian of Magic)&quot;, &quot;category&quot;: &quot;Summoning&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;Variable One Person: 6 Mind, requires 3 rounds of uninterrupted concentration. Two People: 3 Mind per person, requires 2 rounds. Three People: 2 Mind per person, requires 1 round.&quot;}"> <span>Custos Magicae (Guardian of Magic) — Variable One Person: 6 Mind, requires 3 rounds of uninterrupted concentration. Two People: 3 Mind per person, requires 2 rounds. Three People: 2 Mind per person, requires 1 round.</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Custos Magicae Minor (Aspect of the Guardian)&quot;, &quot;category&quot;: &quot;Summoning&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;(Split Evenly Between Casters) Wisp - 2 Mind (1 round) Adept - 4 Mind (2 rounds) Manifest - 6 Mind (3 rounds)&quot;}"> <span>Custos Magicae Minor (Aspect of the Guardian) — (Split Evenly Between Casters) Wisp - 2 Mind (1 round) Adept - 4 Mind (2 rounds) Manifest - 6 Mind (3 rounds)</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Domina Draconum (Tiamat)&quot;, &quot;category&quot;: &quot;Summoning&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;Variable One Person: - 6 Mind/ 3 rounds to summon alone. Enemy DC: 16 to resist. Two People: - 4 Mind/ 2 rounds to summon. Enemy DC: 18 to resist. Three People- 2 Mind/ 1 round to summon. Enemy DC: 20 to resist.&quot;}"> <span>Domina Draconum (Tiamat) — Variable One Person: - 6 Mind/ 3 rounds to summon alone. Enemy DC: 16 to resist. Two People: - 4 Mind/ 2 rounds to summon. Enemy DC: 18 to resist. Three People- 2 Mind/ 1 round to summon. Enemy DC: 20 to resist.</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Dominus Lamia (Lord Dracula)&quot;, &quot;category&quot;: &quot;Summoning&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;Variable One Person: 6 Mind, requires 3 rounds of uninterrupted concentration. Enemy DC: 14. Two People: 3 Mind per person, requires 2 rounds. Enemy DC: 16. Three People: 2 Mind per person, requires 1 round. Enemy DC: 17.&quot;}"> <span>Dominus Lamia (Lord Dracula) — Variable One Person: 6 Mind, requires 3 rounds of uninterrupted concentration. Enemy DC: 14. Two People: 3 Mind per person, requires 2 rounds. Enemy DC: 16. Three People: 2 Mind per person, requires 1 round. Enemy DC: 17.</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Ignis Renascens (Phoenix Rite)&quot;, &quot;category&quot;: &quot;Summoning&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;Split evenly between casters Egg – 2 Mind (1 round) Hatchling – 4 Mind (2 rounds) Aspect – 6 Mind (3 rounds)&quot;}"> <span>Ignis Renascens (Phoenix Rite) — Split evenly between casters Egg – 2 Mind (1 round) Hatchling – 4 Mind (2 rounds) Aspect – 6 Mind (3 rounds)</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Lumen Fractum (Lucifer, the Lightbearer)&quot;, &quot;category&quot;: &quot;Summoning&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;Variable One Person: 6 Spirit, 3 rounds to cast Two people: 3 Spirit per caster, 2 rounds to cast Three people: 2 Spirit per caster, 1 round to cast&quot;}"> <span>Lumen Fractum (Lucifer, the Lightbearer) — Variable One Person: 6 Spirit, 3 rounds to cast Two people: 3 Spirit per caster, 2 rounds to cast Three people: 2 Spirit per caster, 1 round to cast</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Mycelium Ascendens (Rising Fungus)&quot;, &quot;category&quot;: &quot;Summoning&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;Split evenly between casters Sporeling- 2 Mind Bruiser- 4 Mind Colossus- 6 Mind&quot;}"> <span>Mycelium Ascendens (Rising Fungus) — Split evenly between casters Sporeling- 2 Mind Bruiser- 4 Mind Colossus- 6 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Noctis Volucris (Lord of the Night Swarm)&quot;, &quot;category&quot;: &quot;Summoning&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;Split evenly among casters Lesser Swarm: One Person, 6 Mind, requires 3 rounds. Enemy DC: 14. Feeding Swarm: Two People: 3 Mind, requires 2 rounds. Enemy DC: 16. Sovereign Swarm: Three People: 2 Mind, requires 1 round. Enemy DC: 17.&quot;}"> <span>Noctis Volucris (Lord of the Night Swarm) — Split evenly among casters Lesser Swarm: One Person, 6 Mind, requires 3 rounds. Enemy DC: 14. Feeding Swarm: Two People: 3 Mind, requires 2 rounds. Enemy DC: 16. Sovereign Swarm: Three People: 2 Mind, requires 1 round. Enemy DC: 17.</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Nox Gargouille (Night of the Gargoyles)&quot;, &quot;category&quot;: &quot;Summoning&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;Variable One Person: - 10 Mind/ 3 rounds to summon alone. Animates 4 x Catacomb Ghouls with a 60ft Fly speed &amp; 6 Gazers Two People: - 5 Mind/ 2 rounds to summon. Animates as above plus 2 x Corrupted Hippogriffs Three People- 3 Mind/ 1 round to summon. Animates as above plus 1 x Fel Lich&quot;}"> <span>Nox Gargouille (Night of the Gargoyles) — Variable One Person: - 10 Mind/ 3 rounds to summon alone. Animates 4 x Catacomb Ghouls with a 60ft Fly speed &amp; 6 Gazers Two People: - 5 Mind/ 2 rounds to summon. Animates as above plus 2 x Corrupted Hippogriffs Three People- 3 Mind/ 1 round to summon. Animates as above plus 1 x Fel Lich</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Ortus Phoenix (Rise of the Phoenix)&quot;, &quot;category&quot;: &quot;Summoning&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;Variable One Person: 9 Mind, requires 3 rounds of uninterrupted concentration. Allies restored to 1/1/1 Two People: 5 Mind per person, requires 2 rounds. Allies restored up to 5/5/5 Three People: 3 Mind per person, requires 1 round. Allies restored up to 10/10/10&quot;}"> <span>Ortus Phoenix (Rise of the Phoenix) — Variable One Person: 9 Mind, requires 3 rounds of uninterrupted concentration. Allies restored to 1/1/1 Two People: 5 Mind per person, requires 2 rounds. Allies restored up to 5/5/5 Three People: 3 Mind per person, requires 1 round. Allies restored up to 10/10/10</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Regina Fae (Queen of the Fae)&quot;, &quot;category&quot;: &quot;Summoning&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;Variable One Person: 6 Mind, requires 3 rounds, Enemy DC: 14. Two People: 3 Mind per person, requires 2 rounds. Enemy DC: 16. Three People: 2 Mind per person, requires 1 round. Enemy DC: 17.&quot;}"> <span>Regina Fae (Queen of the Fae) — Variable One Person: 6 Mind, requires 3 rounds, Enemy DC: 14. Two People: 3 Mind per person, requires 2 rounds. Enemy DC: 16. Three People: 2 Mind per person, requires 1 round. Enemy DC: 17.</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Rex Simia (Mountain Kong)&quot;, &quot;category&quot;: &quot;Summoning&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;Variable One Person: 6 Mind, requires 3 rounds of uninterrupted concentration to summon. Enemy DC: 14. Two People: 3 Mind per person, requires 2 rounds. Enemy DC: 16. Three People: 2 Mind per person, requires 1 round. Enemy DC: 17.&quot;}"> <span>Rex Simia (Mountain Kong) — Variable One Person: 6 Mind, requires 3 rounds of uninterrupted concentration to summon. Enemy DC: 14. Two People: 3 Mind per person, requires 2 rounds. Enemy DC: 16. Three People: 2 Mind per person, requires 1 round. Enemy DC: 17.</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Simia Saxea (Stoneborne Apes)&quot;, &quot;category&quot;: &quot;Summoning&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;Split evenly between casters Monkey - 2 Mind (1 round casting) Chimp - 4 Mind (2 round casting) Gorilla - 6 Mind (3 round casting)&quot;}"> <span>Simia Saxea (Stoneborne Apes) — Split evenly between casters Monkey - 2 Mind (1 round casting) Chimp - 4 Mind (2 round casting) Gorilla - 6 Mind (3 round casting)</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Torva Messor (The Grim Reaper)&quot;, &quot;category&quot;: &quot;Summoning&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;Variable One Person: 6 Mind, requires 3 rounds of uninterrupted concentration to summon. Enemy DC: 14. Two People: 3 Mind per person, requires 2 rounds. Enemy DC: 16. Three People: 2 Mind per person, requires 1 round. Enemy DC: 17.&quot;}"> <span>Torva Messor (The Grim Reaper) — Variable One Person: 6 Mind, requires 3 rounds of uninterrupted concentration to summon. Enemy DC: 14. Two People: 3 Mind per person, requires 2 rounds. Enemy DC: 16. Three People: 2 Mind per person, requires 1 round. Enemy DC: 17.</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Torva Messor Minor (Aspect of the Reaper)&quot;, &quot;category&quot;: &quot;Summoning&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;Varies (Split evenly between casters) Shade - 2 Mind Warden - 4 Mind Aspect - 6 Mind&quot;}"> <span>Torva Messor Minor (Aspect of the Reaper) — Varies (Split evenly between casters) Shade - 2 Mind Warden - 4 Mind Aspect - 6 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Vinculum Familiaris (Bound Familiar)&quot;, &quot;category&quot;: &quot;Summoning&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;4 body, 4 mind, 4 spirit&quot;}"> <span>Vinculum Familiaris (Bound Familiar) — 4 body, 4 mind, 4 spirit</span></label></details><details open><summary>Neutral Magic — Transmutation (14)</summary><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Aetherius (Ethreal)&quot;, &quot;category&quot;: &quot;Transmutation&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;3 Mind&quot;}"> <span>Aetherius (Ethreal) — 3 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Aleratio Concretio (Matter Manipulation)&quot;, &quot;category&quot;: &quot;Transmutation&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;5 mind/ 3 mind per round to maintain&quot;}"> <span>Aleratio Concretio (Matter Manipulation) — 5 mind/ 3 mind per round to maintain</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Commutate Alicia (Transmute Spell)&quot;, &quot;category&quot;: &quot;Transmutation&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;Usual cost of the changed spell&quot;}"> <span>Commutate Alicia (Transmute Spell) — Usual cost of the changed spell</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Exscindo (Destroy)&quot;, &quot;category&quot;: &quot;Transmutation&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;3 Mind&quot;}"> <span>Exscindo (Destroy) — 3 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Faerie Fire&quot;, &quot;category&quot;: &quot;Transmutation&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;Free&quot;}"> <span>Faerie Fire — Free</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Festinatio (Haste)&quot;, &quot;category&quot;: &quot;Transmutation&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;1 Mind&quot;}"> <span>Festinatio (Haste) — 1 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Figura Elementa (Shape Elements)&quot;, &quot;category&quot;: &quot;Transmutation&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;1 Mind&quot;}"> <span>Figura Elementa (Shape Elements) — 1 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Figura Mutatio (Shape Change )&quot;, &quot;category&quot;: &quot;Transmutation&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;5 Mind&quot;}"> <span>Figura Mutatio (Shape Change ) — 5 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Mutare Alium (Change Another)&quot;, &quot;category&quot;: &quot;Transmutation&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;1 Mind&quot;}"> <span>Mutare Alium (Change Another) — 1 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Mutare Elementa (Change The Elements)&quot;, &quot;category&quot;: &quot;Transmutation&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;1 Mind&quot;}"> <span>Mutare Elementa (Change The Elements) — 1 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Muto Sese (Change Self)&quot;, &quot;category&quot;: &quot;Transmutation&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;Free&quot;}"> <span>Muto Sese (Change Self) — Free</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Reformatio (Reform)&quot;, &quot;category&quot;: &quot;Transmutation&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;2 Mind&quot;}"> <span>Reformatio (Reform) — 2 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Tardus (Slow)&quot;, &quot;category&quot;: &quot;Transmutation&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;1 Mind&quot;}"> <span>Tardus (Slow) — 1 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Tempus Sistere (Time Stop)&quot;, &quot;category&quot;: &quot;Transmutation&quot;, &quot;book&quot;: &quot;Neutral Magic&quot;, &quot;cost&quot;: &quot;4 Mind&quot;}"> <span>Tempus Sistere (Time Stop) — 4 Mind</span></label></details><details open><summary>Light Magic — Abjuration (13)</summary><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Benedicite (Bless)&quot;, &quot;category&quot;: &quot;Abjuration&quot;, &quot;book&quot;: &quot;Light Magic&quot;, &quot;cost&quot;: &quot;1 Spirit&quot;}"> <span>Benedicite (Bless) — 1 Spirit</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Corporis Nexum (Body Link)&quot;, &quot;category&quot;: &quot;Abjuration&quot;, &quot;book&quot;: &quot;Light Magic&quot;, &quot;cost&quot;: &quot;5 Spirit&quot;}"> <span>Corporis Nexum (Body Link) — 5 Spirit</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Custodiae (Protection)&quot;, &quot;category&quot;: &quot;Abjuration&quot;, &quot;book&quot;: &quot;Light Magic&quot;, &quot;cost&quot;: &quot;Free&quot;}"> <span>Custodiae (Protection) — Free</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Dimensionem Anchoram (Dimensional Anchor)&quot;, &quot;category&quot;: &quot;Abjuration&quot;, &quot;book&quot;: &quot;Light Magic&quot;, &quot;cost&quot;: &quot;3 Mind&quot;}"> <span>Dimensionem Anchoram (Dimensional Anchor) — 3 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Disiunctio (Disjunction)&quot;, &quot;category&quot;: &quot;Abjuration&quot;, &quot;book&quot;: &quot;Light Magic&quot;, &quot;cost&quot;: &quot;6 Mind&quot;}"> <span>Disiunctio (Disjunction) — 6 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Entropus Scutum (Entropic Shield)&quot;, &quot;category&quot;: &quot;Abjuration&quot;, &quot;book&quot;: &quot;Light Magic&quot;, &quot;cost&quot;: &quot;2 Mind&quot;}"> <span>Entropus Scutum (Entropic Shield) — 2 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Exilium (Banishment)&quot;, &quot;category&quot;: &quot;Abjuration&quot;, &quot;book&quot;: &quot;Light Magic&quot;, &quot;cost&quot;: &quot;4 Spirit&quot;}"> <span>Exilium (Banishment) — 4 Spirit</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Libertas (Freedom)&quot;, &quot;category&quot;: &quot;Abjuration&quot;, &quot;book&quot;: &quot;Light Magic&quot;, &quot;cost&quot;: &quot;3 Mind&quot;}"> <span>Libertas (Freedom) — 3 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Lituus (Alarm)&quot;, &quot;category&quot;: &quot;Abjuration&quot;, &quot;book&quot;: &quot;Light Magic&quot;, &quot;cost&quot;: &quot;1+ Mind&quot;}"> <span>Lituus (Alarm) — 1+ Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Murus Virium (Wall of Force)&quot;, &quot;category&quot;: &quot;Abjuration&quot;, &quot;book&quot;: &quot;Light Magic&quot;, &quot;cost&quot;: &quot;1 Mind&quot;}"> <span>Murus Virium (Wall of Force) — 1 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Non Vident (Non Detection)&quot;, &quot;category&quot;: &quot;Abjuration&quot;, &quot;book&quot;: &quot;Light Magic&quot;, &quot;cost&quot;: &quot;1 Mind&quot;}"> <span>Non Vident (Non Detection) — 1 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Rakaane Clostruum (Arcane Lock)&quot;, &quot;category&quot;: &quot;Abjuration&quot;, &quot;book&quot;: &quot;Light Magic&quot;, &quot;cost&quot;: &quot;1+ Mind&quot;}"> <span>Rakaane Clostruum (Arcane Lock) — 1+ Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Resistere Vis (Resist Energy)&quot;, &quot;category&quot;: &quot;Abjuration&quot;, &quot;book&quot;: &quot;Light Magic&quot;, &quot;cost&quot;: &quot;2 Mind&quot;}"> <span>Resistere Vis (Resist Energy) — 2 Mind</span></label></details><details open><summary>Light Magic — Healing (11)</summary><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Anastasis (Resurrection)&quot;, &quot;category&quot;: &quot;Healing&quot;, &quot;book&quot;: &quot;Light Magic&quot;, &quot;cost&quot;: &quot;5 Body, 5 Mind, 5 Spirit&quot;}"> <span>Anastasis (Resurrection) — 5 Body, 5 Mind, 5 Spirit</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Essentia Restiture (Restoration of the Essence)&quot;, &quot;category&quot;: &quot;Healing&quot;, &quot;book&quot;: &quot;Light Magic&quot;, &quot;cost&quot;: &quot;See Spell Description&quot;}"> <span>Essentia Restiture (Restoration of the Essence) — See Spell Description</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Exsercio (Exorcism)&quot;, &quot;category&quot;: &quot;Healing&quot;, &quot;book&quot;: &quot;Light Magic&quot;, &quot;cost&quot;: &quot;See Spell Description&quot;}"> <span>Exsercio (Exorcism) — See Spell Description</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Pharus de Lux (Aura of Healing)&quot;, &quot;category&quot;: &quot;Healing&quot;, &quot;book&quot;: &quot;Light Magic&quot;, &quot;cost&quot;: &quot;3 Mind per round&quot;}"> <span>Pharus de Lux (Aura of Healing) — 3 Mind per round</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Purgo Anima (Purge Impurities of the Mind)&quot;, &quot;category&quot;: &quot;Healing&quot;, &quot;book&quot;: &quot;Light Magic&quot;, &quot;cost&quot;: &quot;Free when negating curses, judgements, and hexes. 4 Mind when restoring another’s Mind.&quot;}"> <span>Purgo Anima (Purge Impurities of the Mind) — Free when negating curses, judgements, and hexes. 4 Mind when restoring another’s Mind.</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Purgo Caro (Purge Impurities of the Flesh)&quot;, &quot;category&quot;: &quot;Healing&quot;, &quot;book&quot;: &quot;Light Magic&quot;, &quot;cost&quot;: &quot;Free when neutralizing poisons and fleshy afflictions. 4 Mind when restoring another’s Body.&quot;}"> <span>Purgo Caro (Purge Impurities of the Flesh) — Free when neutralizing poisons and fleshy afflictions. 4 Mind when restoring another’s Body.</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Restituere Sui (Self Restoration)&quot;, &quot;category&quot;: &quot;Healing&quot;, &quot;book&quot;: &quot;Light Magic&quot;, &quot;cost&quot;: &quot;2 Mind&quot;}"> <span>Restituere Sui (Self Restoration) — 2 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Restiture Artus (Severe Restoration)&quot;, &quot;category&quot;: &quot;Healing&quot;, &quot;book&quot;: &quot;Light Magic&quot;, &quot;cost&quot;: &quot;4 Mind&quot;}"> <span>Restiture Artus (Severe Restoration) — 4 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Restiture Minutia (Minor Restoration)&quot;, &quot;category&quot;: &quot;Healing&quot;, &quot;book&quot;: &quot;Light Magic&quot;, &quot;cost&quot;: &quot;2 Mind&quot;}"> <span>Restiture Minutia (Minor Restoration) — 2 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Sanatio Cercis (Wingspan of Healing)&quot;, &quot;category&quot;: &quot;Healing&quot;, &quot;book&quot;: &quot;Light Magic&quot;, &quot;cost&quot;: &quot;4 Mind&quot;}"> <span>Sanatio Cercis (Wingspan of Healing) — 4 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Vigilia Animae (Vigil over the Soul)&quot;, &quot;category&quot;: &quot;Healing&quot;, &quot;book&quot;: &quot;Light Magic&quot;, &quot;cost&quot;: &quot;2 Mind&quot;}"> <span>Vigilia Animae (Vigil over the Soul) — 2 Mind</span></label></details><details open><summary>Light Magic — High Judgements (5)</summary><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Fortuna Adversa Judicii (Judgment of Ill Fortune)&quot;, &quot;category&quot;: &quot;High Judgements&quot;, &quot;book&quot;: &quot;Light Magic&quot;, &quot;cost&quot;: &quot;3 Spirit&quot;}"> <span>Fortuna Adversa Judicii (Judgment of Ill Fortune) — 3 Spirit</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Iudicium Servitutis (Judgment of Servitude)&quot;, &quot;category&quot;: &quot;High Judgements&quot;, &quot;book&quot;: &quot;Light Magic&quot;, &quot;cost&quot;: &quot;3 mind&quot;}"> <span>Iudicium Servitutis (Judgment of Servitude) — 3 mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Paenitentia Judicii (Judgment of Penance)&quot;, &quot;category&quot;: &quot;High Judgements&quot;, &quot;book&quot;: &quot;Light Magic&quot;, &quot;cost&quot;: &quot;4 spirit&quot;}"> <span>Paenitentia Judicii (Judgment of Penance) — 4 spirit</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Pestilentia Judicii (Judgment of Pestilence)&quot;, &quot;category&quot;: &quot;High Judgements&quot;, &quot;book&quot;: &quot;Light Magic&quot;, &quot;cost&quot;: &quot;3 spirit&quot;}"> <span>Pestilentia Judicii (Judgment of Pestilence) — 3 spirit</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Pestis Locustarum Judicii (Plague of Locusts Judgment)&quot;, &quot;category&quot;: &quot;High Judgements&quot;, &quot;book&quot;: &quot;Light Magic&quot;, &quot;cost&quot;: &quot;4 spirit&quot;}"> <span>Pestis Locustarum Judicii (Plague of Locusts Judgment) — 4 spirit</span></label></details><details open><summary>Light Magic — Holyfire (11)</summary><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Daemonium Finis (Spear of Holyfire)&quot;, &quot;category&quot;: &quot;Holyfire&quot;, &quot;book&quot;: &quot;Light Magic&quot;, &quot;cost&quot;: &quot;1 Mind&quot;}"> <span>Daemonium Finis (Spear of Holyfire) — 1 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Flagrans Orbis (Flaming Orbs)&quot;, &quot;category&quot;: &quot;Holyfire&quot;, &quot;book&quot;: &quot;Light Magic&quot;, &quot;cost&quot;: &quot;3 Mind&quot;}"> <span>Flagrans Orbis (Flaming Orbs) — 3 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Ignis Sanctus Captus (Holy Shackles)&quot;, &quot;category&quot;: &quot;Holyfire&quot;, &quot;book&quot;: &quot;Light Magic&quot;, &quot;cost&quot;: &quot;Free&quot;}"> <span>Ignis Sanctus Captus (Holy Shackles) — Free</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Sancta Flamma (Holy Fireball)&quot;, &quot;category&quot;: &quot;Holyfire&quot;, &quot;book&quot;: &quot;Light Magic&quot;, &quot;cost&quot;: &quot;1 Mind&quot;}"> <span>Sancta Flamma (Holy Fireball) — 1 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Sancta Unda (Holy Wave)&quot;, &quot;category&quot;: &quot;Holyfire&quot;, &quot;book&quot;: &quot;Light Magic&quot;, &quot;cost&quot;: &quot;2 Mind&quot;}"> <span>Sancta Unda (Holy Wave) — 2 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Sancti Sigilli (Saint&#x27;s Seal)&quot;, &quot;category&quot;: &quot;Holyfire&quot;, &quot;book&quot;: &quot;Light Magic&quot;, &quot;cost&quot;: &quot;1 Mind&quot;}"> <span>Sancti Sigilli (Saint&#x27;s Seal) — 1 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Sanctum Purgatorium (Holy Purgatory)&quot;, &quot;category&quot;: &quot;Holyfire&quot;, &quot;book&quot;: &quot;Light Magic&quot;, &quot;cost&quot;: &quot;2 Mind&quot;}"> <span>Sanctum Purgatorium (Holy Purgatory) — 2 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Sanctus Eryx (Saint&#x27;s Gauntlets)&quot;, &quot;category&quot;: &quot;Holyfire&quot;, &quot;book&quot;: &quot;Light Magic&quot;, &quot;cost&quot;: &quot;1 Mind&quot;}"> <span>Sanctus Eryx (Saint&#x27;s Gauntlets) — 1 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Sanctus Murus (Holy Wall)&quot;, &quot;category&quot;: &quot;Holyfire&quot;, &quot;book&quot;: &quot;Light Magic&quot;, &quot;cost&quot;: &quot;1 Mind&quot;}"> <span>Sanctus Murus (Holy Wall) — 1 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Sanctus Pluviae (Saint&#x27;s Rain)&quot;, &quot;category&quot;: &quot;Holyfire&quot;, &quot;book&quot;: &quot;Light Magic&quot;, &quot;cost&quot;: &quot;2 Mind&quot;}"> <span>Sanctus Pluviae (Saint&#x27;s Rain) — 2 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Sonet Primus (Sound the First Trumpet)&quot;, &quot;category&quot;: &quot;Holyfire&quot;, &quot;book&quot;: &quot;Light Magic&quot;, &quot;cost&quot;: &quot;4 Mind&quot;}"> <span>Sonet Primus (Sound the First Trumpet) — 4 Mind</span></label></details><details open><summary>Light Magic — Light Magic (9)</summary><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Alis Lucis (Wings of Light)&quot;, &quot;category&quot;: &quot;Light Magic&quot;, &quot;book&quot;: &quot;Light Magic&quot;, &quot;cost&quot;: &quot;2 Mind&quot;}"> <span>Alis Lucis (Wings of Light) — 2 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Columna Caeli (Column of Heaven)&quot;, &quot;category&quot;: &quot;Light Magic&quot;, &quot;book&quot;: &quot;Light Magic&quot;, &quot;cost&quot;: &quot;2 Mind&quot;}"> <span>Columna Caeli (Column of Heaven) — 2 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Custos Luminis (Keeper of Light)&quot;, &quot;category&quot;: &quot;Light Magic&quot;, &quot;book&quot;: &quot;Light Magic&quot;, &quot;cost&quot;: &quot;2 Mind&quot;}"> <span>Custos Luminis (Keeper of Light) — 2 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Fulgur Percutiens (Lightning Strikes)&quot;, &quot;category&quot;: &quot;Light Magic&quot;, &quot;book&quot;: &quot;Light Magic&quot;, &quot;cost&quot;: &quot;4 Mind&quot;}"> <span>Fulgur Percutiens (Lightning Strikes) — 4 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Lamina Lucis (Blades of Light)&quot;, &quot;category&quot;: &quot;Light Magic&quot;, &quot;book&quot;: &quot;Light Magic&quot;, &quot;cost&quot;: &quot;1 Mind&quot;}"> <span>Lamina Lucis (Blades of Light) — 1 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Lux Caelorum (Light of Heavens)&quot;, &quot;category&quot;: &quot;Light Magic&quot;, &quot;book&quot;: &quot;Light Magic&quot;, &quot;cost&quot;: &quot;1 Mind&quot;}"> <span>Lux Caelorum (Light of Heavens) — 1 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Lux Geminae (Light Twin)&quot;, &quot;category&quot;: &quot;Light Magic&quot;, &quot;book&quot;: &quot;Light Magic&quot;, &quot;cost&quot;: &quot;3 Mind&quot;}"> <span>Lux Geminae (Light Twin) — 3 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Perforans Sagitta (Piercing Arrow)&quot;, &quot;category&quot;: &quot;Light Magic&quot;, &quot;book&quot;: &quot;Light Magic&quot;, &quot;cost&quot;: &quot;1 Mind&quot;}"> <span>Perforans Sagitta (Piercing Arrow) — 1 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Trabem Caeca (Blinding Beam)&quot;, &quot;category&quot;: &quot;Light Magic&quot;, &quot;book&quot;: &quot;Light Magic&quot;, &quot;cost&quot;: &quot;1 Mind&quot;}"> <span>Trabem Caeca (Blinding Beam) — 1 Mind</span></label></details><details open><summary>Light Magic — Low Judgements (9)</summary><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Aura Fortunae (Aura of Luck)&quot;, &quot;category&quot;: &quot;Low Judgements&quot;, &quot;book&quot;: &quot;Light Magic&quot;, &quot;cost&quot;: &quot;2 spirit and one spirit per round of maintenance&quot;}"> <span>Aura Fortunae (Aura of Luck) — 2 spirit and one spirit per round of maintenance</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Aura Gratiae (Aura of Grace)&quot;, &quot;category&quot;: &quot;Low Judgements&quot;, &quot;book&quot;: &quot;Light Magic&quot;, &quot;cost&quot;: &quot;1 spirit and 1 spirit per round of maintenance&quot;}"> <span>Aura Gratiae (Aura of Grace) — 1 spirit and 1 spirit per round of maintenance</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Dubium Justicii (Judgment of doubt)&quot;, &quot;category&quot;: &quot;Low Judgements&quot;, &quot;book&quot;: &quot;Light Magic&quot;, &quot;cost&quot;: &quot;1 spirit&quot;}"> <span>Dubium Justicii (Judgment of doubt) — 1 spirit</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Increpa turpes (Rebuke the Vile)&quot;, &quot;category&quot;: &quot;Low Judgements&quot;, &quot;book&quot;: &quot;Light Magic&quot;, &quot;cost&quot;: &quot;2 spirit with 1 spirt per round to maintain the channel&quot;}"> <span>Increpa turpes (Rebuke the Vile) — 2 spirit with 1 spirt per round to maintain the channel</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Iudicium per Pugnam (Trial by Combat)&quot;, &quot;category&quot;: &quot;Low Judgements&quot;, &quot;book&quot;: &quot;Light Magic&quot;, &quot;cost&quot;: &quot;1 spirit&quot;}"> <span>Iudicium per Pugnam (Trial by Combat) — 1 spirit</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Iustus Ultor (Righteous Avenger)&quot;, &quot;category&quot;: &quot;Low Judgements&quot;, &quot;book&quot;: &quot;Light Magic&quot;, &quot;cost&quot;: &quot;2 spirit&quot;}"> <span>Iustus Ultor (Righteous Avenger) — 2 spirit</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Judicii Ultionis (Judgment of Retribution)&quot;, &quot;category&quot;: &quot;Low Judgements&quot;, &quot;book&quot;: &quot;Light Magic&quot;, &quot;cost&quot;: &quot;1 spirit&quot;}"> <span>Judicii Ultionis (Judgment of Retribution) — 1 spirit</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Malleus Iustitiae (Hammer of Justice)&quot;, &quot;category&quot;: &quot;Low Judgements&quot;, &quot;book&quot;: &quot;Light Magic&quot;, &quot;cost&quot;: &quot;2 spirit&quot;}"> <span>Malleus Iustitiae (Hammer of Justice) — 2 spirit</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Percute Rios (smite the guilty)&quot;, &quot;category&quot;: &quot;Low Judgements&quot;, &quot;book&quot;: &quot;Light Magic&quot;, &quot;cost&quot;: &quot;3 spirit or more (see above)&quot;}"> <span>Percute Rios (smite the guilty) — 3 spirit or more (see above)</span></label></details><details open><summary>Light Magic — Martyrdom (5)</summary><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Agnus Immolatus (Sacrificial Lamb)&quot;, &quot;category&quot;: &quot;Martyrdom&quot;, &quot;book&quot;: &quot;Light Magic&quot;, &quot;cost&quot;: &quot;2 Mind&quot;}"> <span>Agnus Immolatus (Sacrificial Lamb) — 2 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Connexum (Bound Together)&quot;, &quot;category&quot;: &quot;Martyrdom&quot;, &quot;book&quot;: &quot;Light Magic&quot;, &quot;cost&quot;: &quot;3 Mind to manifest, 1 Mind to maintain&quot;}"> <span>Connexum (Bound Together) — 3 Mind to manifest, 1 Mind to maintain</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Digrediens Donum (Parting Gift)&quot;, &quot;category&quot;: &quot;Martyrdom&quot;, &quot;book&quot;: &quot;Light Magic&quot;, &quot;cost&quot;: &quot;Remaining Body if at 5 or lower&quot;}"> <span>Digrediens Donum (Parting Gift) — Remaining Body if at 5 or lower</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Sanguinis Martyris (Blood of the Martyr)&quot;, &quot;category&quot;: &quot;Martyrdom&quot;, &quot;book&quot;: &quot;Light Magic&quot;, &quot;cost&quot;: &quot;6 Mind&quot;}"> <span>Sanguinis Martyris (Blood of the Martyr) — 6 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Scutum Sanguinis (Blood Shield)&quot;, &quot;category&quot;: &quot;Martyrdom&quot;, &quot;book&quot;: &quot;Light Magic&quot;, &quot;cost&quot;: &quot;Various Body (Cannot be reduced with Water Regalia or Savant perks)&quot;}"> <span>Scutum Sanguinis (Blood Shield) — Various Body (Cannot be reduced with Water Regalia or Savant perks)</span></label></details><details open><summary>Dark Magic — Blood Magic (14)</summary><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Acidum Pro Sanguine (Acid for Blood)&quot;, &quot;category&quot;: &quot;Blood Magic&quot;, &quot;book&quot;: &quot;Dark Magic&quot;, &quot;cost&quot;: &quot;1 Body&quot;}"> <span>Acidum Pro Sanguine (Acid for Blood) — 1 Body</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Corpus Duplex (Blood Double)&quot;, &quot;category&quot;: &quot;Blood Magic&quot;, &quot;book&quot;: &quot;Dark Magic&quot;, &quot;cost&quot;: &quot;Free&quot;}"> <span>Corpus Duplex (Blood Double) — Free</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Gustus Sanguinis (The Taste of Blood)&quot;, &quot;category&quot;: &quot;Blood Magic&quot;, &quot;book&quot;: &quot;Dark Magic&quot;, &quot;cost&quot;: &quot;Free&quot;}"> <span>Gustus Sanguinis (The Taste of Blood) — Free</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Illimitata Infinita (Unlimited Power)&quot;, &quot;category&quot;: &quot;Blood Magic&quot;, &quot;book&quot;: &quot;Dark Magic&quot;, &quot;cost&quot;: &quot;1 Body&quot;}"> <span>Illimitata Infinita (Unlimited Power) — 1 Body</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Infusus Sanguine (Infusion of Blood)&quot;, &quot;category&quot;: &quot;Blood Magic&quot;, &quot;book&quot;: &quot;Dark Magic&quot;, &quot;cost&quot;: &quot;1 Body&quot;}"> <span>Infusus Sanguine (Infusion of Blood) — 1 Body</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Sanginis Fervo (Blood Storm)&quot;, &quot;category&quot;: &quot;Blood Magic&quot;, &quot;book&quot;: &quot;Dark Magic&quot;, &quot;cost&quot;: &quot;2 Body&quot;}"> <span>Sanginis Fervo (Blood Storm) — 2 Body</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Sanguis Dominus (Blood Domination)&quot;, &quot;category&quot;: &quot;Blood Magic&quot;, &quot;book&quot;: &quot;Dark Magic&quot;, &quot;cost&quot;: &quot;5 Body (Cannot be reduced by Jewelery, potions, Order bonus, etc.)&quot;}"> <span>Sanguis Dominus (Blood Domination) — 5 Body (Cannot be reduced by Jewelery, potions, Order bonus, etc.)</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Sanguis Fervo (Blood Boil)&quot;, &quot;category&quot;: &quot;Blood Magic&quot;, &quot;book&quot;: &quot;Dark Magic&quot;, &quot;cost&quot;: &quot;1 Mind&quot;}"> <span>Sanguis Fervo (Blood Boil) — 1 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Sanguis Flagellum (Blood Whip)&quot;, &quot;category&quot;: &quot;Blood Magic&quot;, &quot;book&quot;: &quot;Dark Magic&quot;, &quot;cost&quot;: &quot;Free&quot;}"> <span>Sanguis Flagellum (Blood Whip) — Free</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Sanguis Furtum (Blood Theft)&quot;, &quot;category&quot;: &quot;Blood Magic&quot;, &quot;book&quot;: &quot;Dark Magic&quot;, &quot;cost&quot;: &quot;1 Mind&quot;}"> <span>Sanguis Furtum (Blood Theft) — 1 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Sanguis Iram (Blood Rage)&quot;, &quot;category&quot;: &quot;Blood Magic&quot;, &quot;book&quot;: &quot;Dark Magic&quot;, &quot;cost&quot;: &quot;2 Body&quot;}"> <span>Sanguis Iram (Blood Rage) — 2 Body</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Sanguis Telum (Blood Bolt)&quot;, &quot;category&quot;: &quot;Blood Magic&quot;, &quot;book&quot;: &quot;Dark Magic&quot;, &quot;cost&quot;: &quot;1 Body&quot;}"> <span>Sanguis Telum (Blood Bolt) — 1 Body</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Sanguis vita Est (Blood is the Life)&quot;, &quot;category&quot;: &quot;Blood Magic&quot;, &quot;book&quot;: &quot;Dark Magic&quot;, &quot;cost&quot;: &quot;4 Mind&quot;}"> <span>Sanguis vita Est (Blood is the Life) — 4 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Venenum Sanguinem (Venomous Blood)&quot;, &quot;category&quot;: &quot;Blood Magic&quot;, &quot;book&quot;: &quot;Dark Magic&quot;, &quot;cost&quot;: &quot;1 Body&quot;}"> <span>Venenum Sanguinem (Venomous Blood) — 1 Body</span></label></details><details open><summary>Dark Magic — Fleshcrafting (26)</summary><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Ars Contorta (Twisted Art)&quot;, &quot;category&quot;: &quot;Fleshcrafting&quot;, &quot;book&quot;: &quot;Dark Magic&quot;, &quot;cost&quot;: &quot;5 Mind&quot;}"> <span>Ars Contorta (Twisted Art) — 5 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Carnem Calcaria (The Flesh of Spurs)&quot;, &quot;category&quot;: &quot;Fleshcrafting&quot;, &quot;book&quot;: &quot;Dark Magic&quot;, &quot;cost&quot;: &quot;1 Mind&quot;}"> <span>Carnem Calcaria (The Flesh of Spurs) — 1 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Carnis Alis (Fleshbound Wings)&quot;, &quot;category&quot;: &quot;Fleshcrafting&quot;, &quot;book&quot;: &quot;Dark Magic&quot;, &quot;cost&quot;: &quot;2 Mind&quot;}"> <span>Carnis Alis (Fleshbound Wings) — 2 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Caro ad Os (Flesh to Bone)&quot;, &quot;category&quot;: &quot;Fleshcrafting&quot;, &quot;book&quot;: &quot;Dark Magic&quot;, &quot;cost&quot;: &quot;3 Mind&quot;}"> <span>Caro ad Os (Flesh to Bone) — 3 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Caro Putredo (Rotten Flesh)&quot;, &quot;category&quot;: &quot;Fleshcrafting&quot;, &quot;book&quot;: &quot;Dark Magic&quot;, &quot;cost&quot;: &quot;2 Mind&quot;}"> <span>Caro Putredo (Rotten Flesh) — 2 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Corpus Reformationis (The Body of Reformation)&quot;, &quot;category&quot;: &quot;Fleshcrafting&quot;, &quot;book&quot;: &quot;Dark Magic&quot;, &quot;cost&quot;: &quot;Reduces all Mind/Spirit scores to 1 for 24 hours.&quot;}"> <span>Corpus Reformationis (The Body of Reformation) — Reduces all Mind/Spirit scores to 1 for 24 hours.</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Crurai Abyssi (Abyssal Legs)&quot;, &quot;category&quot;: &quot;Fleshcrafting&quot;, &quot;book&quot;: &quot;Dark Magic&quot;, &quot;cost&quot;: &quot;2 Mind&quot;}"> <span>Crurai Abyssi (Abyssal Legs) — 2 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Cutis Lubrica (Slippery Skin)&quot;, &quot;category&quot;: &quot;Fleshcrafting&quot;, &quot;book&quot;: &quot;Dark Magic&quot;, &quot;cost&quot;: &quot;2 Mind&quot;}"> <span>Cutis Lubrica (Slippery Skin) — 2 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Dolor ut Voluptas (Pain as Pleasure)&quot;, &quot;category&quot;: &quot;Fleshcrafting&quot;, &quot;book&quot;: &quot;Dark Magic&quot;, &quot;cost&quot;: &quot;2 Mind&quot;}"> <span>Dolor ut Voluptas (Pain as Pleasure) — 2 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Expurgate Carnem (Cleanse the Flesh)&quot;, &quot;category&quot;: &quot;Fleshcrafting&quot;, &quot;book&quot;: &quot;Dark Magic&quot;, &quot;cost&quot;: &quot;3 Mind&quot;}"> <span>Expurgate Carnem (Cleanse the Flesh) — 3 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Forma Immanis (Monstrous Form)&quot;, &quot;category&quot;: &quot;Fleshcrafting&quot;, &quot;book&quot;: &quot;Dark Magic&quot;, &quot;cost&quot;: &quot;4 Mind&quot;}"> <span>Forma Immanis (Monstrous Form) — 4 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Interiorem Dominium (Inner Mastery)&quot;, &quot;category&quot;: &quot;Fleshcrafting&quot;, &quot;book&quot;: &quot;Dark Magic&quot;, &quot;cost&quot;: &quot;See Spell Description&quot;}"> <span>Interiorem Dominium (Inner Mastery) — See Spell Description</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Lingua Verberans (Lashing Tongue)&quot;, &quot;category&quot;: &quot;Fleshcrafting&quot;, &quot;book&quot;: &quot;Dark Magic&quot;, &quot;cost&quot;: &quot;2 Mind 1 Spirit plus one Spirit per round of maintenance.&quot;}"> <span>Lingua Verberans (Lashing Tongue) — 2 Mind 1 Spirit plus one Spirit per round of maintenance.</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Membra Lacertae (Lizard Limbs)&quot;, &quot;category&quot;: &quot;Fleshcrafting&quot;, &quot;book&quot;: &quot;Dark Magic&quot;, &quot;cost&quot;: &quot;2 Body&quot;}"> <span>Membra Lacertae (Lizard Limbs) — 2 Body</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Mutare Os (Alter Bone)&quot;, &quot;category&quot;: &quot;Fleshcrafting&quot;, &quot;book&quot;: &quot;Dark Magic&quot;, &quot;cost&quot;: &quot;4 Mind&quot;}"> <span>Mutare Os (Alter Bone) — 4 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Mutationem Sui (Change Self)&quot;, &quot;category&quot;: &quot;Fleshcrafting&quot;, &quot;book&quot;: &quot;Dark Magic&quot;, &quot;cost&quot;: &quot;2 Mind&quot;}"> <span>Mutationem Sui (Change Self) — 2 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Muto Corpus (Change Flesh)&quot;, &quot;category&quot;: &quot;Fleshcrafting&quot;, &quot;book&quot;: &quot;Dark Magic&quot;, &quot;cost&quot;: &quot;2 Mind&quot;}"> <span>Muto Corpus (Change Flesh) — 2 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Nodus Carcinis (Cancerous Knot)&quot;, &quot;category&quot;: &quot;Fleshcrafting&quot;, &quot;book&quot;: &quot;Dark Magic&quot;, &quot;cost&quot;: &quot;3 Mind&quot;}"> <span>Nodus Carcinis (Cancerous Knot) — 3 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Proboskìs Abyssi (Abyssal Proboscis)&quot;, &quot;category&quot;: &quot;Fleshcrafting&quot;, &quot;book&quot;: &quot;Dark Magic&quot;, &quot;cost&quot;: &quot;2 Mind&quot;}"> <span>Proboskìs Abyssi (Abyssal Proboscis) — 2 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Pupa Carnis (Meat Puppet)&quot;, &quot;category&quot;: &quot;Fleshcrafting&quot;, &quot;book&quot;: &quot;Dark Magic&quot;, &quot;cost&quot;: &quot;2 Mind&quot;}"> <span>Pupa Carnis (Meat Puppet) — 2 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Reditus ad Formam (Return to Form)&quot;, &quot;category&quot;: &quot;Fleshcrafting&quot;, &quot;book&quot;: &quot;Dark Magic&quot;, &quot;cost&quot;: &quot;4 Mind&quot;}"> <span>Reditus ad Formam (Return to Form) — 4 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Spina Carapace (Horned Carapace)&quot;, &quot;category&quot;: &quot;Fleshcrafting&quot;, &quot;book&quot;: &quot;Dark Magic&quot;, &quot;cost&quot;: &quot;1 Mind&quot;}"> <span>Spina Carapace (Horned Carapace) — 1 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Spina Glomerorum (Spine Spores)&quot;, &quot;category&quot;: &quot;Fleshcrafting&quot;, &quot;book&quot;: &quot;Dark Magic&quot;, &quot;cost&quot;: &quot;6 Mind&quot;}"> <span>Spina Glomerorum (Spine Spores) — 6 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Stimulus Abyssi (Abyssal Stinger)&quot;, &quot;category&quot;: &quot;Fleshcrafting&quot;, &quot;book&quot;: &quot;Dark Magic&quot;, &quot;cost&quot;: &quot;2 Mind&quot;}"> <span>Stimulus Abyssi (Abyssal Stinger) — 2 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Tolerare (Endure)&quot;, &quot;category&quot;: &quot;Fleshcrafting&quot;, &quot;book&quot;: &quot;Dark Magic&quot;, &quot;cost&quot;: &quot;4 Body&quot;}"> <span>Tolerare (Endure) — 4 Body</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Ungues Abyssi Cancri (Abyssal Crab Claws)&quot;, &quot;category&quot;: &quot;Fleshcrafting&quot;, &quot;book&quot;: &quot;Dark Magic&quot;, &quot;cost&quot;: &quot;2 Mind&quot;}"> <span>Ungues Abyssi Cancri (Abyssal Crab Claws) — 2 Mind</span></label></details><details open><summary>Dark Magic — Hellfire Magic (12)</summary><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Aeternum Tormentum (Eternal Torment)&quot;, &quot;category&quot;: &quot;Hellfire Magic&quot;, &quot;book&quot;: &quot;Dark Magic&quot;, &quot;cost&quot;: &quot;3 Mind&quot;}"> <span>Aeternum Tormentum (Eternal Torment) — 3 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Angelus Finis (Spear of Hellfire)&quot;, &quot;category&quot;: &quot;Hellfire Magic&quot;, &quot;book&quot;: &quot;Dark Magic&quot;, &quot;cost&quot;: &quot;1 Mind&quot;}"> <span>Angelus Finis (Spear of Hellfire) — 1 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Chorum Damnatorum (Chorus of the Damned)&quot;, &quot;category&quot;: &quot;Hellfire Magic&quot;, &quot;book&quot;: &quot;Dark Magic&quot;, &quot;cost&quot;: &quot;4 Mind&quot;}"> <span>Chorum Damnatorum (Chorus of the Damned) — 4 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Flagrans Calvaria (Screaming Hellfire Skulls)&quot;, &quot;category&quot;: &quot;Hellfire Magic&quot;, &quot;book&quot;: &quot;Dark Magic&quot;, &quot;cost&quot;: &quot;2 Mind&quot;}"> <span>Flagrans Calvaria (Screaming Hellfire Skulls) — 2 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Gehénnam Iracundia (Hellfire Pulse)&quot;, &quot;category&quot;: &quot;Hellfire Magic&quot;, &quot;book&quot;: &quot;Dark Magic&quot;, &quot;cost&quot;: &quot;2 Mind&quot;}"> <span>Gehénnam Iracundia (Hellfire Pulse) — 2 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Gehénnam Murus (Wall of Hellfire)&quot;, &quot;category&quot;: &quot;Hellfire Magic&quot;, &quot;book&quot;: &quot;Dark Magic&quot;, &quot;cost&quot;: &quot;1 Mind&quot;}"> <span>Gehénnam Murus (Wall of Hellfire) — 1 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Ignis Dominium (Hellfire Domain)&quot;, &quot;category&quot;: &quot;Hellfire Magic&quot;, &quot;book&quot;: &quot;Dark Magic&quot;, &quot;cost&quot;: &quot;4 Mind&quot;}"> <span>Ignis Dominium (Hellfire Domain) — 4 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Ignis Regnum (Hellfire Glyph)&quot;, &quot;category&quot;: &quot;Hellfire Magic&quot;, &quot;book&quot;: &quot;Dark Magic&quot;, &quot;cost&quot;: &quot;1 Mind&quot;}"> <span>Ignis Regnum (Hellfire Glyph) — 1 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Imber Ignis (Hellfire Rain)&quot;, &quot;category&quot;: &quot;Hellfire Magic&quot;, &quot;book&quot;: &quot;Dark Magic&quot;, &quot;cost&quot;: &quot;3 Mind&quot;}"> <span>Imber Ignis (Hellfire Rain) — 3 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Infurnum Ignis (Ball of Hellfire)&quot;, &quot;category&quot;: &quot;Hellfire Magic&quot;, &quot;book&quot;: &quot;Dark Magic&quot;, &quot;cost&quot;: &quot;1 Mind&quot;}"> <span>Infurnum Ignis (Ball of Hellfire) — 1 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Infurnum Manicae (Hellfire Gauntlets)&quot;, &quot;category&quot;: &quot;Hellfire Magic&quot;, &quot;book&quot;: &quot;Dark Magic&quot;, &quot;cost&quot;: &quot;1 Mind&quot;}"> <span>Infurnum Manicae (Hellfire Gauntlets) — 1 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Infurnum Vinctum (Hellfire Shackles)&quot;, &quot;category&quot;: &quot;Hellfire Magic&quot;, &quot;book&quot;: &quot;Dark Magic&quot;, &quot;cost&quot;: &quot;Free&quot;}"> <span>Infurnum Vinctum (Hellfire Shackles) — Free</span></label></details><details open><summary>Dark Magic — Hex Magic (8)</summary><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Ad Mortem Signatus (Marked for Death)&quot;, &quot;category&quot;: &quot;Hex Magic&quot;, &quot;book&quot;: &quot;Dark Magic&quot;, &quot;cost&quot;: &quot;2 Mind&quot;}"> <span>Ad Mortem Signatus (Marked for Death) — 2 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Dolor Torquens (Writhing Pain)&quot;, &quot;category&quot;: &quot;Hex Magic&quot;, &quot;book&quot;: &quot;Dark Magic&quot;, &quot;cost&quot;: &quot;4 Mind&quot;}"> <span>Dolor Torquens (Writhing Pain) — 4 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Ineptus Maledicta (Clumsy Curse)&quot;, &quot;category&quot;: &quot;Hex Magic&quot;, &quot;book&quot;: &quot;Dark Magic&quot;, &quot;cost&quot;: &quot;1 Mind&quot;}"> <span>Ineptus Maledicta (Clumsy Curse) — 1 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Lamentatio Tristis (Baleful Keening)&quot;, &quot;category&quot;: &quot;Hex Magic&quot;, &quot;book&quot;: &quot;Dark Magic&quot;, &quot;cost&quot;: &quot;3 Mind&quot;}"> <span>Lamentatio Tristis (Baleful Keening) — 3 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Miasma Foetidum (Fetid Miasma)&quot;, &quot;category&quot;: &quot;Hex Magic&quot;, &quot;book&quot;: &quot;Dark Magic&quot;, &quot;cost&quot;: &quot;2 Mind&quot;}"> <span>Miasma Foetidum (Fetid Miasma) — 2 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Oculus Malus (Evil Eye)&quot;, &quot;category&quot;: &quot;Hex Magic&quot;, &quot;book&quot;: &quot;Dark Magic&quot;, &quot;cost&quot;: &quot;2 Mind initially plus 1 Spirit per round of maintenance&quot;}"> <span>Oculus Malus (Evil Eye) — 2 Mind initially plus 1 Spirit per round of maintenance</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Ossium Confractio (Bone Shatter)&quot;, &quot;category&quot;: &quot;Hex Magic&quot;, &quot;book&quot;: &quot;Dark Magic&quot;, &quot;cost&quot;: &quot;3 Mind&quot;}"> <span>Ossium Confractio (Bone Shatter) — 3 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Pestis Murium (Plague of Rats)&quot;, &quot;category&quot;: &quot;Hex Magic&quot;, &quot;book&quot;: &quot;Dark Magic&quot;, &quot;cost&quot;: &quot;3 Mind&quot;}"> <span>Pestis Murium (Plague of Rats) — 3 Mind</span></label></details><details open><summary>Dark Magic — Necromancy (16)</summary><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Animata Mortuus (Animate Dead)&quot;, &quot;category&quot;: &quot;Necromancy&quot;, &quot;book&quot;: &quot;Dark Magic&quot;, &quot;cost&quot;: &quot;1 Mind&quot;}"> <span>Animata Mortuus (Animate Dead) — 1 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Blightfire Dohereās (Summon Blightfire)&quot;, &quot;category&quot;: &quot;Necromancy&quot;, &quot;book&quot;: &quot;Dark Magic&quot;, &quot;cost&quot;: &quot;10 Mind&quot;}"> <span>Blightfire Dohereās (Summon Blightfire) — 10 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Equitum mortuorum (Cavalry of the Dead)&quot;, &quot;category&quot;: &quot;Necromancy&quot;, &quot;book&quot;: &quot;Dark Magic&quot;, &quot;cost&quot;: &quot;5 Mind&quot;}"> <span>Equitum mortuorum (Cavalry of the Dead) — 5 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Exercitus Mortuorum (Army of the Dead)&quot;, &quot;category&quot;: &quot;Necromancy&quot;, &quot;book&quot;: &quot;Dark Magic&quot;, &quot;cost&quot;: &quot;3 Mind&quot;}"> <span>Exercitus Mortuorum (Army of the Dead) — 3 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Imperium Inmortuae (Control Undead)&quot;, &quot;category&quot;: &quot;Necromancy&quot;, &quot;book&quot;: &quot;Dark Magic&quot;, &quot;cost&quot;: &quot;3 Mind&quot;}"> <span>Imperium Inmortuae (Control Undead) — 3 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Infunde Inmortuae (Infuse Undead)&quot;, &quot;category&quot;: &quot;Necromancy&quot;, &quot;book&quot;: &quot;Dark Magic&quot;, &quot;cost&quot;: &quot;See Spell Description&quot;}"> <span>Infunde Inmortuae (Infuse Undead) — See Spell Description</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Macabe Loquere (Death Speak)&quot;, &quot;category&quot;: &quot;Necromancy&quot;, &quot;book&quot;: &quot;Dark Magic&quot;, &quot;cost&quot;: &quot;Free&quot;}"> <span>Macabe Loquere (Death Speak) — Free</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Manus Mortuorum (Hands of the Dead)&quot;, &quot;category&quot;: &quot;Necromancy&quot;, &quot;book&quot;: &quot;Dark Magic&quot;, &quot;cost&quot;: &quot;1 Mind&quot;}"> <span>Manus Mortuorum (Hands of the Dead) — 1 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Mors Ligatus (Death Bound)&quot;, &quot;category&quot;: &quot;Necromancy&quot;, &quot;book&quot;: &quot;Dark Magic&quot;, &quot;cost&quot;: &quot;1 Mind&quot;}"> <span>Mors Ligatus (Death Bound) — 1 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Mors Tactus (Death Touch)&quot;, &quot;category&quot;: &quot;Necromancy&quot;, &quot;book&quot;: &quot;Dark Magic&quot;, &quot;cost&quot;: &quot;1 Mind&quot;}"> <span>Mors Tactus (Death Touch) — 1 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Mortuus Ambulatio (The Walking Dead)&quot;, &quot;category&quot;: &quot;Necromancy&quot;, &quot;book&quot;: &quot;Dark Magic&quot;, &quot;cost&quot;: &quot;1 Mind&quot;}"> <span>Mortuus Ambulatio (The Walking Dead) — 1 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Pestilentia Fulmen (Plague Bolt)&quot;, &quot;category&quot;: &quot;Necromancy&quot;, &quot;book&quot;: &quot;Dark Magic&quot;, &quot;cost&quot;: &quot;1 Mind&quot;}"> <span>Pestilentia Fulmen (Plague Bolt) — 1 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Pestilentia Pluviae (Plague Rain)&quot;, &quot;category&quot;: &quot;Necromancy&quot;, &quot;book&quot;: &quot;Dark Magic&quot;, &quot;cost&quot;: &quot;3 Mind&quot;}"> <span>Pestilentia Pluviae (Plague Rain) — 3 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Tormentis Immortuos (Undead Artillery)&quot;, &quot;category&quot;: &quot;Necromancy&quot;, &quot;book&quot;: &quot;Dark Magic&quot;, &quot;cost&quot;: &quot;6 Mind&quot;}"> <span>Tormentis Immortuos (Undead Artillery) — 6 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Verutum Osseum (Bone Javelin)&quot;, &quot;category&quot;: &quot;Necromancy&quot;, &quot;book&quot;: &quot;Dark Magic&quot;, &quot;cost&quot;: &quot;3 Mind&quot;}"> <span>Verutum Osseum (Bone Javelin) — 3 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Vita Furtum (Life Theft)&quot;, &quot;category&quot;: &quot;Necromancy&quot;, &quot;book&quot;: &quot;Dark Magic&quot;, &quot;cost&quot;: &quot;3 Mind&quot;}"> <span>Vita Furtum (Life Theft) — 3 Mind</span></label></details><details open><summary>Dark Magic — Shadow Magic (11)</summary><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Imperium Umbrae (Control Shadows)&quot;, &quot;category&quot;: &quot;Shadow Magic&quot;, &quot;book&quot;: &quot;Dark Magic&quot;, &quot;cost&quot;: &quot;2 Mind&quot;}"> <span>Imperium Umbrae (Control Shadows) — 2 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Mutatio Obscura (Dark Transformation)&quot;, &quot;category&quot;: &quot;Shadow Magic&quot;, &quot;book&quot;: &quot;Dark Magic&quot;, &quot;cost&quot;: &quot;1 Mind&quot;}"> <span>Mutatio Obscura (Dark Transformation) — 1 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Tenebrae Aeternae (Darkness Eternal)&quot;, &quot;category&quot;: &quot;Shadow Magic&quot;, &quot;book&quot;: &quot;Dark Magic&quot;, &quot;cost&quot;: &quot;5 Mind&quot;}"> <span>Tenebrae Aeternae (Darkness Eternal) — 5 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Umbra Ambulate (Shadow Walk)&quot;, &quot;category&quot;: &quot;Shadow Magic&quot;, &quot;book&quot;: &quot;Dark Magic&quot;, &quot;cost&quot;: &quot;Free&quot;}"> <span>Umbra Ambulate (Shadow Walk) — Free</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Umbra Didymus (Shadow Twin)&quot;, &quot;category&quot;: &quot;Shadow Magic&quot;, &quot;book&quot;: &quot;Dark Magic&quot;, &quot;cost&quot;: &quot;3 Mind&quot;}"> <span>Umbra Didymus (Shadow Twin) — 3 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Umbra Exilium (Shadow Exile)&quot;, &quot;category&quot;: &quot;Shadow Magic&quot;, &quot;book&quot;: &quot;Dark Magic&quot;, &quot;cost&quot;: &quot;4 Mind&quot;}"> <span>Umbra Exilium (Shadow Exile) — 4 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Umbra Fulmen (Shadow Lightning)&quot;, &quot;category&quot;: &quot;Shadow Magic&quot;, &quot;book&quot;: &quot;Dark Magic&quot;, &quot;cost&quot;: &quot;See Spell Description&quot;}"> <span>Umbra Fulmen (Shadow Lightning) — See Spell Description</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Umbra Hirudo (Shadow Leech)&quot;, &quot;category&quot;: &quot;Shadow Magic&quot;, &quot;book&quot;: &quot;Dark Magic&quot;, &quot;cost&quot;: &quot;4 Mind&quot;}"> <span>Umbra Hirudo (Shadow Leech) — 4 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Umbra Integumentum (Shadow Cover)&quot;, &quot;category&quot;: &quot;Shadow Magic&quot;, &quot;book&quot;: &quot;Dark Magic&quot;, &quot;cost&quot;: &quot;1 Mind&quot;}"> <span>Umbra Integumentum (Shadow Cover) — 1 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Umbra Vincla (Shadow Bind)&quot;, &quot;category&quot;: &quot;Shadow Magic&quot;, &quot;book&quot;: &quot;Dark Magic&quot;, &quot;cost&quot;: &quot;Free&quot;}"> <span>Umbra Vincla (Shadow Bind) — Free</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Visus Tenebrosus (Shadow Sight)&quot;, &quot;category&quot;: &quot;Shadow Magic&quot;, &quot;book&quot;: &quot;Dark Magic&quot;, &quot;cost&quot;: &quot;Free&quot;}"> <span>Visus Tenebrosus (Shadow Sight) — Free</span></label></details><details open><summary>Dark Magic — True Curses (5)</summary><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Canis Mali Ominis (Hound of Ill Omen)&quot;, &quot;category&quot;: &quot;True Curses&quot;, &quot;book&quot;: &quot;Dark Magic&quot;, &quot;cost&quot;: &quot;1 Mind&quot;}"> <span>Canis Mali Ominis (Hound of Ill Omen) — 1 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Duplicatum Maleficum (Doppelganger)&quot;, &quot;category&quot;: &quot;True Curses&quot;, &quot;book&quot;: &quot;Dark Magic&quot;, &quot;cost&quot;: &quot;1 Mind&quot;}"> <span>Duplicatum Maleficum (Doppelganger) — 1 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Incoherentiae Maledictio (curse of incoherence)&quot;, &quot;category&quot;: &quot;True Curses&quot;, &quot;book&quot;: &quot;Dark Magic&quot;, &quot;cost&quot;: &quot;1 Mind&quot;}"> <span>Incoherentiae Maledictio (curse of incoherence) — 1 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Maledictio Corporis Torti (Twisted Body)&quot;, &quot;category&quot;: &quot;True Curses&quot;, &quot;book&quot;: &quot;Dark Magic&quot;, &quot;cost&quot;: &quot;1 Mind&quot;}"> <span>Maledictio Corporis Torti (Twisted Body) — 1 Mind</span></label><label class="check-row"><input type="checkbox" class="spell-check" data-json="{&quot;name&quot;: &quot;Maledictio Mortis Rubrae (Curse of the Red Death)&quot;, &quot;category&quot;: &quot;True Curses&quot;, &quot;book&quot;: &quot;Dark Magic&quot;, &quot;cost&quot;: &quot;1 Mind&quot;}"> <span>Maledictio Mortis Rubrae (Curse of the Red Death) — 1 Mind</span></label></details>
+      </div>
+
+      <div class="section">
+        <h2>Warrior Skill Checklist</h2>
+        <div class="check-tools">
+          <button type="button" onclick="setChecks('.skill-check', true)">Check All Skills</button>
+          <button type="button" onclick="setChecks('.skill-check', false)">Clear Skills</button>
+        </div>
+        <details open><summary>All (1)</summary><label class="check-row"><input type="checkbox" class="skill-check" data-json="{&quot;name&quot;: &quot;Signature Weapon&quot;, &quot;discipline&quot;: &quot;All&quot;}"> <span>Signature Weapon</span></label></details><details open><summary>All Disciplines (1)</summary><label class="check-row"><input type="checkbox" class="skill-check" data-json="{&quot;name&quot;: &quot;Improved Critical&quot;, &quot;discipline&quot;: &quot;All Disciplines&quot;}"> <span>Improved Critical</span></label></details><details open><summary>All Melee (2)</summary><label class="check-row"><input type="checkbox" class="skill-check" data-json="{&quot;name&quot;: &quot;Power Attack&quot;, &quot;discipline&quot;: &quot;All Melee&quot;}"> <span>Power Attack</span></label><label class="check-row"><input type="checkbox" class="skill-check" data-json="{&quot;name&quot;: &quot;Sunder&quot;, &quot;discipline&quot;: &quot;All Melee&quot;}"> <span>Sunder</span></label></details><details open><summary>All Melee Weapons (1)</summary><label class="check-row"><input type="checkbox" class="skill-check" data-json="{&quot;name&quot;: &quot;Imbued Defense&quot;, &quot;discipline&quot;: &quot;All Melee Weapons&quot;}"> <span>Imbued Defense</span></label></details><details open><summary>Blunt (1)</summary><label class="check-row"><input type="checkbox" class="skill-check" data-json="{&quot;name&quot;: &quot;Shatter Armor&quot;, &quot;discipline&quot;: &quot;Blunt&quot;}"> <span>Shatter Armor</span></label></details><details open><summary>Defense (8)</summary><label class="check-row"><input type="checkbox" class="skill-check" data-json="{&quot;name&quot;: &quot;Challenging Roar&quot;, &quot;discipline&quot;: &quot;Defense&quot;}"> <span>Challenging Roar</span></label><label class="check-row"><input type="checkbox" class="skill-check" data-json="{&quot;name&quot;: &quot;Defensive Stance&quot;, &quot;discipline&quot;: &quot;Defense&quot;}"> <span>Defensive Stance</span></label><label class="check-row"><input type="checkbox" class="skill-check" data-json="{&quot;name&quot;: &quot;Improved Counter&quot;, &quot;discipline&quot;: &quot;Defense&quot;}"> <span>Improved Counter</span></label><label class="check-row"><input type="checkbox" class="skill-check" data-json="{&quot;name&quot;: &quot;Inspiring Shout&quot;, &quot;discipline&quot;: &quot;Defense&quot;}"> <span>Inspiring Shout</span></label><label class="check-row"><input type="checkbox" class="skill-check" data-json="{&quot;name&quot;: &quot;Intercept&quot;, &quot;discipline&quot;: &quot;Defense&quot;}"> <span>Intercept</span></label><label class="check-row"><input type="checkbox" class="skill-check" data-json="{&quot;name&quot;: &quot;Parry&quot;, &quot;discipline&quot;: &quot;Defense&quot;}"> <span>Parry</span></label><label class="check-row"><input type="checkbox" class="skill-check" data-json="{&quot;name&quot;: &quot;Signature Defense&quot;, &quot;discipline&quot;: &quot;Defense&quot;}"> <span>Signature Defense</span></label><label class="check-row"><input type="checkbox" class="skill-check" data-json="{&quot;name&quot;: &quot;Spell-Cutter&quot;, &quot;discipline&quot;: &quot;Defense&quot;}"> <span>Spell-Cutter</span></label></details><details open><summary>General (10)</summary><label class="check-row"><input type="checkbox" class="skill-check" data-json="{&quot;name&quot;: &quot;Blind-Fighting&quot;, &quot;discipline&quot;: &quot;General&quot;}"> <span>Blind-Fighting</span></label><label class="check-row"><input type="checkbox" class="skill-check" data-json="{&quot;name&quot;: &quot;Charge&quot;, &quot;discipline&quot;: &quot;General&quot;}"> <span>Charge</span></label><label class="check-row"><input type="checkbox" class="skill-check" data-json="{&quot;name&quot;: &quot;Combat Reflexes&quot;, &quot;discipline&quot;: &quot;General&quot;}"> <span>Combat Reflexes</span></label><label class="check-row"><input type="checkbox" class="skill-check" data-json="{&quot;name&quot;: &quot;Dodge&quot;, &quot;discipline&quot;: &quot;General&quot;}"> <span>Dodge</span></label><label class="check-row"><input type="checkbox" class="skill-check" data-json="{&quot;name&quot;: &quot;Improved Mutagenic Training&quot;, &quot;discipline&quot;: &quot;General&quot;}"> <span>Improved Mutagenic Training</span></label><label class="check-row"><input type="checkbox" class="skill-check" data-json="{&quot;name&quot;: &quot;Mobility&quot;, &quot;discipline&quot;: &quot;General&quot;}"> <span>Mobility</span></label><label class="check-row"><input type="checkbox" class="skill-check" data-json="{&quot;name&quot;: &quot;Mounted Combat&quot;, &quot;discipline&quot;: &quot;General&quot;}"> <span>Mounted Combat</span></label><label class="check-row"><input type="checkbox" class="skill-check" data-json="{&quot;name&quot;: &quot;Mutagenic Training&quot;, &quot;discipline&quot;: &quot;General&quot;}"> <span>Mutagenic Training</span></label><label class="check-row"><input type="checkbox" class="skill-check" data-json="{&quot;name&quot;: &quot;The Right Stuff&quot;, &quot;discipline&quot;: &quot;General&quot;}"> <span>The Right Stuff</span></label><label class="check-row"><input type="checkbox" class="skill-check" data-json="{&quot;name&quot;: &quot;Trample&quot;, &quot;discipline&quot;: &quot;General&quot;}"> <span>Trample</span></label></details><details open><summary>General THIS SKILL IS TEMPORARILY DISABLED UNTIL FURTHER NOTICE (1)</summary><label class="check-row"><input type="checkbox" class="skill-check" data-json="{&quot;name&quot;: &quot;Ride By Attack&quot;, &quot;discipline&quot;: &quot;General THIS SKILL IS TEMPORARILY DISABLED UNTIL FURTHER NOTICE&quot;}"> <span>Ride By Attack</span></label></details><details open><summary>Hand-to-Hand (5)</summary><label class="check-row"><input type="checkbox" class="skill-check" data-json="{&quot;name&quot;: &quot;Grapple&quot;, &quot;discipline&quot;: &quot;Hand-to-Hand&quot;}"> <span>Grapple</span></label><label class="check-row"><input type="checkbox" class="skill-check" data-json="{&quot;name&quot;: &quot;Improved Grapple&quot;, &quot;discipline&quot;: &quot;Hand-to-Hand&quot;}"> <span>Improved Grapple</span></label><label class="check-row"><input type="checkbox" class="skill-check" data-json="{&quot;name&quot;: &quot;Improved Unarmed Strike&quot;, &quot;discipline&quot;: &quot;Hand-to-Hand&quot;}"> <span>Improved Unarmed Strike</span></label><label class="check-row"><input type="checkbox" class="skill-check" data-json="{&quot;name&quot;: &quot;Stunning Fist&quot;, &quot;discipline&quot;: &quot;Hand-to-Hand&quot;}"> <span>Stunning Fist</span></label><label class="check-row"><input type="checkbox" class="skill-check" data-json="{&quot;name&quot;: &quot;Unarmed Strike&quot;, &quot;discipline&quot;: &quot;Hand-to-Hand&quot;}"> <span>Unarmed Strike</span></label></details><details open><summary>Melee: All, Ranged: All (1)</summary><label class="check-row"><input type="checkbox" class="skill-check" data-json="{&quot;name&quot;: &quot;Quick Draw&quot;, &quot;discipline&quot;: &quot;Melee: All, Ranged: All&quot;}"> <span>Quick Draw</span></label></details><details open><summary>Piercing (1)</summary><label class="check-row"><input type="checkbox" class="skill-check" data-json="{&quot;name&quot;: &quot;Impale&quot;, &quot;discipline&quot;: &quot;Piercing&quot;}"> <span>Impale</span></label></details><details open><summary>Projectile (3)</summary><label class="check-row"><input type="checkbox" class="skill-check" data-json="{&quot;name&quot;: &quot;Penetrate&quot;, &quot;discipline&quot;: &quot;Projectile&quot;}"> <span>Penetrate</span></label><label class="check-row"><input type="checkbox" class="skill-check" data-json="{&quot;name&quot;: &quot;Rapid Shot&quot;, &quot;discipline&quot;: &quot;Projectile&quot;}"> <span>Rapid Shot</span></label><label class="check-row"><input type="checkbox" class="skill-check" data-json="{&quot;name&quot;: &quot;Spectral Arrow&quot;, &quot;discipline&quot;: &quot;Projectile&quot;}"> <span>Spectral Arrow</span></label></details><details open><summary>Projectile, Thrown (2)</summary><label class="check-row"><input type="checkbox" class="skill-check" data-json="{&quot;name&quot;: &quot;Point Blank Shot&quot;, &quot;discipline&quot;: &quot;Projectile, Thrown&quot;}"> <span>Point Blank Shot</span></label><label class="check-row"><input type="checkbox" class="skill-check" data-json="{&quot;name&quot;: &quot;Precise Shot&quot;, &quot;discipline&quot;: &quot;Projectile, Thrown&quot;}"> <span>Precise Shot</span></label></details><details open><summary>Slashing (2)</summary><label class="check-row"><input type="checkbox" class="skill-check" data-json="{&quot;name&quot;: &quot;Bleeding strike&quot;, &quot;discipline&quot;: &quot;Slashing&quot;}"> <span>Bleeding strike</span></label><label class="check-row"><input type="checkbox" class="skill-check" data-json="{&quot;name&quot;: &quot;Riposte&quot;, &quot;discipline&quot;: &quot;Slashing&quot;}"> <span>Riposte</span></label></details><details open><summary>Thrown (3)</summary><label class="check-row"><input type="checkbox" class="skill-check" data-json="{&quot;name&quot;: &quot;Bombard&quot;, &quot;discipline&quot;: &quot;Thrown&quot;}"> <span>Bombard</span></label><label class="check-row"><input type="checkbox" class="skill-check" data-json="{&quot;name&quot;: &quot;Great Throw&quot;, &quot;discipline&quot;: &quot;Thrown&quot;}"> <span>Great Throw</span></label><label class="check-row"><input type="checkbox" class="skill-check" data-json="{&quot;name&quot;: &quot;Returning&quot;, &quot;discipline&quot;: &quot;Thrown&quot;}"> <span>Returning</span></label></details>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Notes / Other Information</h2>
+      <textarea id="notes" placeholder="Backstory, title, permissions, special rules, player notes, or anything the DM needs to know."></textarea>
+    </div>
+
+    <div class="section">
+      <h2>Generate Character Sheet File</h2>
+      <button class="dark" type="button" onclick="generateSheet()">Generate JS Sheet</button>
+      <button type="button" onclick="copyOutput()">Copy Output</button>
+      <div class="note" id="manifestLine">Manifest line will appear here after generating.</div>
+      <textarea class="output" id="output" readonly></textarea>
+    </div>
+  </div>
+
+  <script src="./character_sheets/manifest.js"></script>
+  <script src="./character_sheets.js"></script>
+  <script>
+    const rankStats = {
+      "Initiate": [2,2,2,0], "Acolyte": [3,3,3,0], "Centurion": [4,4,4,0], "Sentinel": [5,5,5,0],
+      "Dark Warden": [6,6,6,1], "Light Warden": [6,6,6,1], "Dark Watcher": [8,8,8,1], "Light Watcher": [8,8,8,1],
+      "Dark Knight": [10,10,10,2], "Light Knight": [10,10,10,2], "Custodian": [10,10,10,2],
+      "Priest/Priestess": [12,12,12,3], "Baron/Baroness": [12,12,12,3], "Knight Captain": [12,12,12,3],
+      "Margrave": [16,16,16,4], "Marshall": [16,16,16,4], "Chamberlain": [18,18,18,4],
+      "Lictor": [20,20,20,5], "Praetorian": [20,20,20,5], "Praetorian Prefect": [22,22,22,5],
+      "Quarter Master": [24,24,24,6], "Legate": [24,24,24,6], "Keeper of Knowledge": [24,24,24,6],
+      "High Priest/Priestess": [24,24,24,6], "Prince/Princess": [24,24,24,6],
+      "The Triumvirate": [30,30,30,8], "Knight Errant": [10,10,10,2], "Seneschal": [12,12,12,3],
+      "Count/Countess": [16,16,16,4], "Exemplar": [20,20,20,5], "Duke/Duchess": [24,24,24,6],
+      "Chancellor": [30,30,30,8]
+    };
+
+    document.getElementById("rank").addEventListener("change", function () {
+      const rank = this.value;
+      document.getElementById("typeCode").value = rank ? "ranks!!" + rank : "";
+      if (rankStats[rank]) {
+        document.getElementById("body").value = rankStats[rank][0];
+        document.getElementById("mind").value = rankStats[rank][1];
+        document.getElementById("spirit").value = rankStats[rank][2];
+        document.getElementById("bonus").value = rankStats[rank][3];
+      }
+    });
+
+    document.getElementById("sheetCode").addEventListener("input", function () {
+      const safe = this.value.trim().replace(/[^a-zA-Z0-9_-]+/g, "_");
+      if (safe && !document.getElementById("fileName").value.trim()) {
+        document.getElementById("fileName").value = safe + ".js";
+      }
+    });
+
+    function setChecks(selector, checked) {
+      document.querySelectorAll(selector).forEach(function (box) {
+        box.checked = checked;
+      });
+    }
+
+    function selectedJSON(selector) {
+      return Array.from(document.querySelectorAll(selector + ":checked")).map(function (box) {
+        return JSON.parse(box.dataset.json);
+      });
+    }
+
+    function parseJewelry(text) {
+      return text.split("\n").map(line => line.trim()).filter(Boolean).map(function (line) {
+        const parts = line.split("|").map(x => x.trim());
+        return {
+          name: parts[0] || "",
+          type: parts[1] || "",
+          description: parts[2] || ""
+        };
+      });
+    }
+
+    function parseWeapons(text) {
+      return text.split("\n").map(line => line.trim()).filter(Boolean).map(function (line) {
+        const parts = line.split("|").map(x => x.trim());
+        return {
+          name: parts[0] || "",
+          type: parts[1] || "",
+          damage: parts[2] || "",
+          bonus: parts[3] || "",
+          description: parts[4] || ""
+        };
+      });
+    }
+
+
+    function refreshExistingSheetList() {
+      const select = document.getElementById("existingSheetSelect");
+      if (!select) return;
+
+      const sheets = window.FALLEN_GATE_CHARACTER_SHEETS || {};
+      const codes = Object.keys(sheets).sort();
+
+      select.innerHTML = "";
+
+      if (codes.length === 0) {
+        const opt = document.createElement("option");
+        opt.value = "";
+        opt.textContent = "No loaded sheets found yet";
+        select.appendChild(opt);
+        return;
+      }
+
+      const first = document.createElement("option");
+      first.value = "";
+      first.textContent = "Choose a character sheet";
+      select.appendChild(first);
+
+      codes.forEach(function (code) {
+        const sheet = sheets[code] || {};
+        const opt = document.createElement("option");
+        opt.value = code;
+        opt.textContent = code + (sheet.name ? " — " + sheet.name : "");
+        select.appendChild(opt);
+      });
+    }
+
+    function loadExistingSheetFromSelect() {
+      const code = document.getElementById("existingSheetSelect").value;
+      if (!code) {
+        alert("Choose an existing character sheet first.");
+        return;
+      }
+
+      const sheet = (window.FALLEN_GATE_CHARACTER_SHEETS || {})[code];
+
+      if (!sheet) {
+        alert("That sheet could not be found. Try Refresh List.");
+        return;
+      }
+
+      fillFormFromSheet(code, sheet, code + ".js");
+    }
+
+    function loadOldSheetFile(event) {
+      const file = event.target.files && event.target.files[0];
+
+      if (!file) return;
+
+      const reader = new FileReader();
+
+      reader.onload = function () {
+        try {
+          const result = parseCharacterSheetJS(String(reader.result || ""));
+
+          if (!result || !result.code || !result.sheet) {
+            alert("No character sheet was found inside that file.");
+            return;
+          }
+
+          fillFormFromSheet(result.code, result.sheet, file.name);
+          alert("Loaded " + result.code + " into the form.");
+        } catch (error) {
+          console.error(error);
+          alert("Could not read that character sheet file. Make sure it is a Fallen Gate character sheet .js file.");
+        }
+      };
+
+      reader.readAsText(file);
+    }
+
+    function parseCharacterSheetJS(text) {
+      const found = [];
+
+      function fakeRegister(code, sheet) {
+        found.push({
+          code: String(code || "").trim().toUpperCase(),
+          sheet: sheet || {}
+        });
+      }
+
+      const fakeWindow = {
+        FALLEN_GATE_CHARACTER_SHEETS: {},
+        registerFallenGateCharacterSheet: fakeRegister
+      };
+
+      // Supports the new format:
+      // registerFallenGateCharacterSheet("CODE", { ... });
+      // Also supports the older format:
+      // window.FALLEN_GATE_CHARACTER_SHEETS = { "CODE": { ... } };
+      const runner = new Function(
+        "window",
+        "registerFallenGateCharacterSheet",
+        text + "\n; return window.FALLEN_GATE_CHARACTER_SHEETS || {};"
+      );
+
+      const oldFormatSheets = runner(fakeWindow, fakeRegister);
+
+      if (found.length > 0) {
+        return found[0];
+      }
+
+      const oldCodes = Object.keys(oldFormatSheets || {});
+
+      if (oldCodes.length > 0) {
+        const code = oldCodes[0];
+        return {
+          code: String(code || "").trim().toUpperCase(),
+          sheet: oldFormatSheets[code] || {}
+        };
+      }
+
+      return null;
+    }
+
+    function clearAllChecks() {
+      setChecks(".spell-check", false);
+      setChecks(".skill-check", false);
+    }
+
+    function normalizeCompare(value) {
+      return String(value || "")
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "")
+        .trim();
+    }
+
+    function checkItemsByName(selector, items, possibleKeys) {
+      const wanted = new Set();
+
+      (items || []).forEach(function (item) {
+        if (typeof item === "string") {
+          wanted.add(normalizeCompare(item));
+          return;
+        }
+
+        possibleKeys.forEach(function (key) {
+          if (item && item[key]) {
+            wanted.add(normalizeCompare(item[key]));
+          }
+        });
+      });
+
+      document.querySelectorAll(selector).forEach(function (box) {
+        let data = {};
+
+        try {
+          data = JSON.parse(box.dataset.json || "{}");
+        } catch (error) {
+          data = {};
+        }
+
+        const candidates = [];
+
+        possibleKeys.forEach(function (key) {
+          if (data[key]) candidates.push(normalizeCompare(data[key]));
+        });
+
+        if (data.name) candidates.push(normalizeCompare(data.name));
+
+        box.checked = candidates.some(function (candidate) {
+          return wanted.has(candidate);
+        });
+      });
+    }
+
+    function itemsToJewelryText(items) {
+      return (items || []).map(function (item) {
+        if (typeof item === "string") return item;
+        return [
+          item.name || "",
+          item.type || "",
+          item.description || ""
+        ].filter(Boolean).join(" | ");
+      }).join("\n");
+    }
+
+    function itemsToWeaponText(items) {
+      return (items || []).map(function (item) {
+        if (typeof item === "string") return item;
+        return [
+          item.name || "",
+          item.type || "",
+          item.damage || "",
+          item.bonus || "",
+          item.description || ""
+        ].filter(Boolean).join(" | ");
+      }).join("\n");
+    }
+
+    function fillFormFromSheet(code, sheet, fileName) {
+      document.getElementById("sheetCode").value = String(code || "").toUpperCase();
+      document.getElementById("fileName").value = fileName || (String(code || "").toUpperCase() + ".js");
+      document.getElementById("charName").value = sheet.name || "";
+      document.getElementById("playerName").value = sheet.player || "";
+      document.getElementById("rank").value = sheet.rank || "";
+      document.getElementById("typeCode").value = sheet.type || (sheet.rank ? "ranks!!" + sheet.rank : "");
+
+      document.getElementById("body").value = Number(sheet.body || 0);
+      document.getElementById("mind").value = Number(sheet.mind || 0);
+      document.getElementById("spirit").value = Number(sheet.spirit || 0);
+      document.getElementById("bonus").value = Number(sheet.bonus || 0);
+
+      const inventory = sheet.inventory || {};
+      document.getElementById("jewelry").value = itemsToJewelryText(inventory.jewelry || sheet.jewelry || []);
+      document.getElementById("weapons").value = itemsToWeaponText(inventory.weapons || sheet.weapons || []);
+
+      document.getElementById("notes").value = sheet.notes || "";
+
+      clearAllChecks();
+      checkItemsByName(".spell-check", sheet.spells || [], ["name", "spell"]);
+      checkItemsByName(".skill-check", sheet.warriorSkills || sheet.skills || [], ["name", "skill"]);
+
+      generateSheet();
+    }
+
+    window.addEventListener("DOMContentLoaded", function () {
+      refreshExistingSheetList();
+    });
+
+
+    function generateSheet() {
+      const code = document.getElementById("sheetCode").value.trim().toUpperCase();
+      const fileName = document.getElementById("fileName").value.trim() || (code + ".js");
+      const sheet = {
+        name: document.getElementById("charName").value.trim(),
+        player: document.getElementById("playerName").value.trim(),
+        rank: document.getElementById("rank").value.trim(),
+        type: document.getElementById("typeCode").value.trim(),
+        body: Number(document.getElementById("body").value || 0),
+        mind: Number(document.getElementById("mind").value || 0),
+        spirit: Number(document.getElementById("spirit").value || 0),
+        bonus: Number(document.getElementById("bonus").value || 0),
+        spells: selectedJSON(".spell-check"),
+        warriorSkills: selectedJSON(".skill-check"),
+        inventory: {
+          jewelry: parseJewelry(document.getElementById("jewelry").value),
+          weapons: parseWeapons(document.getElementById("weapons").value)
+        },
+        notes: document.getElementById("notes").value.trim()
+      };
+
+      if (!code) {
+        alert("Add a Sheet Code first.");
+        return;
+      }
+
+      const js = '// character_sheets/' + fileName + '\n' +
+        'registerFallenGateCharacterSheet(' + JSON.stringify(code) + ', ' +
+        JSON.stringify(sheet, null, 2) +
+        ');\n';
+
+      document.getElementById("output").value = js;
+      document.getElementById("manifestLine").textContent =
+        'Add this to character_sheets/manifest.js: "./character_sheets/' + fileName + '"';
+    }
+
+    async function copyOutput() {
+      const output = document.getElementById("output");
+      output.select();
+      await navigator.clipboard.writeText(output.value);
+      alert("Character sheet JS copied.");
+    }
+  </script>
+</body>
+</html>

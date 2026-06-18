@@ -1,0 +1,10 @@
+{
+  "discord_behavior": "First send creates a message, saves its ID, future sends PATCH/edit that same message.",
+  "added_local_storage": true,
+  "storage_key": "fallenGateDiscordMessageID",
+  "added_start_new_discord_post_button": true,
+  "updated_button_label": "Send / Update Discord",
+  "changed_files": [
+    "index.html"
+  ]
+}
