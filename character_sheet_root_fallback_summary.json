@@ -1,0 +1,21 @@
+{
+  "problem": "GitHub may not have a character_sheets folder, causing sheet files listed in ./character_sheets/manifest.js to be missing.",
+  "workaround": "Use root-level character_sheets_manifest.js and put sheet files beside index.html.",
+  "new_files": [
+    "character_sheets_manifest.js",
+    "FG001_template.js",
+    "CHARACTER_SHEET_ROOT_WORKAROUND.txt"
+  ],
+  "updated_files": [
+    "index.html",
+    "character_sheets.html",
+    "character_sheet_form.html",
+    "character_sheets.js",
+    "how_to_use_dm_tool.html"
+  ],
+  "root_manifest_example": [
+    "./RileyD.js",
+    "./FG002.js"
+  ],
+  "one_file_fallback": "Paste generated registerFallenGateCharacterSheet(...) code at the bottom of character_sheets.js."
+}

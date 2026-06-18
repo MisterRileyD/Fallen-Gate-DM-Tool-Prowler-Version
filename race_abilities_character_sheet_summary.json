@@ -1,0 +1,38 @@
+{
+  "updated_files": [
+    "index.html",
+    "races.html",
+    "character_sheet_form.html",
+    "character_sheets.html",
+    "how_to_use_dm_tool.html"
+  ],
+  "new_file": "races.html",
+  "race_count": 35,
+  "ability_records_parsed": 112,
+  "race_families": {
+    "Angelic": 3,
+    "Demonic": 11,
+    "Divine": 2,
+    "Draconic": 2,
+    "Fae": 6,
+    "Jotun": 2,
+    "Lich": 2,
+    "Lycan": 2,
+    "Other": 1,
+    "Slime": 2,
+    "Vampire": 2
+  },
+  "new_character_sheet_fields": [
+    "race",
+    "raceFamily",
+    "raceTier",
+    "raceAbilities"
+  ],
+  "notes": "Race Guide tab added to DM Tool. Character Sheet Form now has Race and Race Abilities section.",
+  "syntax_checks": {
+    "races.html": "ok",
+    "character_sheet_form.html": "ok",
+    "character_sheets.html": "ok",
+    "index.html": "ok"
+  }
+}

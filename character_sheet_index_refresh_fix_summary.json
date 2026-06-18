@@ -1,0 +1,19 @@
+{
+  "fixed_issue": "Character Sheets page rendered before async character sheet files finished loading, then kept an old empty snapshot.",
+  "fix": "The page now refreshes the sheet index after fallenGateCharacterSheetsReady and uses a refreshable sheets variable.",
+  "sheet_code": "THY_PROWLER",
+  "files_to_upload_minimum": [
+    "character_sheets.html",
+    "character_sheets.js",
+    "character_sheets_manifest.js",
+    "Thy_Prowler.js",
+    "character_sheet_loader_test.html"
+  ],
+  "syntax_checks": {
+    "character_sheets.html": "ok",
+    "character_sheets.js": "ok",
+    "character_sheets_manifest.js": "ok",
+    "Thy_Prowler.js": "ok",
+    "character_sheet_loader_test.html": "ok"
+  }
+}

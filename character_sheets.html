@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <title>Fallen Gate Character Sheets</title>
-  <script src="./character_sheets/manifest.js"></script>
+  <script src="./character_sheets_manifest.js"></script>
   <script src="./character_sheets.js"></script>
   <style>
 :root {
@@ -280,7 +280,7 @@ p, li {
   </div>
 
   <script>
-    const sheets = window.FALLEN_GATE_CHARACTER_SHEETS || {};
+    let sheets = window.FALLEN_GATE_CHARACTER_SHEETS || {};
     let allPages = [];
     let filteredPages = [];
     let currentPage = 0;
@@ -320,6 +320,9 @@ p, li {
       const parts = [];
 
       if (item.category) parts.push(item.category);
+      if (item.family) parts.push(item.family);
+      if (item.race) parts.push("Race: " + item.race);
+      if (item.tier) parts.push(item.tier);
       if (item.type) parts.push(item.type);
       if (item.cost) parts.push("Cost: " + item.cost);
       if (item.damage) parts.push("Damage: " + item.damage);
@@ -360,6 +363,9 @@ p, li {
           s.rank,
           s.type,
           s.notes,
+          s.race,
+          s.raceFamily,
+          JSON.stringify(s.raceAbilities || []),
           JSON.stringify(s.spells || []),
           JSON.stringify(s.warriorSkills || s.skills || []),
           JSON.stringify(s.inventory || {}),
@@ -372,7 +378,7 @@ p, li {
 
       let indexContent = "";
       if (codes.length === 0) {
-        indexContent = '<div class="empty">No official character sheets listed yet. Add sheet files inside the character_sheets folder, then list them in character_sheets/manifest.js.</div>';
+        indexContent = '<div class="empty">No official character sheets listed yet. Add sheet files beside index.html, then list them in character_sheets_manifest.js.</div>';
       } else {
         indexContent = '<div class="index-list">' + codes.map(function (code) {
           const s = sheets[code];
@@ -400,6 +406,7 @@ p, li {
         const weapons = inventory.weapons || s.weapons || [];
         const spells = s.spells || [];
         const warriorSkills = s.warriorSkills || s.skills || [];
+        const raceAbilities = s.raceAbilities || [];
 
         return `
           <section class="book-page" id="sheet_${escapeAttr(code)}">
@@ -413,6 +420,12 @@ p, li {
               <div class="sheet-stat">Spirit<br>${emptyDash(s.spirit)}</div>
               <div class="sheet-stat">Bonus<br>${formatBonus(s.bonus)}</div>
             </div>
+
+            <div class="section-title">Race</div>
+            <div class="inventory-card"><strong>${escapeHtml(s.race || "No race selected.")}</strong>${s.raceFamily ? `<span class="item-meta">${escapeHtml(s.raceFamily)}${s.raceTier ? " | " + escapeHtml(s.raceTier) : ""}</span>` : ""}</div>
+
+            <div class="section-title">Race Abilities</div>
+            ${renderItemList(raceAbilities, "No race abilities listed.", "known-card")}
 
             <div class="section-title">Spells Known</div>
             ${renderItemList(spells, "No spells listed.", "known-card")}
@@ -525,6 +538,18 @@ p, li {
     function escapeAttr(value) {
       return escapeHtml(value);
     }
+
+
+    function refreshCharacterSheetIndex() {
+      sheets = window.FALLEN_GATE_CHARACTER_SHEETS || {};
+      renderSheets();
+    }
+
+    window.addEventListener("fallenGateCharacterSheetsReady", refreshCharacterSheetIndex);
+
+    // Extra fallback in case the sheet file loads just after the first render.
+    setTimeout(refreshCharacterSheetIndex, 400);
+    setTimeout(refreshCharacterSheetIndex, 1200);
 
     window.addEventListener("DOMContentLoaded", renderSheets);
   </script>

@@ -7,7 +7,7 @@
 
 	<!-- Keep datafile.js in the same folder as index.html -->
 	<script src="./datafile.js"></script>
-	<script src="./character_sheets/manifest.js"></script>
+	<script src="./character_sheets_manifest.js"></script>
 	<script src="./character_sheets.js"></script>
 
 	<style>
@@ -886,6 +886,7 @@
 			<button id="tabMonsterGuide" class="side-tab" onclick="openGuide('monsterGuide', 'Monster Guide', './monsters.html')"><span>Monster Guide</span></button>
 			<button id="tabSpellbookGuide" class="side-tab" onclick="openGuide('spellbookGuide', 'Spellbook', './spellbook.html')"><span>Spellbook</span></button>
 			<button id="tabSkillsGuide" class="side-tab" onclick="openGuide('skillsGuide', 'Warrior Skills', './skills.html')"><span>Warrior Skills</span></button>
+			<button id="tabRaceGuide" class="side-tab" onclick="openGuide('raceGuide', 'Race Guide', './races.html')"><span>Race Guide</span></button>
 			<button id="tabCharacterSheets" class="side-tab" onclick="openGuide('characterSheetsGuide', 'Character Sheets', './character_sheets.html')"><span>Character Sheets</span></button>
 		</nav>
 
@@ -1007,6 +1008,10 @@
 		});
 
 
+		window.addEventListener("fallenGateCharacterSheetsReady", function () {
+			characterSheets = window.FALLEN_GATE_CHARACTER_SHEETS || {};
+		});
+
 		let data = {};
 		let characterSheets = {};
 		let optionString = "";
@@ -1019,7 +1024,7 @@
 		let draggingId = null;
 		let playerColors = {};
 
-		const DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1382809889684062298/We1eJedsfCJq11wfDdUU9zmzrQC5JbiUs6JqYgCQHmzBzguMMJE0TPyMCgCQ4VfO93Rt";
+		const DISCORD_WEBHOOK_URL = "PASTE_YOUR_NEW_DISCORD_WEBHOOK_URL_HERE";
 		const DISCORD_MESSAGE_STORAGE_KEY = "fallenGateDiscordMessageID";
 		let eventMessageID = null;
 

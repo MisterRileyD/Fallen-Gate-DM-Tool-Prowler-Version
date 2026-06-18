@@ -1,0 +1,14 @@
+{
+  "main_issue_1": "The uploaded manifest entry was commented out, so no character sheet file was loaded.",
+  "main_issue_2": "For the root-folder workaround, the file must be named character_sheets_manifest.js, not manifest.js.",
+  "main_issue_3": "The sheet code was THY PROWLER with a space; the fixed file uses THY_PROWLER so it matches the filename style.",
+  "root_files_to_upload": [
+    "Thy_Prowler.js",
+    "character_sheets_manifest.js"
+  ],
+  "sheet_code_to_add": "THY_PROWLER",
+  "folder_workflow_files": [
+    "character_sheets/manifest.js",
+    "character_sheets/Thy_Prowler.js"
+  ]
+}

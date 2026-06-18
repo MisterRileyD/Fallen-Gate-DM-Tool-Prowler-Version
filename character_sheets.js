@@ -1,9 +1,13 @@
 // character_sheets.js
-// Loads all character sheet files listed in character_sheets/manifest.js.
-// Each sheet file should call registerFallenGateCharacterSheet("CODE", { ...sheet data... });
+// Safe Fallen Gate character sheet loader.
+// Put sheet files beside index.html and list them in character_sheets_manifest.js.
+// Example in character_sheets_manifest.js:
+// window.FALLEN_GATE_CHARACTER_SHEET_FILES = ["./Thy_Prowler.js"];
 
 (function () {
   window.FALLEN_GATE_CHARACTER_SHEETS = window.FALLEN_GATE_CHARACTER_SHEETS || {};
+  window.FALLEN_GATE_CHARACTER_SHEET_FILES = window.FALLEN_GATE_CHARACTER_SHEET_FILES || [];
+  window.FALLEN_GATE_CHARACTER_SHEETS_READY = false;
 
   window.registerFallenGateCharacterSheet = function (code, sheet) {
     const cleanCode = String(code || "").trim().toUpperCase();
@@ -19,8 +23,10 @@
   function loadSheetFile(src) {
     return new Promise(function (resolve) {
       const script = document.createElement("script");
-      script.src = src;
-      script.onload = function () { resolve({ src: src, ok: true }); };
+      script.src = src + (src.includes("?") ? "&" : "?") + "v=" + Date.now();
+      script.onload = function () {
+        resolve({ src: src, ok: true });
+      };
       script.onerror = function () {
         console.warn("Could not load character sheet file:", src);
         resolve({ src: src, ok: false });
@@ -33,19 +39,33 @@
     const files = window.FALLEN_GATE_CHARACTER_SHEET_FILES || [];
 
     if (!Array.isArray(files) || files.length === 0) {
+      window.FALLEN_GATE_CHARACTER_SHEETS_READY = true;
+      window.dispatchEvent(new CustomEvent("fallenGateCharacterSheetsReady"));
       return Promise.resolve([]);
     }
 
-    return Promise.all(files.map(loadSheetFile));
+    return Promise.all(files.map(loadSheetFile)).then(function (results) {
+      window.FALLEN_GATE_CHARACTER_SHEETS_READY = true;
+      window.dispatchEvent(new CustomEvent("fallenGateCharacterSheetsReady"));
+      return results;
+    });
   };
 
-  const files = window.FALLEN_GATE_CHARACTER_SHEET_FILES || [];
+  function startLoadingSheets() {
+    if (window.__fallenGateCharacterSheetsLoadingStarted) return;
+    window.__fallenGateCharacterSheetsLoadingStarted = true;
+    window.loadFallenGateCharacterSheets();
+  }
 
-  // When loaded from the page head, document.write keeps the files available
-  // before the page's onload/init functions run.
-  if (document.readyState === "loading" && Array.isArray(files) && files.length > 0) {
-    files.forEach(function (src) {
-      document.write('<script src="' + String(src).replaceAll('"', "%22") + '"><\\/script>');
-    });
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", startLoadingSheets);
+  } else {
+    startLoadingSheets();
   }
 })();
+
+
+// ------------------------------------------------------------
+// ONE-FILE FALLBACK OPTION
+// Paste generated registerFallenGateCharacterSheet(...) code below this line
+// if you do not want separate character sheet files.

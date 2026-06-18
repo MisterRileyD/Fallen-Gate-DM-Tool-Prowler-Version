@@ -1,0 +1,34 @@
+Character Sheet Root-Folder Workaround
+
+Use this when GitHub is not keeping the character_sheets folder.
+
+Files needed:
+- character_sheets.js
+- character_sheets_manifest.js
+- Your character sheet files, such as RileyD.js, FG002.js, etc.
+
+How to add a new sheet:
+1. Open character_sheet_form.html.
+2. Fill out the form or import an old sheet.
+3. Click Generate JS Sheet.
+4. Copy the output.
+5. Create a new .js file beside index.html, for example RileyD.js.
+6. Paste the generated output into RileyD.js.
+7. Open character_sheets_manifest.js.
+8. Add the file path:
+
+window.FALLEN_GATE_CHARACTER_SHEET_FILES = [
+  "./RileyD.js"
+];
+
+If you add more sheets:
+
+window.FALLEN_GATE_CHARACTER_SHEET_FILES = [
+  "./RileyD.js",
+  "./FG002.js",
+  "./FG003.js"
+];
+
+Alternative:
+Paste all generated registerFallenGateCharacterSheet(...) code directly at the bottom of character_sheets.js.
+That avoids using separate sheet files.

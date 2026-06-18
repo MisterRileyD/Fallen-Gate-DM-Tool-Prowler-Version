@@ -1,0 +1,24 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Character Sheet Loader Test</title>
+  <script src="./character_sheets_manifest.js"></script>
+  <script src="./character_sheets.js"></script>
+</head>
+<body>
+  <h1>Character Sheet Loader Test</h1>
+  <p id="status">Loading...</p>
+  <pre id="out"></pre>
+  <script>
+    function showSheets() {
+      const sheets = window.FALLEN_GATE_CHARACTER_SHEETS || {};
+      const codes = Object.keys(sheets);
+      document.getElementById("status").textContent = "Loaded " + codes.length + " character sheet(s).";
+      document.getElementById("out").textContent = JSON.stringify(sheets, null, 2);
+    }
+    window.addEventListener("fallenGateCharacterSheetsReady", showSheets);
+    setTimeout(showSheets, 1200);
+  </script>
+</body>
+</html>

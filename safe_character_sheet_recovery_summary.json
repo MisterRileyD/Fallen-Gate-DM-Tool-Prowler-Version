@@ -1,0 +1,23 @@
+{
+  "fixed": "Created a safer character sheet loader and included Thy_Prowler at root.",
+  "likely_blank_screen_cause": "A folder/manifest mismatch or old loader issue after uploading separate sheet files.",
+  "files_to_upload_minimum": [
+    "index.html",
+    "character_sheets.html",
+    "character_sheet_form.html",
+    "character_sheets.js",
+    "character_sheets_manifest.js",
+    "Thy_Prowler.js",
+    "character_sheet_loader_test.html"
+  ],
+  "test_url_after_upload": "/character_sheet_loader_test.html",
+  "sheet_code": "THY_PROWLER",
+  "syntax_checks": {
+    "index.html": "ok",
+    "character_sheets.html": "ok",
+    "character_sheet_form.html": "ok",
+    "character_sheets.js": "ok",
+    "character_sheets_manifest.js": "ok",
+    "Thy_Prowler.js": "ok"
+  }
+}
