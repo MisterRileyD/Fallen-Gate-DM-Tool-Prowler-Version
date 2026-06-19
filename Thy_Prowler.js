@@ -1023,6 +1023,36 @@ registerFallenGateCharacterSheet("THY_PROWLER", {
   ],
   "warriorSkills": [
     {
+      "name": "Improved Critical",
+      "discipline": "Melee",
+      "level": "Soldier"
+    },
+    {
+      "name": "Power Attack",
+      "discipline": "Melee",
+      "level": "Soldier"
+    },
+    {
+      "name": "Quick Draw",
+      "discipline": "Melee",
+      "level": "Soldier"
+    },
+    {
+      "name": "Signature Weapon",
+      "discipline": "Melee",
+      "level": "Soldier"
+    },
+    {
+      "name": "Sunder",
+      "discipline": "Melee",
+      "level": "Soldier"
+    },
+    {
+      "name": "Project Energy",
+      "discipline": "Melee",
+      "level": "Champion"
+    },
+    {
       "name": "Power Attack",
       "discipline": "Piercing",
       "level": "Soldier"
@@ -1063,12 +1093,72 @@ registerFallenGateCharacterSheet("THY_PROWLER", {
       "level": "Champion"
     },
     {
+      "name": "Power Attack",
+      "discipline": "Blunt",
+      "level": "Soldier"
+    },
+    {
+      "name": "Quick Draw",
+      "discipline": "Blunt",
+      "level": "Soldier"
+    },
+    {
+      "name": "Signature Weapon",
+      "discipline": "Blunt",
+      "level": "Soldier"
+    },
+    {
+      "name": "Improved Critical",
+      "discipline": "Blunt",
+      "level": "Soldier"
+    },
+    {
+      "name": "Sunder",
+      "discipline": "Blunt",
+      "level": "Soldier"
+    },
+    {
+      "name": "Project Energy",
+      "discipline": "Blunt",
+      "level": "Champion"
+    },
+    {
+      "name": "Power Attack",
+      "discipline": "Hand To Hand",
+      "level": "Soldier"
+    },
+    {
+      "name": "Signature Weapon",
+      "discipline": "Hand To Hand",
+      "level": "Soldier"
+    },
+    {
+      "name": "Improved Critical",
+      "discipline": "Hand To Hand",
+      "level": "Soldier"
+    },
+    {
       "name": "Point Blank Shot",
       "discipline": "Thrown",
       "level": "Soldier"
     },
     {
       "name": "Precise Shot",
+      "discipline": "Thrown",
+      "level": "Soldier"
+    },
+    {
+      "name": "Quick Draw",
+      "discipline": "Thrown",
+      "level": "Soldier"
+    },
+    {
+      "name": "Signature Weapon",
+      "discipline": "Thrown",
+      "level": "Soldier"
+    },
+    {
+      "name": "Improved Critical",
       "discipline": "Thrown",
       "level": "Soldier"
     },
@@ -1080,6 +1170,31 @@ registerFallenGateCharacterSheet("THY_PROWLER", {
     {
       "name": "Returning",
       "discipline": "Thrown",
+      "level": "Soldier"
+    },
+    {
+      "name": "Point Blank Shot",
+      "discipline": "Projectile",
+      "level": "Soldier"
+    },
+    {
+      "name": "Precise Shot",
+      "discipline": "Projectile",
+      "level": "Soldier"
+    },
+    {
+      "name": "Quick Draw",
+      "discipline": "Projectile",
+      "level": "Soldier"
+    },
+    {
+      "name": "Signature Weapon",
+      "discipline": "Projectile",
+      "level": "Soldier"
+    },
+    {
+      "name": "Improved Critical",
+      "discipline": "Projectile",
       "level": "Soldier"
     },
     {
