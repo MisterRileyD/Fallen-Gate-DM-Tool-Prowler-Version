@@ -320,6 +320,16 @@ a {
   <p><strong>Copy Turn Summary</strong> includes the latest successful loot split at the bottom of the turn summary. This also means <strong>Send / Update Discord</strong> includes the loot split because it uses the same summary text.</p>
 </section>
 
+
+<section class="book-page" id="clean_character_sheet_update_help">
+  <h2 class="item-title">Updating an Existing Character Sheet</h2>
+  <div class="category">Character Sheet Help</div>
+  <p>To update an older player sheet, open the Character Sheet Form and load the old <strong>.js</strong> file using the edit/load option. The form will pull the old character data into the fields.</p>
+  <p>Make the changes you need, then click <strong>Generate Clean JS Sheet</strong>. The output box creates one clean replacement file using <code>registerFallenGateCharacterSheet("CODE", {...});</code>.</p>
+  <p>Use <strong>Download / Replace JS File</strong> to download the updated file, or use <strong>Copy Clean JS Code</strong> and replace the entire old character sheet file with the output. Do not paste the new code underneath the old code.</p>
+  <p>The manifest line should stay the same if the file name stays the same. Example: <code>"./Lucie.js"</code>.</p>
+</section>
+
 </main>
     <footer class="book-footer">
       <button class="book-btn" onclick="goToPage('book_index')">Index</button>

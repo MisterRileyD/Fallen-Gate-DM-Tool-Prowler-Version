@@ -295,6 +295,30 @@
       margin-top: 2px;
     }
 
+
+    .output-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      margin: 8px 0 10px;
+    }
+
+    .clean-update-note {
+      margin-top: 8px;
+      padding: 8px 10px;
+      border: 1px solid rgba(90,61,20,0.22);
+      border-radius: 10px;
+      background: rgba(255,255,255,0.28);
+      font-weight: 700;
+      line-height: 1.35;
+    }
+
+    .clean-update-note code {
+      font-weight: 900;
+      color: #4d245d;
+    }
+
   </style>
 </head>
 <body>
@@ -634,9 +658,16 @@ Three People- 3 Mind/ 1 round to summon. Animates as above plus 1 x Fel Lich</sp
 
     <div class="section">
       <h2>Generate Character Sheet File</h2>
-      <button class="dark" type="button" onclick="generateSheet()">Generate JS Sheet</button>
-      <button type="button" onclick="copyOutput()">Copy Output</button>
+      <div class="output-actions">
+        <button class="dark" type="button" onclick="generateSheet()">Generate Clean JS Sheet</button>
+        <button type="button" onclick="copyOutput()">Copy Clean JS Code</button>
+        <button type="button" onclick="downloadGeneratedSheet()">Download / Replace JS File</button>
+        <button type="button" onclick="copyManifestLineOnly()">Copy Manifest Line</button>
+      </div>
       <div class="note" id="manifestLine">Manifest line will appear here after generating.</div>
+      <div class="clean-update-note">
+        To update an old player sheet: load the old <code>.js</code> file, make changes, click <strong>Generate Clean JS Sheet</strong>, then replace the entire old <code>.js</code> file with this cleaned output. Do not paste the new code under the old code.
+      </div>
       <textarea class="output" id="output" readonly></textarea>
     </div>
   </div>
@@ -819,7 +850,7 @@ Three People- 3 Mind/ 1 round to summon. Animates as above plus 1 x Fel Lich</sp
           }
 
           fillFormFromSheet(result.code, result.sheet, file.name);
-          alert("Loaded " + result.code + " into the form.");
+          alert("Loaded " + result.code + " into the form. Make your changes, then click Generate Clean JS Sheet and replace the old .js file.");
         } catch (error) {
           console.error(error);
           alert("Could not read that character sheet file. Make sure it is a Fallen Gate character sheet .js file.");
@@ -987,17 +1018,34 @@ Three People- 3 Mind/ 1 round to summon. Animates as above plus 1 x Fel Lich</sp
     });
 
 
-    function generateSheet() {
-      const code = document.getElementById("sheetCode").value.trim().toUpperCase();
-      const fileName = document.getElementById("fileName").value.trim() || (code + ".js");
-      const sheet = {
+
+    function sanitizeFileName(name, code) {
+      let fileName = String(name || "").trim();
+
+      if (!fileName) {
+        fileName = String(code || "character_sheet").trim() + ".js";
+      }
+
+      fileName = fileName.replace(/[^a-zA-Z0-9_.-]+/g, "_");
+
+      if (!fileName.toLowerCase().endsWith(".js")) {
+        fileName += ".js";
+      }
+
+      return fileName;
+    }
+
+    function buildCleanSheetObject() {
+      const selectedRace = document.getElementById("raceSelect").value.trim();
+
+      return {
         name: document.getElementById("charName").value.trim(),
         player: document.getElementById("playerName").value.trim(),
         rank: document.getElementById("rank").value.trim(),
         type: document.getElementById("typeCode").value.trim(),
-        race: document.getElementById("raceSelect").value.trim(),
-        raceFamily: (RACE_DATA[document.getElementById("raceSelect").value] || {}).family || "",
-        raceTier: (RACE_DATA[document.getElementById("raceSelect").value] || {}).tier || "",
+        race: selectedRace,
+        raceFamily: (RACE_DATA[selectedRace] || {}).family || "",
+        raceTier: (RACE_DATA[selectedRace] || {}).tier || "",
         body: Number(document.getElementById("body").value || 0),
         mind: Number(document.getElementById("mind").value || 0),
         spirit: Number(document.getElementById("spirit").value || 0),
@@ -1011,28 +1059,87 @@ Three People- 3 Mind/ 1 round to summon. Animates as above plus 1 x Fel Lich</sp
         },
         notes: document.getElementById("notes").value.trim()
       };
+    }
 
-      if (!code) {
-        alert("Add a Sheet Code first.");
-        return;
-      }
-
-      const js = '// ' + fileName + '\n' +
+    function buildCleanSheetJS(code, sheet, fileName) {
+      return '// ' + fileName + '\n' +
+        '// Clean Fallen Gate character sheet. Replace the old file with this whole file.\n' +
         'registerFallenGateCharacterSheet(' + JSON.stringify(code) + ', ' +
         JSON.stringify(sheet, null, 2) +
         ');\n';
+    }
+
+    function generateSheet() {
+      const code = document.getElementById("sheetCode").value.trim().toUpperCase();
+
+      if (!code) {
+        alert("Add a Sheet Code first.");
+        return "";
+      }
+
+      const fileName = sanitizeFileName(document.getElementById("fileName").value, code);
+      document.getElementById("fileName").value = fileName;
+
+      const sheet = buildCleanSheetObject();
+      const js = buildCleanSheetJS(code, sheet, fileName);
 
       document.getElementById("output").value = js;
-      document.getElementById("manifestLine").textContent =
-        'Add this to character_sheets_manifest.js: "./' + fileName + '"';
+      document.getElementById("manifestLine").innerHTML =
+        'To update this player sheet, replace <strong>' + fileName + '</strong> with the cleaned output below.<br>' +
+        'Manifest entry: <code>"./' + fileName + '"</code>';
+
+      return js;
     }
 
     async function copyOutput() {
+      let js = document.getElementById("output").value;
+
+      if (!js.trim()) {
+        js = generateSheet();
+      }
+
+      if (!js.trim()) return;
+
       const output = document.getElementById("output");
       output.select();
       await navigator.clipboard.writeText(output.value);
-      alert("Character sheet JS copied.");
+      alert("Clean character sheet JS copied. Replace the whole old .js file with this.");
     }
+
+    async function copyManifestLineOnly() {
+      const code = document.getElementById("sheetCode").value.trim().toUpperCase();
+      const fileName = sanitizeFileName(document.getElementById("fileName").value, code || "character_sheet");
+      const line = '"./' + fileName + '"';
+
+      await navigator.clipboard.writeText(line);
+      alert("Manifest line copied: " + line);
+    }
+
+    function downloadGeneratedSheet() {
+      let js = document.getElementById("output").value;
+
+      if (!js.trim()) {
+        js = generateSheet();
+      }
+
+      if (!js.trim()) return;
+
+      const code = document.getElementById("sheetCode").value.trim().toUpperCase();
+      const fileName = sanitizeFileName(document.getElementById("fileName").value, code || "character_sheet");
+
+      const blob = new Blob([js], { type: "text/javascript" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+
+      a.href = url;
+      a.download = fileName;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+
+      URL.revokeObjectURL(url);
+    }
+
   </script>
 </body>
 </html>
