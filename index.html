@@ -1024,7 +1024,7 @@
 		let draggingId = null;
 		let playerColors = {};
 
-		const DISCORD_WEBHOOK_URL = "PASTE_YOUR_NEW_DISCORD_WEBHOOK_URL_HERE";
+		const DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1382809889684062298/We1eJedsfCJq11wfDdUU9zmzrQC5JbiUs6JqYgCQHmzBzguMMJE0TPyMCgCQ4VfO93Rt";
 		const DISCORD_MESSAGE_STORAGE_KEY = "fallenGateDiscordMessageID";
 		let eventMessageID = null;
 
@@ -1556,11 +1556,81 @@
 			return color;
 		}
 
+
+		function cleanLootItemName(value) {
+			return String(value || "")
+				.replace(/\[\[\s*DM makes.*?\]\]/gi, "")
+				.replace(/Treasure Table\s*:/gi, "")
+				.replace(/\s+/g, " ")
+				.replace(/^[:,.\-\s]+|[:,.\-\s]+$/g, "")
+				.trim();
+		}
+
+		function parseTreasureText(treasureText) {
+			if (!treasureText) return [];
+
+			let text = String(treasureText || "")
+				.replace(/\r/g, "")
+				.replace(/Treasure Table\s*:/gi, "")
+				.replace(/\[\[\s*DM makes.*?\]\]/gi, "")
+				.trim();
+
+			// Keep only the treasure paragraph if monster notes were accidentally copied after it.
+			text = text.split(/\n\s*\n/)[0];
+
+			const options = [];
+			const pattern = /\(?\s*(\d+)\s*[-–]\s*(\d+)\s*\)?\s*([\s\S]*?)(?=\s*,?\s*\(?\s*\d+\s*[-–]\s*\d+\s*\)?\s*|$)/g;
+			let match;
+
+			while ((match = pattern.exec(text)) !== null) {
+				let min = Number(match[1]);
+				let max = Number(match[2]);
+				let rawItem = cleanLootItemName(match[3]);
+
+				if (!rawItem) continue;
+
+				let amount = 1;
+				let name = rawItem;
+
+				const startingAmount = rawItem.match(/^(\d+)\s+(.+)$/);
+				const endingAmount = rawItem.match(/^(.+?)\s*(?:x|×)\s*(\d+)$/i);
+
+				if (startingAmount) {
+					amount = Number(startingAmount[1]);
+					name = cleanLootItemName(startingAmount[2]);
+				} else if (endingAmount) {
+					name = cleanLootItemName(endingAmount[1]);
+					amount = Number(endingAmount[2]);
+				}
+
+				options.push({ min, max, name, amount });
+			}
+
+			return options;
+		}
+
+		function rollLootFromTreasureText(monster) {
+			const options = parseTreasureText(monster.treasure_text || monster.treasureText || "");
+			if (!options.length) return [];
+
+			const roll = Math.floor(Math.random() * 20) + 1;
+			const picked = options.find(option => roll >= option.min && roll <= option.max);
+
+			if (!picked || /no\s+loot/i.test(picked.name)) {
+				return [];
+			}
+
+			const results = [];
+			for (let amount = 0; amount < Number(picked.amount || 1); amount++) {
+				results.push(picked.name);
+			}
+			return results;
+		}
+
 		function divideLoot() {
 			const eligible = participants.filter(p => p.loot && !isDefeated(p) && hasEnteredCombat(p)).map(p => p.name);
 			const defeatedMonsters = participants.filter(function (p) {
-				if (!isDefeated(p) || !p.type.startsWith("monsters!!")) return false;
-				return true;
+				return isDefeated(p) && String(p.type || "").startsWith("monsters!!");
 			});
 
 			if (eligible.length === 0) {
@@ -1568,25 +1638,41 @@
 				return;
 			}
 
+			if (defeatedMonsters.length === 0) {
+				document.getElementById("lootOutput").innerHTML = "No loot generated. Defeat a monster after it has an Init Roll first.";
+				return;
+			}
+
 			let loot = [];
+			let checkedMonsterNames = [];
 
 			defeatedMonsters.forEach(function (p) {
 				const monsterName = p.type.split("!!").slice(1).join("!!");
 				const monster = data.monsters[monsterName];
-				if (!monster || !monster.treasure) return;
+				if (!monster) return;
+
+				checkedMonsterNames.push(p.name || monsterName);
 
 				const rolls = Number(monster.loot_rolls || 1);
+				const hasTreasureArray = Array.isArray(monster.treasure) && monster.treasure.length > 0;
 
 				for (let r = 0; r < rolls; r++) {
-					const item = monster.treasure[Math.floor(Math.random() * monster.treasure.length)];
-					for (let amount = 0; amount < Number(item.amount || 1); amount++) {
-						loot.push(item.name);
+					if (hasTreasureArray) {
+						const item = monster.treasure[Math.floor(Math.random() * monster.treasure.length)];
+						if (!item || /no\s+loot/i.test(item.name || "")) continue;
+
+						for (let amount = 0; amount < Number(item.amount || 1); amount++) {
+							loot.push(item.name);
+						}
+					} else {
+						loot = loot.concat(rollLootFromTreasureText(monster));
 					}
 				}
 			});
 
 			if (loot.length === 0) {
-				document.getElementById("lootOutput").innerHTML = "No loot generated. Defeat a monster after it has an Init Roll first.";
+				document.getElementById("lootOutput").innerHTML =
+					"No loot dropped from the defeated monster roll. This can happen if the monster rolled No Loot, or if that monster has no treasure table.";
 				return;
 			}
 
@@ -1603,7 +1689,12 @@
 				output[person][item]++;
 			});
 
-			let html = "<strong>Loot Split</strong><ul>";
+			let html = "<strong>Loot Split</strong>";
+			if (checkedMonsterNames.length) {
+				html += "<div class='small'>Loot rolled from defeated monster(s): " + checkedMonsterNames.map(escapeHtml).join(", ") + "</div>";
+			}
+			html += "<ul>";
+
 			Object.keys(output).forEach(function (person) {
 				html += "<li><strong>" + escapeHtml(person) + "</strong><ul>";
 				Object.keys(output[person]).forEach(function (item) {
@@ -1616,7 +1707,8 @@
 			document.getElementById("lootOutput").innerHTML = html;
 		}
 
-		function copyTurnSummary() {
+		function copyTurnSummary()
+ {
 			const summary = buildSummaryText();
 			navigator.clipboard.writeText(summary).then(function () {
 				alert("Turn summary copied.");
