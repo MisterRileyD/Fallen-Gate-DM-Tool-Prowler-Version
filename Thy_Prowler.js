@@ -1,16 +1,17 @@
 // THY_PROWLER.js
+// Clean Fallen Gate character sheet. Replace the old file with this whole file.
 registerFallenGateCharacterSheet("THY_PROWLER", {
   "name": "MisterRileyD",
   "player": "",
-  "rank": "Light Knight",
-  "type": "ranks!!Light Knight",
+  "rank": "Knight Captain",
+  "type": "ranks!!Knight Captain",
   "race": "Shadow Prowler",
   "raceFamily": "Demonic",
   "raceTier": "Base",
-  "body": 10,
-  "mind": 10,
-  "spirit": 10,
-  "bonus": 2,
+  "body": 12,
+  "mind": 12,
+  "spirit": 12,
+  "bonus": 3,
   "raceAbilities": [
     {
       "name": "Shadow Sight",
