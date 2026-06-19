@@ -360,20 +360,20 @@
       <div class="grid">
         <div>
           <label for="sheetCode">Sheet Code</label>
-          <input id="sheetCode" placeholder="Example: FG001 or RileyD">
+          <input id="sheetCode" placeholder="Example: FG001 or RileyD" oninput="syncFileNameFromCode(); scheduleGenerateSheet()">
         </div>
         <div>
           <label for="fileName">File Name</label>
-          <input id="fileName" placeholder="Example: RileyD.js">
+          <input id="fileName" placeholder="Example: RileyD.js" oninput="scheduleGenerateSheet()">
           <div class="small">Use only letters, numbers, dash, or underscore if possible.</div>
         </div>
         <div>
           <label for="charName">Character Name</label>
-          <input id="charName" placeholder="Character Name">
+          <input id="charName" placeholder="Character Name" oninput="scheduleGenerateSheet()">
         </div>
         <div>
           <label for="rank">Rank</label>
-          <select id="rank">
+          <select id="rank" onchange="syncTypeCodeFromRank(); scheduleGenerateSheet();">
             <option value="">Choose rank</option>
             <option value="Initiate">Initiate</option>
 <option value="Acolyte">Acolyte</option>
@@ -411,11 +411,11 @@
         </div>
         <div>
           <label for="typeCode">Type Code</label>
-          <input id="typeCode" placeholder="Example: ranks!!Light Knight">
+          <input id="typeCode" placeholder="Example: ranks!!Light Knight" oninput="scheduleGenerateSheet()">
         </div>
         <div>
           <label for="playerName">Player / Owner Name</label>
-          <input id="playerName" placeholder="Optional">
+          <input id="playerName" placeholder="Optional" oninput="scheduleGenerateSheet()">
         </div>
       </div>
     </div>
@@ -426,7 +426,7 @@
       <div class="grid">
         <div>
           <label for="raceSelect">Race</label>
-          <select id="raceSelect" onchange="renderRaceAbilities()">
+          <select id="raceSelect" onchange="renderRaceAbilities(); scheduleGenerateSheet()">
             <option value="">Choose race</option>
             <option value="Arch-Angel">Arch-Angel</option>
 <option value="Angel">Angel</option>
@@ -482,19 +482,19 @@
       <div class="grid">
         <div>
           <label for="body">Body</label>
-          <input id="body" type="number" placeholder="10">
+          <input id="body" type="number" placeholder="10" oninput="scheduleGenerateSheet()">
         </div>
         <div>
           <label for="mind">Mind</label>
-          <input id="mind" type="number" placeholder="10">
+          <input id="mind" type="number" placeholder="10" oninput="scheduleGenerateSheet()">
         </div>
         <div>
           <label for="spirit">Spirit</label>
-          <input id="spirit" type="number" placeholder="10">
+          <input id="spirit" type="number" placeholder="10" oninput="scheduleGenerateSheet()">
         </div>
         <div>
           <label for="bonus">Combat Bonus</label>
-          <input id="bonus" type="number" placeholder="2">
+          <input id="bonus" type="number" placeholder="2" oninput="scheduleGenerateSheet()">
         </div>
       </div>
     </div>
@@ -504,13 +504,13 @@
       <div class="grid">
         <div>
           <label for="jewelry">Jewelry</label>
-          <textarea id="jewelry" placeholder="One per line. Example:
+          <textarea id="jewelry" oninput="scheduleGenerateSheet()" placeholder="One per line. Example:
 Ring of Fire Resistance | Ring | Ignores fire burn effect
 Shadow Amulet | Amulet | +1 to shadow checks"></textarea>
         </div>
         <div>
           <label for="weapons">Weapons</label>
-          <textarea id="weapons" placeholder="One per line. Example:
+          <textarea id="weapons" oninput="scheduleGenerateSheet()" placeholder="One per line. Example:
 Holy Vengeance Trident | Trident | 3 Body / 3 Spirit | +2
 Sea Wrath | Trident | Optional damage | Optional bonus"></textarea>
         </div>
@@ -653,19 +653,20 @@ Three People- 3 Mind/ 1 round to summon. Animates as above plus 1 x Fel Lich</sp
 
     <div class="section">
       <h2>Notes / Other Information</h2>
-      <textarea id="notes" placeholder="Backstory, title, permissions, special rules, player notes, or anything the DM needs to know."></textarea>
+      <textarea id="notes" oninput="scheduleGenerateSheet()" placeholder="Backstory, title, permissions, special rules, player notes, or anything the DM needs to know."></textarea>
     </div>
 
     <div class="section">
       <h2>Generate Character Sheet File</h2>
       <div class="output-actions">
         <button class="dark" type="button" onclick="generateSheet()">Generate Clean JS Sheet</button>
+        <button type="button" onclick="forceRebuildCleanOutput()">Force Rebuild Output</button>
         <button type="button" onclick="copyOutput()">Copy Clean JS Code</button>
         <button type="button" onclick="downloadGeneratedSheet()">Download / Replace JS File</button>
         <button type="button" onclick="copyManifestLineOnly()">Copy Manifest Line</button>
       </div>
       <div class="note" id="manifestLine">Manifest line will appear here after generating.</div>
-      <div class="clean-update-note">
+      <div class="clean-update-note"><strong>Auto-updates after you change fields.</strong> After loading an old sheet, edits to rank, stats, spells, skills, race, inventory, and notes will rebuild the clean JS output automatically. 
         To update an old player sheet: load the old <code>.js</code> file, make changes, click <strong>Generate Clean JS Sheet</strong>, then replace the entire old <code>.js</code> file with this cleaned output. Do not paste the new code under the old code.
       </div>
       <textarea class="output" id="output" readonly></textarea>
@@ -675,6 +676,54 @@ Three People- 3 Mind/ 1 round to summon. Animates as above plus 1 x Fel Lich</sp
   <script src="./character_sheets_manifest.js"></script>
   <script src="./character_sheets.js"></script>
   <script>
+
+    let autoGenerateTimer = null;
+    let isFillingOldSheet = false;
+
+    function scheduleGenerateSheet() {
+      if (isFillingOldSheet) return;
+
+      clearTimeout(autoGenerateTimer);
+      autoGenerateTimer = setTimeout(function () {
+        const codeBox = document.getElementById("sheetCode");
+        if (codeBox && codeBox.value.trim()) {
+          generateSheet();
+        }
+      }, 120);
+    }
+
+    function syncTypeCodeFromRank() {
+      const rank = document.getElementById("rank").value.trim();
+      const typeCode = document.getElementById("typeCode");
+
+      if (!typeCode) return;
+
+      // Keep the Type Code matching the Rank unless the user manually clears the rank.
+      typeCode.value = rank ? "ranks!!" + rank : "";
+    }
+
+    function syncFileNameFromCode() {
+      const code = document.getElementById("sheetCode").value.trim().toUpperCase();
+      const fileName = document.getElementById("fileName");
+
+      if (!fileName) return;
+
+      // Only auto-fill when blank or when it still matches an older sheet-code style file name.
+      if (!fileName.value.trim() || /^[A-Z0-9_-]+\.js$/i.test(fileName.value.trim())) {
+        fileName.value = code ? code + ".js" : "";
+      }
+    }
+
+    document.addEventListener("change", function (event) {
+      if (event.target && (
+        event.target.classList.contains("spell-check") ||
+        event.target.classList.contains("skill-check") ||
+        event.target.classList.contains("race-ability-check")
+      )) {
+        scheduleGenerateSheet();
+      }
+    });
+
 
     const RACE_DATA = {"Arch-Angel": {"name": "Arch-Angel", "family": "Angelic", "tier": "Advanced Fallen Angel", "abilities": [{"name": "Angelic Claws", "sourceName": "Angelic Claws", "category": "Angelic", "cost": "Free"}, {"name": "Angelic Flight", "sourceName": "Angelic Flight", "category": "Angelic", "cost": "Free"}, {"name": "Imbue Weapon", "sourceName": "Imbue Weapon", "category": "Angelic", "cost": "Free"}, {"name": "Dark Summoning", "sourceName": "Dark Summoning", "category": "Angelic", "cost": "Free"}, {"name": "Shapeshifting", "sourceName": "Shapeshifting", "category": "Angelic", "cost": "Free"}, {"name": "Unholy Aura", "sourceName": "Unholy Aura", "category": "Angelic", "cost": "Free"}]}, "Angel": {"name": "Angel", "family": "Angelic", "tier": "Base", "abilities": [{"name": "Angelic Claws", "sourceName": "Angelic Claws", "category": "Angelic", "cost": "Free"}, {"name": "Angelic Flight", "sourceName": "Angelic Flight", "category": "Angelic", "cost": "Free"}, {"name": "Imbue Weapon", "sourceName": "Imbue Weapon", "category": "Angelic", "cost": "Free"}, {"name": "Shapeshifting", "sourceName": "Shapeshifting", "category": "Angelic", "cost": "Free"}, {"name": "Unholy Aura", "sourceName": "Unholy Aura", "category": "Angelic", "cost": "Free"}]}, "Erinyes": {"name": "Erinyes", "family": "Angelic", "tier": "Base", "abilities": [{"name": "Angelic Claws", "sourceName": "Angelic Claws", "category": "Angelic", "cost": "Free"}, {"name": "Angelic Flight", "sourceName": "Angelic Flight", "category": "Angelic", "cost": "Free"}, {"name": "Soul Draining Kiss", "sourceName": "Soul Draining Kiss", "category": "Angelic", "cost": "Free"}, {"name": "Shapeshifting", "sourceName": "Shapeshifting", "category": "Angelic", "cost": "Free"}, {"name": "Unholy Aura", "sourceName": "Unholy Aura", "category": "Angelic", "cost": "Free"}]}, "Abyssal Hellhound": {"name": "Abyssal Hellhound", "family": "Demonic", "tier": "Advanced Demonic", "abilities": [{"name": "Demonic Claws", "sourceName": "Demonic Claws", "category": "Demonic", "cost": "Free"}, {"name": "Dark Summoning", "sourceName": "Dark Summoning", "category": "Demonic", "cost": "Free"}, {"name": "Demonic Bite", "sourceName": "Demonic Bite", "category": "Demonic", "cost": "Free"}, {"name": "Hellfire Breath", "sourceName": "Hellfire Breath", "category": "Demonic", "cost": "Free"}, {"name": "Soul Feeding", "sourceName": "Soul Feeding", "category": "Demonic", "cost": "Free"}, {"name": "Demonic Speed", "sourceName": "Demonic Speed", "category": "Demonic", "cost": "Free"}, {"name": "Shadow Prowl", "sourceName": "Shadow Prowl", "category": "Demonic", "cost": "Free"}, {"name": "Weakness: Holy Light", "sourceName": "Weakness: Holy Light", "category": "Demonic", "cost": "N/A"}]}, "Arch Demon": {"name": "Arch Demon", "family": "Demonic", "tier": "Advanced Demonic", "abilities": [{"name": "Demonic Claws", "sourceName": "Demonic Claws", "category": "Demonic", "cost": "Free"}, {"name": "Demonic Flight", "sourceName": "Demonic Flight", "category": "Demonic", "cost": "Free"}, {"name": "Shapeshifting", "sourceName": "Shapeshifting", "category": "Demonic", "cost": "Free"}, {"name": "Dark Summoning", "sourceName": "Dark Summoning", "category": "Demonic", "cost": "Free"}, {"name": "Imbue Weapon", "sourceName": "Imbue Weapon", "category": "Demonic", "cost": "Free"}, {"name": "Weakness: Holy Light", "sourceName": "Weakness: Holy Light", "category": "Demonic", "cost": "N/A"}]}, "Arch-Sphinx": {"name": "Arch-Sphinx", "family": "Demonic", "tier": "Advanced Demonic", "abilities": [{"name": "Demonic Claws", "sourceName": "Demonic Claws", "category": "Demonic", "cost": "Free"}, {"name": "Demonic Bite", "sourceName": "Demonic Bite", "category": "Demonic", "cost": "Free"}, {"name": "Demonic Flight", "sourceName": "Demonic Flight", "category": "Demonic", "cost": "Free"}, {"name": "Shapeshifting", "sourceName": "Shapeshifting", "category": "Demonic", "cost": "Free"}, {"name": "Weakness: Holy Light", "sourceName": "Weakness: Holy Light", "category": "Demonic", "cost": "N/A"}, {"name": "Riddle of the Sphinx", "sourceName": "Riddle of the Sphinx", "category": "Sphinx", "cost": "1 Mind"}, {"name": "Imbue Weapon", "sourceName": "Imbue Weapon", "category": "Demonic", "cost": "Free"}, {"name": "Dark Presence", "sourceName": "Dark Presence", "category": "Sphinx", "cost": "Free"}]}, "Shadewalker": {"name": "Shadewalker", "family": "Demonic", "tier": "Advanced Demonic", "abilities": [{"name": "Shadow Sight", "sourceName": "Shadow Prowler Shadow Sight", "category": "Demonic", "cost": "Free"}, {"name": "Shadow Prowler War Form", "sourceName": "Shadow Prowler War Form", "category": "Demonic", "cost": "Free"}, {"name": "War Form Claws", "sourceName": "Shadow Prowler War Form Claws", "category": "Demonic", "cost": "Free (must be in Shadow Prowler War Form)"}, {"name": "War Form Bite", "sourceName": "Shadow Prowler War Form Bite", "category": "Demonic", "cost": "Free"}, {"name": "Nine Lives", "sourceName": "Nine Lives", "category": "Demonic", "cost": "Free"}, {"name": "Form Mastery", "sourceName": "Form Mastery", "category": "Lycan, Demonic", "cost": "Free"}, {"name": "Apex Predator", "sourceName": "Apex Predator", "category": "Lycan, Demonic", "cost": "None"}, {"name": "Primal Roar", "sourceName": "Primal Roar", "category": "Lycan, Demonic", "cost": "None"}, {"name": "One with Shadows", "sourceName": "One with Shadow", "category": "Demonic", "cost": "Per Spell"}, {"name": "Weakness: Holy Light", "sourceName": "Weakness: Holy Light", "category": "Demonic", "cost": "N/A"}]}, "Wildbrand Hound": {"name": "Wildbrand Hound", "family": "Demonic", "tier": "Advanced Demonic", "abilities": [{"name": "Lunar War Form", "sourceName": "Lunar War Form", "category": "👿-demonic-abilities", "cost": "N/A"}, {"name": "Lunar Bite", "sourceName": "Lunar Bite", "category": "Demon", "cost": "Free"}, {"name": "Lunar Claws", "sourceName": "Lunar Claws", "category": "Demon", "cost": "Free"}, {"name": "Lunar Ascension", "sourceName": "Lunar Ascension", "category": "Demon", "cost": "Free"}, {"name": "Moonfire Breath", "sourceName": "Moonfire Breath", "category": "Demon", "cost": "2 Spirit"}, {"name": "Walk on the Dark Side", "sourceName": "Walk on the Dark Side", "category": "Demon", "cost": "Free/2 Spirit"}, {"name": "Eclipse Howl", "sourceName": "Eclipse Howl", "category": "Demon", "cost": "Free"}, {"name": "Apex Predator", "sourceName": "Apex Predator", "category": "Lycan, Demonic", "cost": "None"}, {"name": "Weakness: Holy Light", "sourceName": "Weakness: Holy Light", "category": "Demonic", "cost": "N/A"}]}, "Devil/Fiend": {"name": "Devil/Fiend", "family": "Demonic", "tier": "Base", "abilities": [{"name": "Demonic Claws", "sourceName": "Demonic Claws", "category": "Demonic", "cost": "Free"}, {"name": "Demonic Flight", "sourceName": "Demonic Flight", "category": "Demonic", "cost": "Free"}, {"name": "Shapeshifting", "sourceName": "Shapeshifting", "category": "Demonic", "cost": "Free"}, {"name": "Imbue Weapon", "sourceName": "Imbue Weapon", "category": "Demonic", "cost": "Free"}, {"name": "Weakness: Holy Light", "sourceName": "Weakness: Holy Light", "category": "Demonic", "cost": "N/A"}]}, "Hellhound": {"name": "Hellhound", "family": "Demonic", "tier": "Base", "abilities": [{"name": "Demonic Claws", "sourceName": "Demonic Claws", "category": "Demonic", "cost": "Free"}, {"name": "Demonic Bite", "sourceName": "Demonic Bite", "category": "Demonic", "cost": "Free"}, {"name": "Hellfire Breath", "sourceName": "Hellfire Breath", "category": "Demonic", "cost": "Free"}, {"name": "Demonic Speed", "sourceName": "Demonic Speed", "category": "Demonic", "cost": "Free"}, {"name": "Weakness: Holy Light", "sourceName": "Weakness: Holy Light", "category": "Demonic", "cost": "N/A"}]}, "Incubus/Succubus": {"name": "Incubus/Succubus", "family": "Demonic", "tier": "Base", "abilities": [{"name": "Demonic Claws", "sourceName": "Demonic Claws", "category": "Demonic", "cost": "Free"}, {"name": "Soul Draining Kiss", "sourceName": "Soul Draining Kiss", "category": "Demonic", "cost": "Free"}, {"name": "Demonic Flight", "sourceName": "Demonic Flight", "category": "Demonic", "cost": "Free"}, {"name": "Dream Walking", "sourceName": "Dream Walking", "category": "Demonic", "cost": "Free"}, {"name": "Shapeshifting", "sourceName": "Shapeshifting", "category": "Demonic", "cost": "Free"}, {"name": "Weakness: Holy Light", "sourceName": "Weakness: Holy Light", "category": "Demonic", "cost": "N/A"}]}, "Shadow Prowler": {"name": "Shadow Prowler", "family": "Demonic", "tier": "Base", "abilities": [{"name": "Shadow Sight", "sourceName": "Shadow Prowler Shadow Sight", "category": "Demonic", "cost": "Free"}, {"name": "Shadow Prowler War Form", "sourceName": "Shadow Prowler War Form", "category": "Demonic", "cost": "Free"}, {"name": "War Form Claws", "sourceName": "Shadow Prowler War Form Claws", "category": "Demonic", "cost": "Free (must be in Shadow Prowler War Form)"}, {"name": "War Form Bite", "sourceName": "Shadow Prowler War Form Bite", "category": "Demonic", "cost": "Free"}, {"name": "Nine Lives", "sourceName": "Nine Lives", "category": "Demonic", "cost": "Free"}, {"name": "Weakness: Holy Light", "sourceName": "Weakness: Holy Light", "category": "Demonic", "cost": "N/A"}]}, "Sphinx": {"name": "Sphinx", "family": "Demonic", "tier": "Base", "abilities": [{"name": "Demonic Claws", "sourceName": "Demonic Claws", "category": "Demonic", "cost": "Free"}, {"name": "Demonic Bite", "sourceName": "Demonic Bite", "category": "Demonic", "cost": "Free"}, {"name": "Demonic Flight", "sourceName": "Demonic Flight", "category": "Demonic", "cost": "Free"}, {"name": "Shapeshifting", "sourceName": "Shapeshifting", "category": "Demonic", "cost": "Free"}, {"name": "Weakness: Holy Light", "sourceName": "Weakness: Holy Light", "category": "Demonic", "cost": "N/A"}, {"name": "Riddle of the Sphinx", "sourceName": "Riddle of the Sphinx", "category": "Sphinx", "cost": "1 Mind"}]}, "Tiefling": {"name": "Tiefling", "family": "Demonic", "tier": "Base", "abilities": [{"name": "Demonic Claws", "sourceName": "Demonic Claws", "category": "Demonic", "cost": "Free"}, {"name": "Demonic Bite", "sourceName": "Demonic Bite", "category": "Demonic", "cost": "Free"}, {"name": "Imbue Weapon", "sourceName": "Imbue Weapon", "category": "Demonic", "cost": "Free"}, {"name": "Shapeshifting", "sourceName": "Shapeshifting", "category": "Demonic", "cost": "Free"}]}, "Elder Draconic": {"name": "Elder Draconic", "family": "Draconic", "tier": "Advanced", "abilities": [{"name": "Draconic Breath", "sourceName": "Draconic Breath", "category": "Draconic", "cost": "Free"}, {"name": "Draconic Flight", "sourceName": "Draconic Flight", "category": "Draconic", "cost": "Free"}, {"name": "Draconic Claws", "sourceName": "Draconic Claws", "category": "Draconic", "cost": "Free"}, {"name": "Draconic Tail", "sourceName": "Draconic Tail", "category": "Draconic", "cost": "Free"}, {"name": "Dragon Kin", "sourceName": "Dragon Kin", "category": "Draconic", "cost": "Free"}, {"name": "Dragon Form", "sourceName": "Dragon Form", "category": "Draconic", "cost": "Free"}]}, "Draconic": {"name": "Draconic", "family": "Draconic", "tier": "Base", "abilities": [{"name": "Draconic Breath", "sourceName": "Draconic Breath", "category": "Draconic", "cost": "Free"}, {"name": "Draconic Flight", "sourceName": "Draconic Flight", "category": "Draconic", "cost": "Free"}, {"name": "Draconic Claws", "sourceName": "Draconic Claws", "category": "Draconic", "cost": "Free"}, {"name": "Draconic Tail", "sourceName": "Draconic Tail", "category": "Draconic", "cost": "Free"}]}, "Dread Lich": {"name": "Dread Lich", "family": "Lich", "tier": "Advanced", "abilities": [{"name": "Drain Life", "sourceName": "Drain Life", "category": "Lich", "cost": "Free"}, {"name": "Phylactery", "sourceName": "Create Phylactery", "category": "Lich", "cost": "Varies"}, {"name": "Create Soulstones", "sourceName": "Create Soulstones", "category": "Lich", "cost": "Varies"}]}, "Lich": {"name": "Lich", "family": "Lich", "tier": "Base", "abilities": [{"name": "Drain Life", "sourceName": "Drain Life", "category": "Lich", "cost": "Free"}, {"name": "Phylactery", "sourceName": "Create Phylactery", "category": "Lich", "cost": "Varies"}]}, "Lycan Pack Leader": {"name": "Lycan Pack Leader", "family": "Lycan", "tier": "Advanced", "abilities": [{"name": "Lycan War Form", "sourceName": "Lycan War Form", "category": "Lycan", "cost": "Free"}, {"name": "Lycan War Form Claws", "sourceName": "Lycan War Form Claws", "category": "Lycan", "cost": "Free"}, {"name": "Lycan War Form Bite", "sourceName": "Lycan War Form Bite", "category": "Lycan", "cost": "Free"}, {"name": "Form Mastery", "sourceName": "Form Mastery", "category": "Lycan, Demonic", "cost": "Free"}, {"name": "Pack Tactics", "sourceName": "Pack Tactics", "category": "Lycan", "cost": "Free"}, {"name": "Apex Predator", "sourceName": "Apex Predator", "category": "Lycan, Demonic", "cost": "None"}, {"name": "Primal Roar", "sourceName": "Primal Roar", "category": "Lycan, Demonic", "cost": "None"}, {"name": "Weakness: Silver", "sourceName": "Weakness: Silver", "category": "Lycan", "cost": "N/A"}]}, "Lycan": {"name": "Lycan", "family": "Lycan", "tier": "Base", "abilities": [{"name": "Lycan War Form", "sourceName": "Lycan War Form", "category": "Lycan", "cost": "Free"}, {"name": "Lycan War Form Claws", "sourceName": "Lycan War Form Claws", "category": "Lycan", "cost": "Free"}, {"name": "Lycan War Form Bite", "sourceName": "Lycan War Form Bite", "category": "Lycan", "cost": "Free"}, {"name": "Weakness: Silver", "sourceName": "Weakness: Silver", "category": "Lycan", "cost": "N/A"}]}, "Master Vampire": {"name": "Master Vampire", "family": "Vampire", "tier": "Advanced", "abilities": [{"name": "Vampire Claws", "sourceName": "Vampire Claws", "category": "Vampire", "cost": "Free"}, {"name": "Vampire Bite", "sourceName": "Vampire Bite", "category": "Vampire", "cost": "Free"}, {"name": "Wolf Form", "sourceName": "Wolf Form", "category": "Vampire", "cost": "Free"}, {"name": "Swarm of Bats", "sourceName": "Swarm of Bats", "category": "Vampire", "cost": "Free"}, {"name": "Gaseous Form", "sourceName": "Gaseous Form", "category": "Vampire", "cost": "Free"}, {"name": "Command Vampire", "sourceName": "Command Vampire", "category": "Vampire", "cost": "Free"}, {"name": "True Form", "sourceName": "True Form", "category": "Vampire", "cost": "Free"}, {"name": "Power of Blood", "sourceName": "Power of Blood", "category": "Vampire", "cost": "Free"}, {"name": "Undying", "sourceName": "Undying", "category": "Vampire", "cost": "N/A"}, {"name": "Day Walker", "sourceName": "Day Walker", "category": "Vampire", "cost": "N/A"}, {"name": "Weakness: Fire/ Holy Fire", "sourceName": "Weakness: Fire/ Holy Fire", "category": "Vampire", "cost": "N/A"}]}, "Vampire": {"name": "Vampire", "family": "Vampire", "tier": "Base", "abilities": [{"name": "Vampire Claws", "sourceName": "Vampire Claws", "category": "Vampire", "cost": "Free"}, {"name": "Vampire Bite", "sourceName": "Vampire Bite", "category": "Vampire", "cost": "Free"}, {"name": "Wolf Form", "sourceName": "Wolf Form", "category": "Vampire", "cost": "Free"}, {"name": "Swarm of Bats", "sourceName": "Swarm of Bats", "category": "Vampire", "cost": "Free"}, {"name": "Gaseous Form", "sourceName": "Gaseous Form", "category": "Vampire", "cost": "Free"}, {"name": "Weakness: Fire/ Holy Fire", "sourceName": "Weakness: Fire/ Holy Fire", "category": "Vampire", "cost": "N/A"}, {"name": "Weakness: Sunlight", "sourceName": "Weakness: Sunlight", "category": "Vampire", "cost": "N/A"}]}, "Queen Slime": {"name": "Queen Slime", "family": "Slime", "tier": "Advanced", "abilities": [{"name": "Pseudopod", "sourceName": "Pseudopod", "category": "Slimes", "cost": "Free"}, {"name": "Engulf", "sourceName": "Engulf", "category": "Slimes", "cost": "Free"}, {"name": "Shapeshifting", "sourceName": "Shapeshifting", "category": "Slimes", "cost": "Free"}, {"name": "Bifurcate", "sourceName": "Bifurcate", "category": "Slime", "cost": "Variable number of Body Points"}, {"name": "Fuse", "sourceName": "Fuse", "category": "Slime", "cost": "Free"}, {"name": "Healing Slime", "sourceName": "Healing Slime", "category": "Slime", "cost": "Free"}]}, "Slime": {"name": "Slime", "family": "Slime", "tier": "Base", "abilities": [{"name": "Pseudopod", "sourceName": "Pseudopod", "category": "Slimes", "cost": "Free"}, {"name": "Engulf", "sourceName": "Engulf", "category": "Slimes", "cost": "Free"}, {"name": "Shapeshifting", "sourceName": "Shapeshifting", "category": "Slimes", "cost": "Free"}]}, "Frost Jotun Jarl": {"name": "Frost Jotun Jarl", "family": "Jotun", "tier": "Advanced", "abilities": [{"name": "Frost Giant Form", "sourceName": "Frost Giant Form (Monstrous Form)", "category": "Giant", "cost": "None"}, {"name": "Frost Giant Fists", "sourceName": "Frost Giant Fist", "category": "Giant", "cost": "Free"}, {"name": "Frost Giant Breath", "sourceName": "Frost Giants Breath", "category": "Frost Giant", "cost": "Free"}, {"name": "Weakness Fire", "sourceName": "Weakness: Fire/ Holy Fire / Hellfire", "category": "Giant", "cost": "N/A"}, {"name": "Giant's Roar", "sourceName": "Giants Roar", "category": "Giant", "cost": "None"}, {"name": "Jarl War Form", "sourceName": "Jarl War Form", "category": "Giant", "cost": "N/A"}, {"name": "Imbue Weapon (Ice)", "sourceName": "Imbue Weapon", "category": "Angelic", "cost": "Free"}]}, "Frost Jotun": {"name": "Frost Jotun", "family": "Jotun", "tier": "Base", "abilities": [{"name": "Frost Giant Form", "sourceName": "Frost Giant Form (Monstrous Form)", "category": "Giant", "cost": "None"}, {"name": "Frost Giant Fists", "sourceName": "Frost Giant Fist", "category": "Giant", "cost": "Free"}, {"name": "Frost Giant Breath", "sourceName": "Frost Giants Breath", "category": "Frost Giant", "cost": "Free"}, {"name": "Weakness Fire", "sourceName": "Weakness: Fire/ Holy Fire / Hellfire", "category": "Giant", "cost": "N/A"}]}, "Fungal Dryad": {"name": "Fungal Dryad", "family": "Fae", "tier": "Advanced", "abilities": [{"name": "Nature's Step", "sourceName": "Nature's Step", "category": "Fae: Dryad & Fungal Dryad", "cost": "Free"}, {"name": "Talk with animals/plants", "sourceName": "Talk with animals/plants", "category": "Fae: Dryad & Fungal Dryad", "cost": "Free"}, {"name": "Decompose", "sourceName": "Decompose", "category": "Fae: Fungal Dryad", "cost": "1 Spirit"}, {"name": "Mycelium Network", "sourceName": "Mycelium Network", "category": "Fae: Fungal Dryad", "cost": "None"}, {"name": "Fungal Dryad: Undead Traits", "sourceName": "Fungal Dryad: Undead Traits", "category": "Fae: Fungal Dryad", "cost": "N/A"}]}, "Alux": {"name": "Alux", "family": "Fae", "tier": "Base", "abilities": [{"name": "Plant Growth", "sourceName": "Plant Growth", "category": "Fae / Alux", "cost": "1 Spirit"}, {"name": "Prank", "sourceName": "Prank", "category": "Fae / Alux", "cost": "1 Spirit"}, {"name": "Animal Companion", "sourceName": "Animal Companion", "category": "Fae: Pixie", "cost": "Free"}, {"name": "Change Size", "sourceName": "Change Size", "category": "Fae: Pixie", "cost": "Free"}, {"name": "Flight", "sourceName": "Flight", "category": "Fae: Pixie", "cost": "Free"}, {"name": "Weakness: Iron", "sourceName": "Weakness: Iron", "category": "Fae: Pixie / Alux / Changeling", "cost": "N/A"}]}, "Changeling": {"name": "Changeling", "family": "Fae", "tier": "Base", "abilities": [{"name": "Weakness: Iron", "sourceName": "Weakness: Iron", "category": "Fae: Pixie / Alux / Changeling", "cost": "N/A"}, {"name": "Shapeshifting", "sourceName": "Shapeshifting", "category": "Fae", "cost": "Free"}, {"name": "Charm", "sourceName": "Charm", "category": "Psionics", "cost": "1 Mind"}]}, "Dryad": {"name": "Dryad", "family": "Fae", "tier": "Base", "abilities": [{"name": "Plant Growth", "sourceName": "Plant Growth", "category": "Fae / Alux", "cost": "1 Spirit"}, {"name": "Plant Life", "sourceName": "Plant Life", "category": "Fae: Dryad", "cost": "Free"}]}, "Kitsune": {"name": "Kitsune", "family": "Fae", "tier": "Base", "abilities": [{"name": "Shapeshifting", "sourceName": "Shapeshifting", "category": "Fae", "cost": "Free"}, {"name": "Flight", "sourceName": "Flight", "category": "Fae: Pixie", "cost": "Free"}, {"name": "Dream Walking", "sourceName": "Dream Walking", "category": "Kitsune", "cost": "Free"}, {"name": "Claws", "sourceName": "Claws", "category": "Kitsune", "cost": "Free"}]}, "Pixie": {"name": "Pixie", "family": "Fae", "tier": "Base", "abilities": [{"name": "Animal Companion", "sourceName": "Animal Companion", "category": "Fae: Pixie", "cost": "Free"}, {"name": "Change Size", "sourceName": "Change Size", "category": "Fae: Pixie", "cost": "Free"}, {"name": "Flight", "sourceName": "Flight", "category": "Fae: Pixie", "cost": "Free"}, {"name": "Weakness: Iron", "sourceName": "Weakness: Iron", "category": "Fae: Pixie / Alux / Changeling", "cost": "N/A"}]}, "Deity": {"name": "Deity", "family": "Divine", "tier": "Special", "abilities": [{"name": "Charm", "sourceName": "Charm", "category": "Psionics", "cost": "1 Mind"}, {"name": "Command", "sourceName": "Command", "category": "Psionics", "cost": "Free"}, {"name": "Oblivious", "sourceName": "Oblivious", "category": "Psionics", "cost": "2 Mind"}, {"name": "Suggestion", "sourceName": "Suggestion", "category": "Psionics", "cost": "2 Mind"}, {"name": "Possession", "sourceName": "Possession", "category": "Psionics", "cost": "2 Mind"}, {"name": "Telekinesis", "sourceName": "Telekinesis", "category": "Psionics", "cost": "Varies"}, {"name": "Aeronautics", "sourceName": "Aeronautics", "category": "Psionics", "cost": "1 Mind per turn"}, {"name": "Clairvoyance", "sourceName": "Clairvoyance", "category": "Psionics", "cost": "3 Mind"}]}, "Lesser Deity": {"name": "Lesser Deity", "family": "Divine", "tier": "Special", "abilities": [{"name": "Charm", "sourceName": "Charm", "category": "Psionics", "cost": "1 Mind"}, {"name": "Command", "sourceName": "Command", "category": "Psionics", "cost": "Free"}, {"name": "Oblivious", "sourceName": "Oblivious", "category": "Psionics", "cost": "2 Mind"}, {"name": "Suggestion", "sourceName": "Suggestion", "category": "Psionics", "cost": "2 Mind"}, {"name": "Possession", "sourceName": "Possession", "category": "Psionics", "cost": "2 Mind"}, {"name": "Telekinesis", "sourceName": "Telekinesis", "category": "Psionics", "cost": "Varies"}, {"name": "Aeronautics", "sourceName": "Aeronautics", "category": "Psionics", "cost": "1 Mind per turn"}, {"name": "Clairvoyance", "sourceName": "Clairvoyance", "category": "Psionics", "cost": "3 Mind"}]}, "Immortal": {"name": "Immortal", "family": "Other", "tier": "Special", "abilities": [{"name": "Command", "sourceName": "Command", "category": "Psionics", "cost": "Free"}, {"name": "Telekinesis", "sourceName": "Telekinesis", "category": "Psionics", "cost": "Varies"}, {"name": "Aeronautics", "sourceName": "Aeronautics", "category": "Psionics", "cost": "1 Mind per turn"}]}};
 
@@ -850,7 +899,7 @@ Three People- 3 Mind/ 1 round to summon. Animates as above plus 1 x Fel Lich</sp
           }
 
           fillFormFromSheet(result.code, result.sheet, file.name);
-          alert("Loaded " + result.code + " into the form. Make your changes, then click Generate Clean JS Sheet and replace the old .js file.");
+          alert("Loaded " + result.code + " into the form. The clean JS output will auto-update after your changes. Replace the old .js file with the output or use Download / Replace JS File.");
         } catch (error) {
           console.error(error);
           alert("Could not read that character sheet file. Make sure it is a Fallen Gate character sheet .js file.");
@@ -981,6 +1030,7 @@ Three People- 3 Mind/ 1 round to summon. Animates as above plus 1 x Fel Lich</sp
     }
 
     function fillFormFromSheet(code, sheet, fileName) {
+      isFillingOldSheet = true;
       document.getElementById("sheetCode").value = String(code || "").toUpperCase();
       document.getElementById("fileName").value = fileName || (String(code || "").toUpperCase() + ".js");
       document.getElementById("charName").value = sheet.name || "";
@@ -1006,6 +1056,7 @@ Three People- 3 Mind/ 1 round to summon. Animates as above plus 1 x Fel Lich</sp
       checkItemsByName(".skill-check", sheet.warriorSkills || sheet.skills || [], ["name", "skill"]);
       checkItemsByName(".race-ability-check", sheet.raceAbilities || [], ["name", "ability", "sourceName"]);
 
+      isFillingOldSheet = false;
       generateSheet();
     }
 
@@ -1089,6 +1140,12 @@ Three People- 3 Mind/ 1 round to summon. Animates as above plus 1 x Fel Lich</sp
         'Manifest entry: <code>"./' + fileName + '"</code>';
 
       return js;
+    }
+
+    function forceRebuildCleanOutput() {
+      syncTypeCodeFromRank();
+      generateSheet();
+      alert("Clean JS output rebuilt. Replace the old .js file with this output.");
     }
 
     async function copyOutput() {
