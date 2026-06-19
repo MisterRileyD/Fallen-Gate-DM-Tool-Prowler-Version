@@ -182,6 +182,14 @@ registerFallenGateCharacterSheet("THY_PROWLER", {
       "whoCanCast": "All Ranks"
     },
     {
+      "name": "Ampelos Agria laqueum (Vine Trap)",
+      "category": "Ecomancy",
+      "book": "Neutral Magic",
+      "subtype": "",
+      "cost": "1 Mind",
+      "whoCanCast": "All Ranks"
+    },
+    {
       "name": "Camouflage Chamaeleonis (Chameleon Camouflage)",
       "category": "Ecomancy",
       "book": "Neutral Magic",
@@ -198,11 +206,35 @@ registerFallenGateCharacterSheet("THY_PROWLER", {
       "whoCanCast": "All Ranks"
     },
     {
+      "name": "Melodiam Sanitatem (Melody of Healing)",
+      "category": "Ecomancy",
+      "book": "Neutral Magic",
+      "subtype": "",
+      "cost": "2 Spirit",
+      "whoCanCast": "All Ranks"
+    },
+    {
       "name": "Rafflesia - (Parasitic Plant)",
       "category": "Ecomancy",
       "book": "Neutral Magic",
       "subtype": "",
       "cost": "3 Mind",
+      "whoCanCast": "All Ranks"
+    },
+    {
+      "name": "Uniflora Caulis (One Flowered Stem)",
+      "category": "Ecomancy",
+      "book": "Neutral Magic",
+      "subtype": "",
+      "cost": "1 Mind",
+      "whoCanCast": "All Ranks"
+    },
+    {
+      "name": "Urtica dioica (Thorn Whip)",
+      "category": "Ecomancy",
+      "book": "Neutral Magic",
+      "subtype": "",
+      "cost": "Mind 1",
       "whoCanCast": "All Ranks"
     },
     {
@@ -611,6 +643,78 @@ registerFallenGateCharacterSheet("THY_PROWLER", {
       "book": "Neutral Magic",
       "subtype": "",
       "cost": "3 Mind",
+      "whoCanCast": "All Ranks"
+    },
+    {
+      "name": "Angelus Cadens (Fallen Angels)",
+      "category": "Summoning",
+      "book": "Neutral Magic",
+      "subtype": "",
+      "cost": "Split evenly between casters\nCherub – 2 Mind (1 round)\nWarden – 4 Mind (2 rounds)\nSeraph – 6 Mind (3 rounds)",
+      "whoCanCast": "All Ranks"
+    },
+    {
+      "name": "Aula Reginae (The Queen’s Court)",
+      "category": "Summoning",
+      "book": "Neutral Magic",
+      "subtype": "",
+      "cost": "Split evenly between casters\nSprite – 2 Mind (1 round)\nEnvoy – 4 Mind (2 rounds)\nAspect – 6 Mind (3 rounds)",
+      "whoCanCast": "All Ranks"
+    },
+    {
+      "name": "Custos Magicae (Guardian of Magic)",
+      "category": "Summoning",
+      "book": "Neutral Magic",
+      "subtype": "",
+      "cost": "Variable\nOne Person: 6 Mind, requires 3 rounds of uninterrupted concentration.\nTwo People: 3 Mind per person, requires 2 rounds.\nThree People: 2 Mind per person, requires 1 round.",
+      "whoCanCast": "All Ranks"
+    },
+    {
+      "name": "Dominus Lamia (Lord Dracula)",
+      "category": "Summoning",
+      "book": "Neutral Magic",
+      "subtype": "",
+      "cost": "Variable\nOne Person: 6 Mind, requires 3 rounds of uninterrupted concentration. Enemy DC: 14.\nTwo People: 3 Mind per person, requires 2 rounds. Enemy DC: 16.\nThree People: 2 Mind per person, requires 1 round. Enemy DC: 17.",
+      "whoCanCast": "All Ranks"
+    },
+    {
+      "name": "Ignis Renascens (Phoenix Rite)",
+      "category": "Summoning",
+      "book": "Neutral Magic",
+      "subtype": "",
+      "cost": "Split evenly between casters\nEgg – 2 Mind (1 round)\nHatchling – 4 Mind (2 rounds)\nAspect – 6 Mind (3 rounds)",
+      "whoCanCast": "All Ranks"
+    },
+    {
+      "name": "Ortus Phoenix (Rise of the Phoenix)",
+      "category": "Summoning",
+      "book": "Neutral Magic",
+      "subtype": "",
+      "cost": "Variable\nOne Person: 9 Mind, requires 3 rounds of uninterrupted concentration. Allies restored to 1/1/1\nTwo People: 5 Mind per person, requires 2 rounds. Allies restored up to 5/5/5\nThree People: 3 Mind per person, requires 1 round. Allies restored up to 10/10/10",
+      "whoCanCast": "All Ranks"
+    },
+    {
+      "name": "Regina Fae (Queen of the Fae)",
+      "category": "Summoning",
+      "book": "Neutral Magic",
+      "subtype": "",
+      "cost": "Variable\nOne Person: 6 Mind, requires 3 rounds, Enemy DC: 14.\nTwo People: 3 Mind per person, requires 2 rounds. Enemy DC: 16.\nThree People: 2 Mind per person, requires 1 round. Enemy DC: 17.",
+      "whoCanCast": "All Ranks"
+    },
+    {
+      "name": "Torva Messor (The Grim Reaper)",
+      "category": "Summoning",
+      "book": "Neutral Magic",
+      "subtype": "",
+      "cost": "Variable\nOne Person: 6 Mind, requires 3 rounds of uninterrupted concentration to summon. Enemy DC: 14.\nTwo People: 3 Mind per person, requires 2 rounds. Enemy DC: 16.\nThree People: 2 Mind per person, requires 1 round. Enemy DC: 17.",
+      "whoCanCast": "All Ranks"
+    },
+    {
+      "name": "Torva Messor Minor (Aspect of the Reaper)",
+      "category": "Summoning",
+      "book": "Neutral Magic",
+      "subtype": "",
+      "cost": "Varies (Split evenly between casters)\nShade - 2 Mind\nWarden - 4 Mind\nAspect - 6 Mind",
       "whoCanCast": "All Ranks"
     },
     {
