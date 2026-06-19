@@ -314,12 +314,26 @@ p, li {
       return item.name || item.title || "Unnamed";
     }
 
+    function warriorSkillName(item) {
+      if (typeof item === "string") return item;
+
+      const name = item.name || item.title || "Unnamed";
+      const tags = [];
+
+      if (item.discipline) tags.push(item.discipline);
+      if (item.level) tags.push(item.level);
+
+      return tags.length ? name + " (" + tags.join(" — ") + ")" : name;
+    }
+
     function itemDetail(item) {
       if (typeof item === "string") return "";
 
       const parts = [];
 
       if (item.category) parts.push(item.category);
+      if (item.discipline) parts.push("Discipline: " + item.discipline);
+      if (item.level) parts.push("Tier: " + item.level);
       if (item.family) parts.push(item.family);
       if (item.race) parts.push("Race: " + item.race);
       if (item.tier) parts.push(item.tier);
@@ -345,6 +359,24 @@ p, li {
         return `
           <div class="${cardClass}">
             <strong>${escapeHtml(itemName(item))}</strong>
+            ${detail ? `<span class="item-meta">${escapeHtml(detail)}</span>` : ""}
+          </div>
+        `;
+      }).join("") + '</div>';
+    }
+
+    function renderWarriorSkillList(items, emptyText, cardClass) {
+      const list = normalizeList(items);
+
+      if (list.length === 0) {
+        return '<div class="empty">' + escapeHtml(emptyText) + '</div>';
+      }
+
+      return '<div class="item-list">' + list.map(function (item) {
+        const detail = itemDetail(item);
+        return `
+          <div class="${cardClass}">
+            <strong>${escapeHtml(warriorSkillName(item))}</strong>
             ${detail ? `<span class="item-meta">${escapeHtml(detail)}</span>` : ""}
           </div>
         `;
@@ -431,7 +463,7 @@ p, li {
             ${renderItemList(spells, "No spells listed.", "known-card")}
 
             <div class="section-title">Warrior Skills Known</div>
-            ${renderItemList(warriorSkills, "No warrior skills listed.", "known-card")}
+            ${renderWarriorSkillList(warriorSkills, "No warrior skills listed.", "known-card")}
 
             <div class="section-title">Inventory — Jewelry</div>
             ${renderItemList(jewelry, "No jewelry listed.", "inventory-card")}

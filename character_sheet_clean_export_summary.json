@@ -1,0 +1,18 @@
+{
+  "updated_files": [
+    "character_sheet_form.html",
+    "how_to_use_dm_tool.html"
+  ],
+  "changes": [
+    "Generate button renamed to Generate Clean JS Sheet.",
+    "Output now includes a clean replacement .js file with one registerFallenGateCharacterSheet block.",
+    "Added Download / Replace JS File button.",
+    "Added Copy Manifest Line button.",
+    "Added clear instruction to replace the whole old .js file, not paste under it.",
+    "How guide updated with update/override instructions."
+  ],
+  "syntax_checks": {
+    "character_sheet_form.html": "ok",
+    "how_to_use_dm_tool.html": "ok"
+  }
+}

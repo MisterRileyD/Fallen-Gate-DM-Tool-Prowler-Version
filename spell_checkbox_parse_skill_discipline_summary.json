@@ -1,0 +1,37 @@
+{
+  "updated_files": [
+    "character_sheet_form.html",
+    "character_sheets.html",
+    "how_to_use_dm_tool.html"
+  ],
+  "fixes": [
+    "Fixed data-json parsing for spells with multiline costs, which was stopping Summoning spells from being generated.",
+    "Generate output now shows total spells and Summoning count.",
+    "Changed remaining Warrior Skill discipline label from Melee to Slashing in the form.",
+    "Character Sheets book now displays warrior skills with discipline and tier in parentheses."
+  ],
+  "fixed_uploaded_sheet": {
+    "uploaded_sheet_code": "THY_PROWLER",
+    "summoning_spells_added_to_fixed_sheet": [
+      "Angelus Cadens (Fallen Angels)",
+      "Aula Reginae (The Queen\u2019s Court)",
+      "Custos Magicae (Guardian of Magic)",
+      "Dominus Lamia (Lord Dracula)",
+      "Ignis Renascens (Phoenix Rite)",
+      "Ortus Phoenix (Rise of the Phoenix)",
+      "Regina Fae (Queen of the Fae)",
+      "Torva Messor (The Grim Reaper)",
+      "Torva Messor Minor (Aspect of the Reaper)"
+    ],
+    "fixed_sheet_spells_total": 132,
+    "fixed_sheet_summoning_total": 9,
+    "melee_renamed_to_slashing_in_fixed_sheet": true
+  },
+  "syntax_checks": {
+    "character_sheet_form.html": "ok",
+    "character_sheets.html": "ok",
+    "how_to_use_dm_tool.html": "ok",
+    "skills.html": "ok",
+    "spellbook.html": "ok"
+  }
+}

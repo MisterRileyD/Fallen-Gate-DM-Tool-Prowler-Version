@@ -803,10 +803,34 @@ Three People- 3 Mind/ 1 round to summon. Animates as above plus 1 x Fel Lich</sp
       });
     }
 
+    function parseDataJSON(box) {
+      const raw = box && box.dataset ? String(box.dataset.json || "{}") : "{}";
+
+      try {
+        return JSON.parse(raw);
+      } catch (firstError) {
+        try {
+          // Some spell costs/descriptions include line breaks. Literal line breaks inside
+          // a data-json string can break JSON.parse, so convert them to escaped newlines.
+          return JSON.parse(raw.replace(/\r?\n/g, "\\n"));
+        } catch (secondError) {
+          try {
+            // Last fallback: keep the item instead of blocking the whole sheet.
+            return JSON.parse(raw.replace(/[\r\n]+/g, " "));
+          } catch (thirdError) {
+            console.warn("Could not read checkbox data-json:", raw, thirdError);
+            return null;
+          }
+        }
+      }
+    }
+
     function selectedJSON(selector) {
-      return Array.from(document.querySelectorAll(selector + ":checked")).map(function (box) {
-        return JSON.parse(box.dataset.json);
-      });
+      return Array.from(document.querySelectorAll(selector + ":checked"))
+        .map(function (box) {
+          return parseDataJSON(box);
+        })
+        .filter(Boolean);
     }
 
     function parseJewelry(text) {
@@ -985,11 +1009,7 @@ Three People- 3 Mind/ 1 round to summon. Animates as above plus 1 x Fel Lich</sp
       document.querySelectorAll(selector).forEach(function (box) {
         let data = {};
 
-        try {
-          data = JSON.parse(box.dataset.json || "{}");
-        } catch (error) {
-          data = {};
-        }
+        data = parseDataJSON(box) || {};
 
         const candidates = [];
 
@@ -1135,9 +1155,17 @@ Three People- 3 Mind/ 1 round to summon. Animates as above plus 1 x Fel Lich</sp
       const js = buildCleanSheetJS(code, sheet, fileName);
 
       document.getElementById("output").value = js;
+      const spellCount = (sheet.spells || []).length;
+      const skillCount = (sheet.warriorSkills || []).length;
+      const raceAbilityCount = (sheet.raceAbilities || []).length;
+      const summoningCount = (sheet.spells || []).filter(function (spell) {
+        return spell && spell.category === "Summoning";
+      }).length;
+
       document.getElementById("manifestLine").innerHTML =
         'To update this player sheet, replace <strong>' + fileName + '</strong> with the cleaned output below.<br>' +
-        'Manifest entry: <code>"./' + fileName + '"</code>';
+        'Manifest entry: <code>"./' + fileName + '"</code><br>' +
+        'Output count: <strong>' + spellCount + '</strong> spells, <strong>' + summoningCount + '</strong> summoning, <strong>' + skillCount + '</strong> warrior skills, <strong>' + raceAbilityCount + '</strong> race abilities.';
 
       return js;
     }

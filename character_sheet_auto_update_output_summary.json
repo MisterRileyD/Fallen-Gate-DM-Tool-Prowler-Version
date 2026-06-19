@@ -1,0 +1,18 @@
+{
+  "updated_files": [
+    "character_sheet_form.html",
+    "how_to_use_dm_tool.html"
+  ],
+  "changes": [
+    "Character Sheet output now auto-updates after field edits and checkbox changes.",
+    "Rank dropdown now syncs Type Code automatically.",
+    "Added Force Rebuild Output button.",
+    "Loaded old sheets now regenerate clean output after loading.",
+    "How Guide updated with auto-update instructions."
+  ],
+  "important_note": "The browser cannot overwrite the GitHub .js file by itself. Use Copy Clean JS Code or Download / Replace JS File, then replace the old file in GitHub/Render.",
+  "syntax_checks": {
+    "character_sheet_form.html": "ok",
+    "how_to_use_dm_tool.html": "ok"
+  }
+}
