@@ -639,13 +639,17 @@
 		}
 
 		.loot-output {
-			max-height: 118px;
+			max-height: 240px;
+			min-height: 72px;
 			overflow-y: auto;
+			overflow-x: auto;
+			resize: vertical;
 			padding: 8px;
 			background: rgba(255,255,255,0.38);
 			border: 1px solid rgba(70, 45, 12, 0.24);
 			border-radius: 10px;
 			font-size: 13px;
+			line-height: 1.35;
 		}
 
 		.guide-page {
@@ -846,7 +850,27 @@
 				min-height: 470px;
 			}
 		}
-	</style>
+	
+		.loot-actions {
+			display: flex;
+			align-items: center;
+			gap: 8px;
+			flex-wrap: wrap;
+			margin-top: 8px;
+			margin-bottom: 10px;
+			padding: 8px;
+			border: 1px solid rgba(70, 45, 12, 0.18);
+			border-radius: 10px;
+			background: rgba(255,255,255,0.22);
+		}
+
+		.loot-copy-under-btn,
+		.loot-copy-top-btn {
+			font-size: 15px;
+			font-weight: 900;
+		}
+
+</style>
 </head>
 
 <body onload="initDMTool()">
@@ -967,6 +991,7 @@
 						<div>
 							<div class="toolbar">
 								<button class="book-btn dark" onclick="divideLoot()">Show / Divide Loot</button>
+								<button class="book-btn dark loot-copy-top-btn" onclick="copyLootSplit()">Copy Loot Split</button>
 								<button class="book-btn" onclick="copyTurnSummary()">Copy Turn Summary</button>
 								<button class="book-btn" onclick="shareToDiscord()">Send / Update Discord</button>
 							</div>
@@ -978,6 +1003,10 @@
 							</div>
 
 							<div class="loot-output" id="lootOutput">Loot and summary output will appear here.</div>
+							<div class="loot-actions">
+								<button id="copyLootSplitUnderBox" class="book-btn dark loot-copy-under-btn" onclick="copyLootSplit()">Copy Loot Split</button>
+								<span class="small">Click Show / Divide Loot first, then copy the split here.</span>
+							</div>
 
 						</div>
 					</div>
@@ -1557,6 +1586,44 @@
 		}
 
 
+		let lastLootSplitText = "";
+		let lastLootSplitHtml = "";
+
+		function setLootOutput(html, text) {
+			lastLootSplitHtml = html || "";
+			lastLootSplitText = text || "";
+			document.getElementById("lootOutput").innerHTML = html || "";
+		}
+
+		function copyLootSplit() {
+			const box = document.getElementById("lootOutput");
+			const visibleText = box ? box.innerText.trim() : "";
+			const text = lastLootSplitText || visibleText;
+
+			if (!text || text === "Loot and summary output will appear here." || text.startsWith("No loot generated") || text.startsWith("No loot dropped") || text.startsWith("No active living players")) {
+				alert("No loot split to copy yet. Click Show / Divide Loot after defeating a monster.");
+				return;
+			}
+
+			navigator.clipboard.writeText(text).then(function () {
+				alert("Loot split copied.");
+			}).catch(function () {
+				if (box) box.textContent = text;
+			});
+		}
+
+		function getCurrentLootSplitText() {
+			if (lastLootSplitText) return lastLootSplitText;
+
+			const box = document.getElementById("lootOutput");
+			const text = box ? box.innerText.trim() : "";
+
+			if (!text || text === "Loot and summary output will appear here.") return "";
+			if (text.startsWith("No loot generated") || text.startsWith("No loot dropped") || text.startsWith("No active living players")) return "";
+
+			return text;
+		}
+
 		function cleanLootItemName(value) {
 			return String(value || "")
 				.replace(/\[\[\s*DM makes.*?\]\]/gi, "")
@@ -1634,12 +1701,12 @@
 			});
 
 			if (eligible.length === 0) {
-				document.getElementById("lootOutput").innerHTML = "No active living players are checked for loot.";
+				setLootOutput("No active living players are checked for loot.", "");
 				return;
 			}
 
 			if (defeatedMonsters.length === 0) {
-				document.getElementById("lootOutput").innerHTML = "No loot generated. Defeat a monster after it has an Init Roll first.";
+				setLootOutput("No loot generated. Defeat a monster after it has an Init Roll first.", "");
 				return;
 			}
 
@@ -1671,8 +1738,7 @@
 			});
 
 			if (loot.length === 0) {
-				document.getElementById("lootOutput").innerHTML =
-					"No loot dropped from the defeated monster roll. This can happen if the monster rolled No Loot, or if that monster has no treasure table.";
+				setLootOutput("No loot dropped from the defeated monster roll. This can happen if the monster rolled No Loot, or if that monster has no treasure table.", "");
 				return;
 			}
 
@@ -1704,7 +1770,20 @@
 			});
 			html += "</ul>";
 
-			document.getElementById("lootOutput").innerHTML = html;
+			
+			let textLines = ["Loot Split"];
+			if (checkedMonsterNames.length) {
+				textLines.push("Loot rolled from defeated monster(s): " + checkedMonsterNames.join(", "));
+			}
+
+			Object.keys(output).forEach(function (person) {
+				textLines.push(person + ":");
+				Object.keys(output[person]).forEach(function (item) {
+					textLines.push("- " + item + ": " + output[person][item]);
+				});
+			});
+
+			setLootOutput(html, textLines.join("\n"));
 		}
 
 		function copyTurnSummary()
@@ -1736,6 +1815,12 @@
 			participants.forEach(function (p) {
 				lines.push(p.name + ": " + statusText(p) + " | Body " + emptyDash(p.body) + " | Mind " + emptyDash(p.mind) + " | Spirit " + emptyDash(p.spirit) + " | AC " + emptyDash(p.ac) + " | Bonus " + emptyDash(p.bonus) + (p.effects ? " | " + p.effects : ""));
 			});
+
+			const currentLootSplit = getCurrentLootSplitText();
+			if (currentLootSplit) {
+				lines.push("");
+				lines.push(currentLootSplit);
+			}
 
 			return lines.join("\n");
 		}
