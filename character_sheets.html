@@ -177,6 +177,11 @@ p, li {
   margin-bottom: 4px;
 }
 
+.index-card .item-meta {
+  display: block;
+  margin-top: 4px;
+}
+
 .sheet-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(90px, 1fr));
@@ -255,6 +260,34 @@ p, li {
 
 .sheet-form-callout button {
   margin-top: 8px;
+}
+
+
+.sheet-image-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 240px));
+  gap: 12px;
+  margin: 10px 0 14px;
+  align-items: start;
+}
+
+.sheet-image-card {
+  padding: 8px;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.28);
+  border: 1px solid rgba(90,61,20,0.22);
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: 900;
+}
+
+.sheet-image-card img {
+  display: block;
+  width: 100%;
+  max-height: 260px;
+  object-fit: contain;
+  border-radius: 9px;
+  margin-top: 6px;
+  background: rgba(255,255,255,0.34);
 }
 
 </style>
@@ -347,6 +380,38 @@ p, li {
       return parts.join(" | ");
     }
 
+    function renderSheetImages(sheet) {
+      const profileImage = sheet.profileImage || sheet.profilePicture || "";
+      const idImage = sheet.idImage || sheet.identificationImage || "";
+
+      if (!profileImage && !idImage) {
+        return "";
+      }
+
+      let html = '<div class="sheet-image-row">';
+
+      if (profileImage) {
+        html += `
+          <div class="sheet-image-card">
+            Profile Picture
+            <img alt="Profile picture for ${escapeAttr(sheet.name || "character")}" src="${escapeAttr(profileImage)}">
+          </div>
+        `;
+      }
+
+      if (idImage) {
+        html += `
+          <div class="sheet-image-card">
+            ID Image
+            <img alt="ID image for ${escapeAttr(sheet.name || "character")}" src="${escapeAttr(idImage)}">
+          </div>
+        `;
+      }
+
+      html += '</div>';
+      return html;
+    }
+
     function renderItemList(items, emptyText, cardClass) {
       const list = normalizeList(items);
 
@@ -363,6 +428,40 @@ p, li {
           </div>
         `;
       }).join("") + '</div>';
+    }
+
+    function sheetRaceName(sheet) {
+      return (sheet && sheet.race) ? sheet.race : "Mortal";
+    }
+
+    function sheetRaceFamily(sheet) {
+      return (sheet && sheet.raceFamily) ? sheet.raceFamily : "Mortal / Common Race";
+    }
+
+    function sheetRaceTier(sheet) {
+      return (sheet && sheet.raceTier) ? sheet.raceTier : "Base";
+    }
+
+    function sheetRaceAbilities(sheet) {
+      const abilities = normalizeList(sheet && sheet.raceAbilities ? sheet.raceAbilities : []);
+
+      if (abilities.length > 0) {
+        return abilities;
+      }
+
+      if (!sheet || !sheet.race || sheet.race === "Mortal") {
+        return [{
+          name: "No Innate Race Ability",
+          race: "Mortal",
+          family: "Mortal / Common Race",
+          tier: "Base",
+          category: "Mortal",
+          cost: "N/A",
+          description: "Normal mortal/common character with no special race ability package."
+        }];
+      }
+
+      return abilities;
     }
 
     function renderWarriorSkillList(items, emptyText, cardClass) {
@@ -395,8 +494,8 @@ p, li {
           s.rank,
           s.type,
           s.notes,
-          s.race,
-          s.raceFamily,
+          sheetRaceName(s),
+          sheetRaceFamily(s),
           JSON.stringify(s.raceAbilities || []),
           JSON.stringify(s.spells || []),
           JSON.stringify(s.warriorSkills || s.skills || []),
@@ -418,6 +517,7 @@ p, li {
             <button class="index-card" onclick="goToSheet('${escapeAttr(code)}')">
               <strong>${escapeHtml(code)}</strong>
               ${escapeHtml(s.name || code)}
+              <span class="item-meta">Race: ${escapeHtml(sheetRaceName(s))}</span>
             </button>
           `;
         }).join("") + '</div>';
@@ -438,13 +538,15 @@ p, li {
         const weapons = inventory.weapons || s.weapons || [];
         const spells = s.spells || [];
         const warriorSkills = s.warriorSkills || s.skills || [];
-        const raceAbilities = s.raceAbilities || [];
+        const raceAbilities = sheetRaceAbilities(s);
 
         return `
           <section class="book-page" id="sheet_${escapeAttr(code)}">
             <h2 class="item-title">${escapeHtml(s.name || code)}</h2>
             <div class="category">Sheet Code: ${escapeHtml(code)}</div>
             <div class="stats-line">${escapeHtml(s.rank || s.type || "No rank selected")}</div>
+
+            ${renderSheetImages(s)}
 
             <div class="sheet-grid">
               <div class="sheet-stat">Body<br>${emptyDash(s.body)}</div>
@@ -454,7 +556,7 @@ p, li {
             </div>
 
             <div class="section-title">Race</div>
-            <div class="inventory-card"><strong>${escapeHtml(s.race || "No race selected.")}</strong>${s.raceFamily ? `<span class="item-meta">${escapeHtml(s.raceFamily)}${s.raceTier ? " | " + escapeHtml(s.raceTier) : ""}</span>` : ""}</div>
+            <div class="inventory-card"><strong>${escapeHtml(sheetRaceName(s))}</strong><span class="item-meta">${escapeHtml(sheetRaceFamily(s))}${sheetRaceTier(s) ? " | " + escapeHtml(sheetRaceTier(s)) : ""}</span></div>
 
             <div class="section-title">Race Abilities</div>
             ${renderItemList(raceAbilities, "No race abilities listed.", "known-card")}

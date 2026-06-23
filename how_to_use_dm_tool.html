@@ -348,6 +348,76 @@ a {
   <p>Warrior Skills on character sheets now show the skill discipline and tier in parentheses, such as <strong>Improved Critical (Slashing — Soldier)</strong> or <strong>Improved Critical (Piercing — Soldier)</strong>.</p>
 </section>
 
+
+<section class="book-page" id="monster_roster_next_turn_discord_help">
+  <h2 class="item-title">Monster Guide Roster Button and Auto Discord Turn Updates</h2>
+  <div class="category">Encounter Tool Help</div>
+  <p>Each monster page in the Monster Guide now has an <strong>Add Monster to Roster</strong> button. Open the Monster Guide inside the DM Tool, go to a monster page, then click the button to add that monster directly into the encounter roster.</p>
+  <p>The added monster starts with its monster type, Body, Mind, Spirit, AC, Bonus, and category effects filled in. Add its Init Roll when it enters combat.</p>
+  <p>The <strong>Next Turn</strong> button now auto-updates the existing Discord post after the turn changes. You must send the first Discord post with <strong>Send / Update Discord</strong> first so the tool has a Discord Message ID. After that, Next Turn edits that saved post without making a new one.</p>
+</section>
+
+
+<section class="book-page" id="monster_roster_button_fix_help">
+  <h2 class="item-title">Monster Guide Add to Roster Button</h2>
+  <div class="category">Encounter Tool Help</div>
+  <p>Each monster page has an <strong>Add Monster to Roster</strong> button. The button now uses a safe hidden monster-name field, so monster names with parentheses or special symbols will not break the button.</p>
+  <p>Open the Monster Guide from inside the DM Tool, choose a monster, then click <strong>Add Monster to Roster</strong>. The monster should appear in the encounter roster with stats filled in. Add its Init Roll when it enters combat.</p>
+</section>
+
+
+<section class="book-page" id="map_designer_local_save_help">
+  <h2 class="item-title">Map Designer and Local Map Saves</h2>
+  <div class="category">Map Help</div>
+  <p>The encounter map now has a small map designer. You can upload a background image, add simple map items like walls, doors, chests, traps, pillars, trees, and labels, then keep using the same map for tokens.</p>
+  <p><strong>Save Map to This Browser</strong> stores the map on the current person's computer/browser using browser storage. It does not save the map to the online tool or to other players.</p>
+  <p><strong>Download Map File</strong> saves a <code>.fgmap.json</code> file to the person's computer. Use <strong>Load Map File</strong> later to bring it back. This is the safest way to keep a map outside the tool.</p>
+  <p>Browsers cannot secretly save files into a chosen folder. The user must either download the map file, load a map file, or use the browser's local save.</p>
+</section>
+
+
+<section class="book-page" id="map_items_visible_fix_help">
+  <h2 class="item-title">Adding Visible Map Items</h2>
+  <div class="category">Map Help</div>
+  <p>To place map items, click a tool such as <strong>Add Wall</strong>, <strong>Add Door</strong>, <strong>Add Chest</strong>, <strong>Add Trap</strong>, <strong>Add Pillar</strong>, <strong>Add Tree</strong>, or <strong>Add Text</strong>, then click directly on the map grid.</p>
+  <p>The map tool now places visible labeled items on the canvas. Use <strong>Add Sample Items</strong> to quickly test that map items are drawing.</p>
+  <p>Use <strong>Move Tokens</strong> when you want to drag player or monster tokens again. Map items save with <strong>Save Map to This Browser</strong> or <strong>Download Map File</strong>.</p>
+</section>
+
+
+
+<section class="book-page" id="mortal_race_help">
+  <h2 class="item-title">Mortal Race</h2>
+  <div class="category">Race Guide Help</div>
+  <p>The <strong>Mortal</strong> race is available in the Race Guide and Character Sheet Form. It is used for normal mortal/common characters or characters without a special race ability package.</p>
+  <p>It has one placeholder entry, <strong>No Innate Race Ability</strong>, so the character sheet can still record that the player chose Mortal as their race.</p>
+</section>
+
+
+<section class="book-page" id="mortal_character_sheet_book_help">
+  <h2 class="item-title">Mortal in Character Sheets</h2>
+  <div class="category">Character Sheet Help</div>
+  <p>The Character Sheet Book now shows <strong>Mortal</strong> as the race for any older player sheet that does not have a race saved yet.</p>
+  <p>The Character Sheet Form also defaults blank or older sheets to <strong>Mortal</strong>, so when you regenerate the sheet, the saved JS file will include <code>race: "Mortal"</code>, <code>raceFamily: "Mortal / Common Race"</code>, and <code>raceTier: "Base"</code>.</p>
+</section>
+
+
+<section class="book-page" id="mortal_dropdown_help">
+  <h2 class="item-title">Mortal Race Dropdown</h2>
+  <div class="category">Character Sheet Form Help</div>
+  <p><strong>Mortal</strong> is now listed in the Character Sheet Form under <strong>Race and Race Abilities</strong>. It appears near <strong>Immortal</strong> so it is easier to find.</p>
+  <p>Choosing Mortal adds the placeholder race ability <strong>No Innate Race Ability</strong>, allowing the sheet to record normal mortal/common characters.</p>
+</section>
+
+
+<section class="book-page" id="character_sheet_image_upload_help">
+  <h2 class="item-title">Character Sheet Image Uploads</h2>
+  <div class="category">Character Sheet Help</div>
+  <p>The Character Sheet Form now has optional uploads for a <strong>Profile Picture</strong> and an <strong>ID Image</strong>. These images are saved inside the generated character sheet JS file as image data.</p>
+  <p>When that character sheet is listed in the Character Sheet Book, the profile picture and ID image will display near the top of the character page.</p>
+  <p>Large images can make a character sheet JS file very large. Smaller PNG, JPG, or WebP images are recommended.</p>
+</section>
+
 </main>
     <footer class="book-footer">
       <button class="book-btn" onclick="goToPage('book_index')">Index</button>

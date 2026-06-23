@@ -870,6 +870,30 @@
 			font-weight: 900;
 		}
 
+
+		.map-designer-panel {
+			margin-top: 8px;
+			padding: 8px;
+			border: 1px solid rgba(90,61,20,0.22);
+			border-radius: 10px;
+			background: rgba(255,255,255,0.22);
+		}
+
+		.map-designer-panel .toolbar {
+			margin-bottom: 6px;
+		}
+
+		.map-designer-panel input[type="file"] {
+			max-width: 240px;
+		}
+
+		.map-status {
+			font-size: 12px;
+			color: #5a3a1a;
+			font-weight: 800;
+			margin-top: 4px;
+		}
+
 </style>
 </head>
 
@@ -941,6 +965,34 @@
 
 						<canvas id="mapCanvas" width="900" height="700"></canvas>
 						<p class="small-note">Drag tokens to move them. A red crossed token means Body, Mind, or Spirit hit 0 after the creature entered combat.</p>
+
+						<div class="map-designer-panel">
+							<div class="toolbar">
+								<button class="book-btn dark" onclick="setMapTool('move')">Move Tokens</button>
+								<button class="book-btn" onclick="setMapTool('wall')">Add Wall</button>
+								<button class="book-btn" onclick="setMapTool('door')">Add Door</button>
+								<button class="book-btn" onclick="setMapTool('chest')">Add Chest</button>
+								<button class="book-btn" onclick="setMapTool('trap')">Add Trap</button>
+								<button class="book-btn" onclick="setMapTool('pillar')">Add Pillar</button>
+								<button class="book-btn" onclick="setMapTool('tree')">Add Tree</button>
+								<button class="book-btn" onclick="setMapTool('text')">Add Text</button>
+								<button class="book-btn danger" onclick="undoMapItem()">Undo Map Item</button>
+								<button class="book-btn" onclick="addSampleMapItems()">Add Sample Items</button>
+							</div>
+							<div class="toolbar">
+								<label><strong>Map Image</strong></label>
+								<input type="file" id="mapImageInput" accept="image/*" onchange="loadMapBackgroundImage(event)">
+								<button class="book-btn" onclick="saveMapToBrowser()">Save Map to This Browser</button>
+								<button class="book-btn" onclick="loadMapFromBrowser()">Load Saved Map</button>
+								<button class="book-btn" onclick="downloadMapFile()">Download Map File</button>
+								<label class="book-btn">
+									Load Map File
+									<input type="file" accept=".json,.fgmap.json,application/json" onchange="loadMapFile(event)" style="display:none">
+								</label>
+								<button class="book-btn danger" onclick="clearMapDesign()">Clear Map Design</button>
+							</div>
+							<div id="mapDesignerStatus" class="map-status">Map Tool: Move Tokens. Map files save to this browser or download to your computer.</div>
+						</div>
 					</div>
 
 					<div class="page data-page">
@@ -1059,6 +1111,12 @@
 
 		const canvas = document.getElementById("mapCanvas");
 		const ctx = canvas.getContext("2d");
+
+		const MAP_SAVE_KEY = "fallenGateLocalMapDesign";
+		let mapTool = "move";
+		let mapItems = [];
+		let mapBackgroundImageData = "";
+		let mapBackgroundImage = null;
 
 		function initDMTool() {
 			data = window.FALLEN_GATE_DATA || {};
@@ -1220,9 +1278,76 @@
 		}
 
 		window.addEventListener("message", function (event) {
-			if (!event.data || event.data.type !== "addCharacterSheet") return;
-			addCharacterFromSheetCode(event.data.code);
+			if (!event.data) return;
+
+			if (event.data.type === "addCharacterSheet") {
+				addCharacterFromSheetCode(event.data.code);
+				return;
+			}
+
+			if (event.data.type === "addMonsterToRoster") {
+				addMonsterFromGuide(event.data.monsterName);
+				return;
+			}
 		});
+
+		function addMonsterFromGuide(monsterName) {
+			const cleanName = String(monsterName || "").trim();
+
+			if (!cleanName || !data.monsters) {
+				alert("Monster not found in the roster data: " + cleanName);
+				return;
+			}
+
+			let monsterKey = cleanName;
+			let monster = data.monsters[monsterKey];
+
+			if (!monster) {
+				const target = cleanName.toLowerCase().replace(/[^a-z0-9]+/g, "");
+				monsterKey = Object.keys(data.monsters).find(function (key) {
+					return key.toLowerCase().replace(/[^a-z0-9]+/g, "") === target;
+				});
+				monster = monsterKey ? data.monsters[monsterKey] : null;
+			}
+
+			if (!monster) {
+				alert("Monster not found in the roster data: " + cleanName);
+				return;
+			}
+			const id = nextId++;
+			const rosterName = monsterKey || cleanName;
+			const colorKey = rosterName.toLowerCase();
+
+			if (!playerColors[colorKey]) {
+				playerColors[colorKey] = getRandomColor();
+			}
+
+			const participant = {
+				id,
+				name: rosterName,
+				type: "monsters!!" + rosterName,
+				body: Number(monster.body || 0),
+				mind: Number(monster.mind || 0),
+				spirit: Number(monster.spirit || 0),
+				ac: Number(monster.ac || 0),
+				bonus: Number(monster.bonus || 0),
+				init: "",
+				effects: monster.monster_title ? "Category: " + monster.monster_title : "",
+				loot: false,
+				x: 70 + (participants.length % 6) * 52,
+				y: 70 + Math.floor(participants.length / 6) * 52,
+				color: playerColors[colorKey]
+			};
+
+			participants.push(participant);
+			renderTable();
+			syncTurnOrder();
+			drawGrid();
+
+			setLootOutput("Added <strong>" + escapeHtml(rosterName) + "</strong> to the encounter roster from the Monster Guide.", "");
+		}
+
+		window.addMonsterFromGuide = addMonsterFromGuide;
 
 		function addParticipant() {
 			const name = prompt("Enter player or enemy name:");
@@ -1399,17 +1524,34 @@
 			renderTurnOrder();
 		}
 
-		function nextTurn() {
+
+		async function nextTurn() {
 			syncTurnOrder();
 
 			if (turnOrderIds.length <= 1) {
 				renderTurnOrder();
+				await autoUpdateDiscordAfterTurnChange();
 				return;
 			}
 
 			const current = turnOrderIds.shift();
 			turnOrderIds.push(current);
 			renderTurnOrder();
+
+			await autoUpdateDiscordAfterTurnChange();
+		}
+
+		async function autoUpdateDiscordAfterTurnChange() {
+			// Only auto-update after a Discord message already exists.
+			// This prevents Next Turn from creating a brand new Discord post by accident.
+			const idBox = document.getElementById("discordMessageID");
+			const typedID = idBox && idBox.value ? idBox.value.trim() : "";
+			const savedID = localStorage.getItem(DISCORD_MESSAGE_STORAGE_KEY);
+			const hasExistingPost = Boolean(eventMessageID || typedID || savedID);
+
+			if (!hasExistingPost) return;
+
+			await shareToDiscord(true, true);
 		}
 
 		function renderTurnOrder() {
@@ -1472,6 +1614,8 @@
 			ctx.fillStyle = "#fff8df";
 			ctx.fillRect(0, 0, canvas.width, canvas.height);
 
+			drawMapBackground();
+
 			ctx.strokeStyle = "#d4b37c";
 			ctx.lineWidth = 1;
 
@@ -1490,6 +1634,8 @@
 				ctx.lineTo(canvas.width, y);
 				ctx.stroke();
 			}
+
+			drawMapItems();
 
 			participants.forEach(function (p) {
 				drawToken(p);
@@ -1524,6 +1670,312 @@
 			ctx.fillText(p.name, p.x + 18, p.y + 5);
 		}
 
+		function updateMapStatus(text) {
+			const status = document.getElementById("mapDesignerStatus");
+			if (status) status.textContent = text;
+		}
+
+		function setMapTool(tool) {
+			mapTool = tool || "move";
+			const labels = {
+				move: "Move Tokens",
+				wall: "Add Wall",
+				door: "Add Door",
+				chest: "Add Chest",
+				trap: "Add Trap",
+				pillar: "Add Pillar",
+				tree: "Add Tree",
+				text: "Add Text"
+			};
+
+			updateMapStatus("Map Tool: " + (labels[mapTool] || mapTool) + ". Click on the map to place it.");
+		}
+
+		function drawMapBackground() {
+			if (!mapBackgroundImage) return;
+
+			const imgRatio = mapBackgroundImage.width / mapBackgroundImage.height;
+			const canvasRatio = canvas.width / canvas.height;
+			let drawWidth = canvas.width;
+			let drawHeight = canvas.height;
+			let x = 0;
+			let y = 0;
+
+			if (imgRatio > canvasRatio) {
+				drawHeight = canvas.width / imgRatio;
+				y = (canvas.height - drawHeight) / 2;
+			} else {
+				drawWidth = canvas.height * imgRatio;
+				x = (canvas.width - drawWidth) / 2;
+			}
+
+			ctx.globalAlpha = 0.92;
+			ctx.drawImage(mapBackgroundImage, x, y, drawWidth, drawHeight);
+			ctx.globalAlpha = 1;
+		}
+
+
+		function drawMapItemLabel(item, label) {
+			ctx.font = "bold 11px Arial";
+			ctx.fillStyle = "rgba(35, 21, 13, 0.92)";
+			ctx.textAlign = "center";
+			ctx.fillText(label, item.x, item.y + 32);
+			ctx.textAlign = "left";
+		}
+
+		function drawMapItems() {
+			mapItems.forEach(function (item) {
+				ctx.save();
+
+				ctx.shadowColor = "rgba(0,0,0,0.35)";
+				ctx.shadowBlur = 4;
+				ctx.shadowOffsetX = 2;
+				ctx.shadowOffsetY = 2;
+
+				if (item.type === "wall") {
+					ctx.strokeStyle = "#2b1b10";
+					ctx.lineWidth = 10;
+					ctx.beginPath();
+					ctx.moveTo(item.x - 34, item.y);
+					ctx.lineTo(item.x + 34, item.y);
+					ctx.stroke();
+
+					ctx.strokeStyle = "#8b6a3a";
+					ctx.lineWidth = 3;
+					ctx.beginPath();
+					ctx.moveTo(item.x - 34, item.y - 1);
+					ctx.lineTo(item.x + 34, item.y - 1);
+					ctx.stroke();
+
+					drawMapItemLabel(item, "Wall");
+				} else if (item.type === "door") {
+					ctx.fillStyle = "#c99739";
+					ctx.fillRect(item.x - 20, item.y - 11, 40, 22);
+					ctx.strokeStyle = "#3a2413";
+					ctx.lineWidth = 3;
+					ctx.strokeRect(item.x - 20, item.y - 11, 40, 22);
+					ctx.fillStyle = "#3a2413";
+					ctx.beginPath();
+					ctx.arc(item.x + 12, item.y, 3, 0, Math.PI * 2);
+					ctx.fill();
+
+					drawMapItemLabel(item, "Door");
+				} else if (item.type === "chest") {
+					ctx.fillStyle = "#8b5a2b";
+					ctx.fillRect(item.x - 17, item.y - 12, 34, 24);
+					ctx.strokeStyle = "#3a2413";
+					ctx.lineWidth = 3;
+					ctx.strokeRect(item.x - 17, item.y - 12, 34, 24);
+					ctx.fillStyle = "#e2bf62";
+					ctx.fillRect(item.x - 4, item.y - 12, 8, 24);
+					ctx.fillRect(item.x - 17, item.y - 1, 34, 4);
+
+					drawMapItemLabel(item, "Chest");
+				} else if (item.type === "trap") {
+					ctx.fillStyle = "rgba(140, 25, 25, 0.18)";
+					ctx.strokeStyle = "#8c1919";
+					ctx.lineWidth = 4;
+					ctx.beginPath();
+					ctx.moveTo(item.x, item.y - 20);
+					ctx.lineTo(item.x + 20, item.y + 17);
+					ctx.lineTo(item.x - 20, item.y + 17);
+					ctx.closePath();
+					ctx.fill();
+					ctx.stroke();
+					ctx.fillStyle = "#8c1919";
+					ctx.font = "bold 20px Arial";
+					ctx.textAlign = "center";
+					ctx.fillText("!", item.x, item.y + 9);
+					ctx.textAlign = "left";
+
+					drawMapItemLabel(item, "Trap");
+				} else if (item.type === "pillar") {
+					ctx.fillStyle = "#9f9275";
+					ctx.beginPath();
+					ctx.arc(item.x, item.y, 20, 0, Math.PI * 2);
+					ctx.fill();
+					ctx.strokeStyle = "#4b3a24";
+					ctx.lineWidth = 3;
+					ctx.stroke();
+					ctx.beginPath();
+					ctx.arc(item.x, item.y, 10, 0, Math.PI * 2);
+					ctx.stroke();
+
+					drawMapItemLabel(item, "Pillar");
+				} else if (item.type === "tree") {
+					ctx.fillStyle = "#6b3a13";
+					ctx.fillRect(item.x - 5, item.y + 8, 10, 18);
+					ctx.fillStyle = "#2e6b35";
+					ctx.beginPath();
+					ctx.arc(item.x, item.y, 22, 0, Math.PI * 2);
+					ctx.fill();
+					ctx.fillStyle = "#3d8a45";
+					ctx.beginPath();
+					ctx.arc(item.x - 8, item.y - 6, 10, 0, Math.PI * 2);
+					ctx.fill();
+
+					drawMapItemLabel(item, "Tree");
+				} else if (item.type === "text") {
+					ctx.shadowBlur = 2;
+					ctx.fillStyle = "#3a1a49";
+					ctx.font = "bold 18px Georgia";
+					ctx.fillText(item.text || "Note", item.x, item.y);
+				}
+
+				ctx.restore();
+			});
+		}
+
+		function addMapItemAt(x, y) {
+			if (mapTool === "move") return false;
+
+			let item = { type: mapTool, x: Math.round(x), y: Math.round(y) };
+
+			if (mapTool === "text") {
+				const text = prompt("Map label text:", "Note");
+				if (!text) return true;
+				item.text = text;
+			}
+
+			mapItems.push(item);
+			drawGrid();
+			updateMapStatus("Added " + mapTool + ". Map items on grid: " + mapItems.length + ". Use Save Map to This Browser or Download Map File to keep it.");
+			return true;
+		}
+
+		function addSampleMapItems() {
+			const cx = canvas.width / 2;
+			const cy = canvas.height / 2;
+			mapItems.push({ type: "wall", x: Math.round(cx - 80), y: Math.round(cy - 60) });
+			mapItems.push({ type: "door", x: Math.round(cx), y: Math.round(cy - 60) });
+			mapItems.push({ type: "chest", x: Math.round(cx + 80), y: Math.round(cy - 60) });
+			mapItems.push({ type: "trap", x: Math.round(cx - 80), y: Math.round(cy + 40) });
+			mapItems.push({ type: "pillar", x: Math.round(cx), y: Math.round(cy + 40) });
+			mapItems.push({ type: "tree", x: Math.round(cx + 80), y: Math.round(cy + 40) });
+			drawGrid();
+			updateMapStatus("Sample map items added. Map items on grid: " + mapItems.length + ".");
+		}
+
+
+		function undoMapItem() {
+			mapItems.pop();
+			drawGrid();
+			updateMapStatus("Removed last map item. Map items on grid: " + mapItems.length + ".");
+		}
+
+		function clearMapDesign() {
+			if (!confirm("Clear map items and background image? Tokens stay on the roster.")) return;
+			mapItems = [];
+			mapBackgroundImageData = "";
+			mapBackgroundImage = null;
+			const input = document.getElementById("mapImageInput");
+			if (input) input.value = "";
+			drawGrid();
+			updateMapStatus("Map design cleared. Map items on grid: 0.");
+		}
+
+		function loadMapBackgroundImage(event) {
+			const file = event.target.files && event.target.files[0];
+			if (!file) return;
+
+			const reader = new FileReader();
+			reader.onload = function () {
+				mapBackgroundImageData = reader.result;
+				mapBackgroundImage = new Image();
+				mapBackgroundImage.onload = function () {
+					drawGrid();
+					updateMapStatus("Background image loaded. Save or download the map file to keep it.");
+				};
+				mapBackgroundImage.src = mapBackgroundImageData;
+			};
+			reader.readAsDataURL(file);
+		}
+
+		function buildMapSaveData() {
+			return {
+				version: 1,
+				gridWidth,
+				gridHeight,
+				backgroundImage: mapBackgroundImageData,
+				items: mapItems
+			};
+		}
+
+		function applyMapSaveData(saved) {
+			if (!saved) return;
+
+			gridWidth = Number(saved.gridWidth || gridWidth || 10);
+			gridHeight = Number(saved.gridHeight || gridHeight || 10);
+
+			const widthInput = document.getElementById("gridWidth");
+			const heightInput = document.getElementById("gridHeight");
+			if (widthInput) widthInput.value = gridWidth;
+			if (heightInput) heightInput.value = gridHeight;
+
+			mapItems = Array.isArray(saved.items) ? saved.items : [];
+			mapBackgroundImageData = saved.backgroundImage || "";
+
+			if (mapBackgroundImageData) {
+				mapBackgroundImage = new Image();
+				mapBackgroundImage.onload = drawGrid;
+				mapBackgroundImage.src = mapBackgroundImageData;
+			} else {
+				mapBackgroundImage = null;
+				drawGrid();
+			}
+		}
+
+		function saveMapToBrowser() {
+			localStorage.setItem(MAP_SAVE_KEY, JSON.stringify(buildMapSaveData()));
+			updateMapStatus("Map saved to this browser. It stays here on this computer/browser only.");
+		}
+
+		function loadMapFromBrowser() {
+			const saved = localStorage.getItem(MAP_SAVE_KEY);
+			if (!saved) {
+				alert("No map has been saved to this browser yet.");
+				return;
+			}
+
+			applyMapSaveData(JSON.parse(saved));
+			updateMapStatus("Loaded map saved in this browser.");
+		}
+
+		function downloadMapFile() {
+			const fileName = (document.getElementById("eventName").value || "fallen_gate_map")
+				.replace(/[^a-zA-Z0-9_-]+/g, "_") + ".fgmap.json";
+
+			const blob = new Blob([JSON.stringify(buildMapSaveData(), null, 2)], { type: "application/json" });
+			const url = URL.createObjectURL(blob);
+			const a = document.createElement("a");
+
+			a.href = url;
+			a.download = fileName;
+			document.body.appendChild(a);
+			a.click();
+			a.remove();
+
+			URL.revokeObjectURL(url);
+			updateMapStatus("Downloaded map file to your computer.");
+		}
+
+		function loadMapFile(event) {
+			const file = event.target.files && event.target.files[0];
+			if (!file) return;
+
+			const reader = new FileReader();
+			reader.onload = function () {
+				try {
+					applyMapSaveData(JSON.parse(reader.result));
+					updateMapStatus("Loaded map file from your computer.");
+				} catch (error) {
+					alert("Could not load this map file.");
+				}
+			};
+			reader.readAsText(file);
+		}
+
+
 		function resizeGrid() {
 			gridWidth = Math.max(1, Number(document.getElementById("gridWidth").value || 10));
 			gridHeight = Math.max(1, Number(document.getElementById("gridHeight").value || 10));
@@ -1540,9 +1992,32 @@
 
 		canvas.addEventListener("mousedown", function (e) {
 			const point = getCanvasPoint(e);
+
+			// If a map-design tool is selected, place the map item instead of dragging a token.
+			if (addMapItemAt(point.x, point.y)) {
+				draggingId = null;
+				return;
+			}
+
 			const found = [...participants].reverse().find(p => distance(point.x, point.y, p.x, p.y) <= 18);
 			draggingId = found ? found.id : null;
 		});
+
+		canvas.addEventListener("touchstart", function (e) {
+			if (!e.touches || e.touches.length === 0) return;
+			const touch = e.touches[0];
+			const rect = canvas.getBoundingClientRect();
+			const point = {
+				x: touch.clientX - rect.left,
+				y: touch.clientY - rect.top
+			};
+
+			if (addMapItemAt(point.x, point.y)) {
+				e.preventDefault();
+				draggingId = null;
+			}
+		}, { passive: false });
+
 
 		canvas.addEventListener("mousemove", function (e) {
 			if (!draggingId) return;
@@ -1869,9 +2344,9 @@
 			alert("Saved Discord Message ID cleared. The next send will create a new first message.");
 		}
 
-		async function shareToDiscord() {
+		async function shareToDiscord(silent = false, updateOnly = false) {
 			if (!DISCORD_WEBHOOK_URL || DISCORD_WEBHOOK_URL.includes("PASTE_YOUR_NEW_DISCORD_WEBHOOK_URL_HERE")) {
-				alert("Add your Discord webhook URL in DISCORD_WEBHOOK_URL first.");
+				if (!silent) alert("Add your Discord webhook URL in DISCORD_WEBHOOK_URL first.");
 				return;
 			}
 
@@ -1888,6 +2363,10 @@
 						eventMessageID = savedID;
 						if (idBox) idBox.value = savedID;
 					}
+				}
+
+				if (updateOnly && !eventMessageID) {
+					return;
 				}
 
 				const updatingExistingMessage = Boolean(eventMessageID);
@@ -1942,13 +2421,13 @@
 
 				if (!updatingExistingMessage && result.id) {
 					saveDiscordMessageID(result.id);
-					alert("First Discord message sent and saved. Future updates will edit this same message.");
+					if (!silent) alert("First Discord message sent and saved. Future updates will edit this same message.");
 				} else {
-					alert("Discord message updated.");
+					if (!silent) alert("Discord message updated.");
 				}
 			} catch (error) {
 				console.error(error);
-				alert("Failed to send/update Discord. If the old Discord message was deleted, click Start New Discord Post and send again.");
+				if (!silent) alert("Failed to send/update Discord. If the old Discord message was deleted, click Start New Discord Post and send again.");
 			}
 		}
 
