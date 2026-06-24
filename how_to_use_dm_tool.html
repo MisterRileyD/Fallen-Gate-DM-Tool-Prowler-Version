@@ -418,6 +418,150 @@ a {
   <p>Large images can make a character sheet JS file very large. Smaller PNG, JPG, or WebP images are recommended.</p>
 </section>
 
+
+<section class="book-page" id="map_item_move_fix_help">
+  <h2 class="item-title">Moving Map Items</h2>
+  <div class="category">Map Help</div>
+  <p>Use <strong>Move Tokens</strong> to drag player or monster tokens.</p>
+  <p>Use <strong>Move Map Items</strong> to drag placed map items like walls, doors, chests, traps, pillars, trees, and text labels.</p>
+  <p>After moving map items, use <strong>Save Map to This Browser</strong> or <strong>Download Map File</strong> to keep those map item positions.</p>
+</section>
+
+
+<section class="book-page" id="discord_config_preserve_help">
+  <h2 class="item-title">Discord Link Setup</h2>
+  <div class="category">Discord Help</div>
+  <p>The Discord webhook now lives in <strong>discord_config.js</strong>. Paste the webhook URL in that file so future <strong>index.html</strong> updates do not wipe the Discord link.</p>
+  <p>If you do not see a new Discord post, check two things: first, the webhook must be pasted into <strong>discord_config.js</strong>; second, if a Discord Message ID is saved, <strong>Send / Update Discord</strong> edits that existing post instead of making a new one.</p>
+  <p>To make a brand-new post, click <strong>Start New Discord Post</strong>, then click <strong>Send / Update Discord</strong>.</p>
+</section>
+
+
+<section class="book-page" id="roster_compact_grab_area_help">
+  <h2 class="item-title">Compact Roster and Easier Token Grab</h2>
+  <div class="category">Encounter Tool Help</div>
+  <p>The Encounter Data roster now uses a smaller compact layout so the table fits better without inner scrolling. When a second book is open, the roster text becomes smaller again to fit the tighter space.</p>
+  <p><strong>Move Tokens</strong> now has a larger grab area around player and monster tokens. You can click near the token instead of exactly on the circle.</p>
+  <p><strong>Move Map Items</strong> now has a larger grab area around walls, doors, chests, traps, pillars, trees, and labels. Grab hints appear on the map while a move tool is selected.</p>
+</section>
+
+
+<section class="book-page" id="roster_even_centered_help">
+  <h2 class="item-title">Evened Roster Table</h2>
+  <div class="category">Encounter Tool Help</div>
+  <p>The roster table has been polished so the columns look more centered and evenly spaced. Stat columns, AC, Bonus, Init, Loot, and Remove are centered, while Name, Type, and Effects stay left-aligned for readability.</p>
+  <p>The roster also has cleaner row spacing, subtle alternating rows, and hover highlighting to make each row easier to follow.</p>
+</section>
+
+
+<section class="book-page" id="sheet_links_roster_map_resize_help">
+  <h2 class="item-title">Sheet Links, Roster Fit, and Map Item Size</h2>
+  <div class="category">Update Help</div>
+  <p><strong>Character Sheets:</strong> The <strong>Add This Sheet to Encounter</strong> button is now near the top of each character sheet page. Spells and warrior skills on a character sheet are clickable; clicking one opens the Spellbook or Warrior Skills book and searches for that entry.</p>
+  <p><strong>Encounter Roster:</strong> The roster uses shorter headers, shorter status labels, and adjusted column widths so the row data is easier to read without an inner table scrollbar.</p>
+  <p><strong>Map Items:</strong> Map items can now be created at a chosen size. Use <strong>Item Size</strong> before placing a wall, door, chest, trap, pillar, tree, or text. Use <strong>Move Map Items</strong> to select an item, then use <strong>Grow Selected</strong> or <strong>Shrink Selected</strong> to resize it.</p>
+</section>
+
+
+<section class="book-page" id="stats_edge_exact_link_help">
+  <h2 class="item-title">Stats, Edge Placement, and Exact Sheet Links</h2>
+  <div class="category">Update Help</div>
+  <p><strong>Roster Stats:</strong> The Body, Mind, Spirit, AC, Bonus, and Init cells were widened and made bolder so the numbers are easier to read.</p>
+  <p><strong>Map Edge Placement:</strong> The large grab hint circles were removed from the map view. Moving tokens and map items now clamps to the map edge, making it easier to place things on the border of the grid.</p>
+  <p><strong>Character Sheet Links:</strong> Clicking a spell or warrior skill now searches for the exact item-title first, so it opens the spell or skill page instead of only the spell book, magic type, or discipline section.</p>
+</section>
+
+
+<section class="book-page" id="roster_font_plus_7_help">
+  <h2 class="item-title">Roster Font +7</h2>
+  <div class="category">Encounter Data Help</div>
+  <p>The Encounter Data roster table font has been increased by about <strong>7px</strong>. This affects the roster headers, stat numbers, dropdowns, status labels, and remove button.</p>
+  <p>When a second book is open, the roster still uses a slightly smaller font so it has a better chance to fit in the reduced space.</p>
+</section>
+
+
+<section class="book-page" id="roster_font_minus_3_help">
+  <h2 class="item-title">Roster Font -3</h2>
+  <div class="category">Encounter Data Help</div>
+  <p>The Encounter Data roster table font has been decreased by about <strong>3px</strong> from the larger version. This affects the roster headers, stat numbers, dropdowns, status labels, and remove button.</p>
+</section>
+
+
+<section class="book-page" id="wide_roster_small_second_book_help">
+  <h2 class="item-title">Wider Roster with Secondary Book</h2>
+  <div class="category">Encounter Data Help</div>
+  <p>When a secondary book is open, the Encounter Data book now keeps more width and the secondary book becomes smaller. This helps the roster keep its Name, Type, stats, and Effects data visible instead of squeezing the fields too much.</p>
+  <p>The roster column widths were also rebalanced so Type and Effects have more room while Body, Mind, Spirit, AC, Bonus, Init, Loot, and Delete stay readable.</p>
+</section>
+
+
+<section class="book-page" id="balanced_second_book_roster_fix_help">
+  <h2 class="item-title">Balanced Secondary Book Layout</h2>
+  <div class="category">Layout Help</div>
+  <p>The previous layout made the secondary book too narrow and cut off a lot of its content. This update restores a balanced two-book view.</p>
+  <p>The secondary book is wider again, the main Encounter Data book is only slightly scaled down, and the roster keeps a compact readable font when another book is open.</p>
+  <p>On smaller screens, the books stack instead of squeezing side-by-side, which prevents the roster and character sheet from being cut off.</p>
+</section>
+
+
+<section class="book-page" id="book_nudge_map_delete_help">
+  <h2 class="item-title">Two-Book Nudge and Map Item Delete</h2>
+  <div class="category">Map / Layout Help</div>
+  <p>The two-book view has been nudged closer together so the secondary book is not pushed so far right, while still keeping the secondary book wide enough to read.</p>
+  <p>The Battle Map now has a <strong>Delete Map Item</strong> tool. Choose it, then click near a wall, door, chest, trap, pillar, tree, or text label to remove it.</p>
+  <p>You can also use <strong>Move Map Items</strong> to select an item, then click <strong>Delete Selected</strong>.</p>
+</section>
+
+
+<section class="book-page" id="books_more_spacing_help">
+  <h2 class="item-title">More Space Between Books</h2>
+  <div class="category">Layout Help</div>
+  <p>The two-book layout now has more space between the main Encounter Data book and the secondary guide book.</p>
+  <p>This keeps the secondary book readable while moving it farther away from the main book.</p>
+</section>
+
+
+<section class="book-page" id="side_books_farther_help">
+  <h2 class="item-title">Side Books Farther Away</h2>
+  <div class="category">Layout Help</div>
+  <p>The side guide books now sit farther away from the main Encounter Data / Battle Map book.</p>
+  <p>The right-side book is pushed farther right, and the left-side book is pushed farther left. The layout keeps a smaller gap on narrow screens so the books do not get cut off.</p>
+</section>
+
+
+<section class="book-page" id="smaller_secondary_books_help">
+  <h2 class="item-title">Smaller Secondary Books</h2>
+  <div class="category">Layout Help</div>
+  <p>The right and left secondary guide books have been reduced in size so the main Battle Map / Encounter Data book stays visually dominant.</p>
+  <p>The secondary book is scaled down, given less grid space, and moved away from the main book. On narrower screens, the books stack to avoid cutting anything off.</p>
+</section>
+
+
+<section class="book-page" id="main_wider_equal_height_guides_help">
+  <h2 class="item-title">Main Book Wider / Equal Guide Height</h2>
+  <div class="category">Layout Help</div>
+  <p>When a secondary book is open, the main Battle Map / Encounter Data book now keeps more width, closer to its normal alone view.</p>
+  <p>The normal alone view of the main book was not changed.</p>
+  <p>The secondary book now uses the same visual height scale as the main book, so the two books line up better vertically.</p>
+</section>
+
+
+<section class="book-page" id="gap15_width_expand_help">
+  <h2 class="item-title">Gap 15px / Width Expansion</h2>
+  <div class="category">Layout Help</div>
+  <p>The two-book layout now uses a <strong>15px</strong> gap between the main book and the secondary book.</p>
+  <p>The main book minimum width was expanded by <strong>10px</strong>, and the secondary book minimum width was expanded by <strong>17px</strong>.</p>
+  <p>The extra side push was removed so the visual spacing stays close to the requested 15px.</p>
+</section>
+
+
+<section class="book-page" id="alone_width_minus10_roster_font_minus3_help">
+  <h2 class="item-title">Main Book -10px / Roster Font -3</h2>
+  <div class="category">Layout Help</div>
+  <p>When the main book is by itself, its minimum width was reduced by <strong>10px</strong>.</p>
+  <p>The Encounter Data roster information font was lowered by about <strong>3px</strong>, including table text, stat boxes, dropdowns, status labels, and the delete button.</p>
+</section>
+
 </main>
     <footer class="book-footer">
       <button class="book-btn" onclick="goToPage('book_index')">Index</button>

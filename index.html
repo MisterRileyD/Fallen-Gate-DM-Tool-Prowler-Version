@@ -9,6 +9,7 @@
 	<script src="./datafile.js"></script>
 	<script src="./character_sheets_manifest.js"></script>
 	<script src="./character_sheets.js"></script>
+	<script src="./discord_config.js"></script>
 
 	<style>
 		:root {
@@ -317,7 +318,7 @@
 			max-width: 2100px;
 			margin: 0 auto;
 			display: grid;
-			grid-template-columns: 0px minmax(860px, 1fr) 0px;
+			grid-template-columns: 0px minmax(850px, 1fr) 0px;
 			gap: 0;
 			align-items: start;
 			transition: grid-template-columns 0.55s ease, gap 0.55s ease, padding 0.55s ease;
@@ -894,6 +895,773 @@
 			margin-top: 4px;
 		}
 
+
+		/* Compact Encounter Data roster — helps keep the roster fitted without inner scrolling. */
+		.data-page {
+			font-size: 12px;
+			gap: 5px;
+			grid-template-rows: auto auto auto auto auto;
+			overflow: visible;
+		}
+
+		.data-page .page-title {
+			font-size: 20px;
+			margin-bottom: 5px;
+			padding-bottom: 4px;
+		}
+
+		.data-page .toolbar {
+			gap: 5px;
+			margin-bottom: 5px;
+		}
+
+		.data-page .book-btn {
+			padding: 5px 7px;
+			font-size: 11px;
+			line-height: 1.1;
+		}
+
+		.data-page input,
+		.data-page select {
+			font-size: 11px;
+		}
+
+		.data-page .turn-box {
+			padding: 6px;
+			gap: 6px;
+		}
+
+		.data-page .current-turn {
+			font-size: 15px;
+		}
+
+		.data-page .order-list {
+			max-height: 58px;
+			font-size: 11px;
+			margin-top: 4px;
+		}
+
+		.data-page .order-list li {
+			padding: 2px 5px;
+			margin-bottom: 2px;
+		}
+
+		.data-page .table-wrap {
+			overflow: visible;
+			min-height: 0;
+			max-height: none;
+			border-radius: 8px;
+		}
+
+		.data-page table {
+			width: 100%;
+			min-width: 0;
+			table-layout: fixed;
+			font-size: 10.5px;
+		}
+
+		.data-page th,
+		.data-page td {
+			padding: 2px 3px;
+			white-space: normal;
+			vertical-align: middle;
+			line-height: 1.12;
+		}
+
+		.data-page td input,
+		.data-page td select {
+			padding: 2px 3px;
+			border-radius: 4px;
+			font-size: 10.5px;
+			min-width: 0;
+		}
+
+		.data-page td input.stat {
+			width: 100%;
+			max-width: 42px;
+			padding-left: 1px;
+			padding-right: 1px;
+		}
+
+		.data-page td input.check {
+			transform: scale(0.9);
+		}
+
+		.data-page .status-pill {
+			font-size: 9px;
+			padding: 2px 4px;
+		}
+
+		.data-page #partyTable th:nth-child(1),
+		.data-page #partyTable td:nth-child(1) { width: 7%; }
+
+		.data-page #partyTable th:nth-child(2),
+		.data-page #partyTable td:nth-child(2) { width: 13%; }
+
+		.data-page #partyTable th:nth-child(3),
+		.data-page #partyTable td:nth-child(3) { width: 17%; }
+
+		.data-page #partyTable th:nth-child(4),
+		.data-page #partyTable td:nth-child(4),
+		.data-page #partyTable th:nth-child(5),
+		.data-page #partyTable td:nth-child(5),
+		.data-page #partyTable th:nth-child(6),
+		.data-page #partyTable td:nth-child(6) { width: 5%; }
+
+		.data-page #partyTable th:nth-child(7),
+		.data-page #partyTable td:nth-child(7) { width: 4%; }
+
+		.data-page #partyTable th:nth-child(8),
+		.data-page #partyTable td:nth-child(8) { width: 5%; }
+
+		.data-page #partyTable th:nth-child(9),
+		.data-page #partyTable td:nth-child(9) { width: 6%; }
+
+		.data-page #partyTable th:nth-child(10),
+		.data-page #partyTable td:nth-child(10) { width: 16%; }
+
+		.data-page #partyTable th:nth-child(11),
+		.data-page #partyTable td:nth-child(11) { width: 4%; text-align: center; }
+
+		.data-page #partyTable th:nth-child(12),
+		.data-page #partyTable td:nth-child(12) { width: 5%; text-align: center; }
+
+		.data-page #partyTable td:nth-child(12) .book-btn {
+			padding: 2px 5px;
+			font-size: 10px;
+		}
+
+		.data-page .loot-output {
+			max-height: 120px;
+			min-height: 48px;
+			font-size: 11px;
+			padding: 5px;
+			line-height: 1.2;
+		}
+
+		.data-page .loot-actions {
+			padding: 5px;
+			gap: 5px;
+			margin-top: 5px;
+			margin-bottom: 5px;
+			font-size: 11px;
+		}
+
+		/* Smaller roster text when either secondary book is open. */
+		.book-layout.guide-open .data-page,
+		.book-layout.left-guide-open .data-page {
+			font-size: 10px;
+		}
+
+		.book-layout.guide-open .data-page .page-title,
+		.book-layout.left-guide-open .data-page .page-title {
+			font-size: 17px;
+		}
+
+		.book-layout.guide-open .data-page table,
+		.book-layout.left-guide-open .data-page table {
+			font-size: 8.9px;
+		}
+
+		.book-layout.guide-open .data-page td input,
+		.book-layout.guide-open .data-page td select,
+		.book-layout.left-guide-open .data-page td input,
+		.book-layout.left-guide-open .data-page td select {
+			font-size: 8.9px;
+			padding: 1px 2px;
+		}
+
+		.book-layout.guide-open .data-page .book-btn,
+		.book-layout.left-guide-open .data-page .book-btn {
+			font-size: 9px;
+			padding: 3px 5px;
+		}
+
+		.book-layout.guide-open .data-page .status-pill,
+		.book-layout.left-guide-open .data-page .status-pill {
+			font-size: 8px;
+			padding: 1px 3px;
+		}
+
+
+
+		/* Evened / centered roster table polish. */
+		.data-page .table-wrap {
+			display: flex;
+			justify-content: center;
+			align-items: flex-start;
+			width: 100%;
+			padding: 4px;
+		}
+
+		.data-page #partyTable {
+			margin: 0 auto;
+			width: 100%;
+			table-layout: fixed;
+			border-collapse: separate;
+			border-spacing: 0;
+		}
+
+		.data-page #partyTable th,
+		.data-page #partyTable td {
+			text-align: center;
+			vertical-align: middle;
+			overflow: hidden;
+			text-overflow: ellipsis;
+		}
+
+		.data-page #partyTable th {
+			font-size: 10px;
+			letter-spacing: 0.02em;
+		}
+
+		.data-page #partyTable td:nth-child(2),
+		.data-page #partyTable td:nth-child(3),
+		.data-page #partyTable td:nth-child(10) {
+			text-align: left;
+		}
+
+		.data-page #partyTable td:nth-child(2) input,
+		.data-page #partyTable td:nth-child(10) input {
+			text-align: left;
+		}
+
+		.data-page #partyTable td:nth-child(3) select {
+			text-align: left;
+		}
+
+		.data-page #partyTable input,
+		.data-page #partyTable select {
+			box-sizing: border-box;
+			text-align: center;
+		}
+
+		.data-page #partyTable th:nth-child(1),
+		.data-page #partyTable td:nth-child(1) { width: 7.5%; }
+
+		.data-page #partyTable th:nth-child(2),
+		.data-page #partyTable td:nth-child(2) { width: 14%; }
+
+		.data-page #partyTable th:nth-child(3),
+		.data-page #partyTable td:nth-child(3) { width: 16%; }
+
+		.data-page #partyTable th:nth-child(4),
+		.data-page #partyTable td:nth-child(4),
+		.data-page #partyTable th:nth-child(5),
+		.data-page #partyTable td:nth-child(5),
+		.data-page #partyTable th:nth-child(6),
+		.data-page #partyTable td:nth-child(6) { width: 5.5%; }
+
+		.data-page #partyTable th:nth-child(7),
+		.data-page #partyTable td:nth-child(7) { width: 5%; }
+
+		.data-page #partyTable th:nth-child(8),
+		.data-page #partyTable td:nth-child(8) { width: 5.5%; }
+
+		.data-page #partyTable th:nth-child(9),
+		.data-page #partyTable td:nth-child(9) { width: 6.5%; }
+
+		.data-page #partyTable th:nth-child(10),
+		.data-page #partyTable td:nth-child(10) { width: 15%; }
+
+		.data-page #partyTable th:nth-child(11),
+		.data-page #partyTable td:nth-child(11) { width: 4.5%; }
+
+		.data-page #partyTable th:nth-child(12),
+		.data-page #partyTable td:nth-child(12) { width: 4.5%; }
+
+		.data-page #partyTable th:first-child {
+			border-top-left-radius: 8px;
+		}
+
+		.data-page #partyTable th:last-child {
+			border-top-right-radius: 8px;
+		}
+
+		.data-page #partyTable tbody tr:nth-child(even) {
+			background: rgba(255,255,255,0.12);
+		}
+
+		.data-page #partyTable tbody tr:hover {
+			background: rgba(201,151,57,0.18);
+		}
+
+		.book-layout.guide-open .data-page #partyTable th,
+		.book-layout.left-guide-open .data-page #partyTable th {
+			font-size: 8.3px;
+		}
+
+		.book-layout.guide-open .data-page #partyTable th,
+		.book-layout.guide-open .data-page #partyTable td,
+		.book-layout.left-guide-open .data-page #partyTable th,
+		.book-layout.left-guide-open .data-page #partyTable td {
+			padding: 1px 2px;
+		}
+
+
+
+		/* Readable no-scroll roster adjustment. */
+		.data-page .table-wrap {
+			overflow: visible !important;
+			padding: 5px;
+		}
+
+		.data-page #partyTable {
+			width: 100%;
+			min-width: 0 !important;
+			table-layout: fixed;
+			font-size: 11.4px;
+		}
+
+		.data-page #partyTable th,
+		.data-page #partyTable td {
+			padding: 3px 4px;
+			line-height: 1.15;
+			white-space: normal;
+			text-align: center;
+			vertical-align: middle;
+		}
+
+		.data-page #partyTable th {
+			font-size: 10.5px;
+		}
+
+		.data-page #partyTable input,
+		.data-page #partyTable select {
+			font-size: 11px;
+			padding: 3px 4px;
+			min-width: 0;
+			box-sizing: border-box;
+		}
+
+		.data-page #partyTable td:nth-child(2),
+		.data-page #partyTable td:nth-child(3),
+		.data-page #partyTable td:nth-child(10) {
+			text-align: left;
+		}
+
+		.data-page #partyTable td:nth-child(2) input,
+		.data-page #partyTable td:nth-child(10) input,
+		.data-page #partyTable td:nth-child(3) select {
+			text-align: left;
+		}
+
+		.data-page #partyTable th:nth-child(1),
+		.data-page #partyTable td:nth-child(1) { width: 6%; }
+
+		.data-page #partyTable th:nth-child(2),
+		.data-page #partyTable td:nth-child(2) { width: 14%; }
+
+		.data-page #partyTable th:nth-child(3),
+		.data-page #partyTable td:nth-child(3) { width: 18%; }
+
+		.data-page #partyTable th:nth-child(4),
+		.data-page #partyTable td:nth-child(4),
+		.data-page #partyTable th:nth-child(5),
+		.data-page #partyTable td:nth-child(5),
+		.data-page #partyTable th:nth-child(6),
+		.data-page #partyTable td:nth-child(6),
+		.data-page #partyTable th:nth-child(7),
+		.data-page #partyTable td:nth-child(7),
+		.data-page #partyTable th:nth-child(8),
+		.data-page #partyTable td:nth-child(8),
+		.data-page #partyTable th:nth-child(9),
+		.data-page #partyTable td:nth-child(9) { width: 4.7%; }
+
+		.data-page #partyTable th:nth-child(10),
+		.data-page #partyTable td:nth-child(10) { width: 20%; }
+
+		.data-page #partyTable th:nth-child(11),
+		.data-page #partyTable td:nth-child(11) { width: 5%; }
+
+		.data-page #partyTable th:nth-child(12),
+		.data-page #partyTable td:nth-child(12) { width: 5%; }
+
+		.data-page .status-pill {
+			font-size: 9.2px;
+			padding: 2px 3px;
+			max-width: 100%;
+		}
+
+		.data-page #partyTable td:nth-child(12) .book-btn {
+			padding: 2px 5px;
+			font-size: 10px;
+		}
+
+		.book-layout.guide-open .data-page #partyTable,
+		.book-layout.left-guide-open .data-page #partyTable {
+			font-size: 10px;
+		}
+
+		.book-layout.guide-open .data-page #partyTable input,
+		.book-layout.guide-open .data-page #partyTable select,
+		.book-layout.left-guide-open .data-page #partyTable input,
+		.book-layout.left-guide-open .data-page #partyTable select {
+			font-size: 9.6px;
+			padding: 2px;
+		}
+
+
+
+		/* Readable stat cells after compact roster pass. */
+		.data-page #partyTable {
+			font-size: 12.2px;
+		}
+
+		.data-page #partyTable th,
+		.data-page #partyTable td {
+			padding: 3px 3px;
+			line-height: 1.18;
+		}
+
+		.data-page #partyTable th {
+			font-size: 11px;
+		}
+
+		.data-page #partyTable input,
+		.data-page #partyTable select {
+			font-size: 11.6px;
+			font-weight: 800;
+			color: #23150d;
+			padding: 2px 3px;
+			min-height: 20px;
+			box-sizing: border-box;
+		}
+
+		.data-page #partyTable td input.stat {
+			width: 100%;
+			min-width: 28px;
+			max-width: 42px;
+			text-align: center;
+			padding-left: 1px;
+			padding-right: 1px;
+		}
+
+		.data-page #partyTable th:nth-child(1),
+		.data-page #partyTable td:nth-child(1) { width: 6%; }
+
+		.data-page #partyTable th:nth-child(2),
+		.data-page #partyTable td:nth-child(2) { width: 13%; }
+
+		.data-page #partyTable th:nth-child(3),
+		.data-page #partyTable td:nth-child(3) { width: 15%; }
+
+		.data-page #partyTable th:nth-child(4),
+		.data-page #partyTable td:nth-child(4),
+		.data-page #partyTable th:nth-child(5),
+		.data-page #partyTable td:nth-child(5),
+		.data-page #partyTable th:nth-child(6),
+		.data-page #partyTable td:nth-child(6),
+		.data-page #partyTable th:nth-child(7),
+		.data-page #partyTable td:nth-child(7),
+		.data-page #partyTable th:nth-child(8),
+		.data-page #partyTable td:nth-child(8),
+		.data-page #partyTable th:nth-child(9),
+		.data-page #partyTable td:nth-child(9) { width: 6%; }
+
+		.data-page #partyTable th:nth-child(10),
+		.data-page #partyTable td:nth-child(10) { width: 17%; }
+
+		.data-page #partyTable th:nth-child(11),
+		.data-page #partyTable td:nth-child(11) { width: 5%; }
+
+		.data-page #partyTable th:nth-child(12),
+		.data-page #partyTable td:nth-child(12) { width: 5%; }
+
+		.book-layout.guide-open .data-page #partyTable input,
+		.book-layout.guide-open .data-page #partyTable select,
+		.book-layout.left-guide-open .data-page #partyTable input,
+		.book-layout.left-guide-open .data-page #partyTable select {
+			font-size: 10.2px;
+			min-height: 18px;
+		}
+
+		/* Roster font adjusted down 3px from the larger version. */
+		.data-page #partyTable {
+			font-size: 15.4px;
+		}
+
+		.data-page #partyTable th {
+			font-size: 14.5px;
+		}
+
+		.data-page #partyTable th,
+		.data-page #partyTable td {
+			padding: 4px 5px;
+			line-height: 1.18;
+		}
+
+		.data-page #partyTable input,
+		.data-page #partyTable select {
+			font-size: 15.6px;
+			font-weight: 900;
+			min-height: 24px;
+			padding: 3px 4px;
+		}
+
+		.data-page #partyTable td input.stat {
+			min-width: 34px;
+			max-width: 52px;
+			font-size: 15.6px;
+		}
+
+		.data-page .status-pill {
+			font-size: 13.2px;
+			padding: 3px 5px;
+		}
+
+		.data-page #partyTable td:nth-child(12) .book-btn {
+			font-size: 13px;
+			padding: 3px 7px;
+		}
+
+		.book-layout.guide-open .data-page #partyTable,
+		.book-layout.left-guide-open .data-page #partyTable {
+			font-size: 13.4px;
+		}
+
+		.book-layout.guide-open .data-page #partyTable th,
+		.book-layout.left-guide-open .data-page #partyTable th {
+			font-size: 12.8px;
+		}
+
+		.book-layout.guide-open .data-page #partyTable input,
+		.book-layout.guide-open .data-page #partyTable select,
+		.book-layout.left-guide-open .data-page #partyTable input,
+		.book-layout.left-guide-open .data-page #partyTable select {
+			font-size: 13px;
+			min-height: 22px;
+		}
+
+		/* Balanced two-book layout fix — keeps secondary book readable and prevents cutoff. */
+		.book-layout {
+			max-width: calc(100vw - 18px);
+			overflow: visible;
+		}
+
+		.book-layout.guide-open {
+			grid-template-columns: 0px minmax(0, 1.08fr) minmax(340px, 0.92fr);
+			gap: 10px;
+			padding-right: 36px;
+			max-width: calc(100vw - 18px);
+		}
+
+		.book-layout.left-guide-open {
+			grid-template-columns: minmax(340px, 0.92fr) minmax(0, 1.08fr) 0px;
+			gap: 10px;
+			padding-left: 36px;
+			max-width: calc(100vw - 18px);
+		}
+
+		.book-layout.guide-open .main-tome,
+		.book-layout.left-guide-open .main-tome {
+			transform: scale(0.94);
+			transform-origin: left top;
+		}
+
+		.book-layout.guide-open .guide-tome,
+		.book-layout.left-guide-open .left-guide-tome {
+			transform: translateX(0) scale(0.94);
+			transform-origin: left top;
+		}
+
+		.book-layout.guide-open .guide-book,
+		.book-layout.left-guide-open .guide-book {
+			padding: 14px;
+			min-width: 0;
+		}
+
+		.book-layout.guide-open .guide-page .page-title,
+		.book-layout.left-guide-open .guide-page .page-title {
+			font-size: 24px;
+			line-height: 1.05;
+		}
+
+		.book-layout.guide-open .close-guide-row,
+		.book-layout.left-guide-open .close-guide-row {
+			min-height: 40px;
+		}
+
+		.book-layout.guide-open .close-guide-row .book-btn,
+		.book-layout.left-guide-open .close-guide-row .book-btn {
+			padding: 6px 9px;
+			font-size: 12px;
+		}
+
+		/* Roster stays compact enough for the balanced two-book layout. */
+		.book-layout.guide-open .data-page #partyTable,
+		.book-layout.left-guide-open .data-page #partyTable {
+			font-size: 12.2px;
+		}
+
+		.book-layout.guide-open .data-page #partyTable th,
+		.book-layout.left-guide-open .data-page #partyTable th {
+			font-size: 11px;
+		}
+
+		.book-layout.guide-open .data-page #partyTable input,
+		.book-layout.guide-open .data-page #partyTable select,
+		.book-layout.left-guide-open .data-page #partyTable input,
+		.book-layout.left-guide-open .data-page #partyTable select {
+			font-size: 12px;
+			min-height: 20px;
+			font-weight: 900;
+			padding: 2px 3px;
+		}
+
+		.book-layout.guide-open .data-page .status-pill,
+		.book-layout.left-guide-open .data-page .status-pill {
+			font-size: 10px;
+			padding: 2px 3px;
+		}
+
+		.book-layout.guide-open .data-page #partyTable td input.stat,
+		.book-layout.left-guide-open .data-page #partyTable td input.stat {
+			min-width: 28px;
+			max-width: 42px;
+		}
+
+		@media (max-width: 1050px) {
+			.book-layout.guide-open,
+			.book-layout.left-guide-open {
+				grid-template-columns: 1fr;
+				padding-left: 8px;
+				padding-right: 8px;
+				gap: 12px;
+			}
+
+			.book-layout.guide-open .main-tome,
+			.book-layout.left-guide-open .main-tome,
+			.book-layout.guide-open .guide-tome,
+			.book-layout.left-guide-open .left-guide-tome {
+				transform: scale(1);
+			}
+
+			.book-layout.guide-open .guide-tome,
+			.book-layout.left-guide-open .left-guide-tome {
+				margin-top: 10px;
+			}
+		}
+
+		/* Main-wider two-book layout with equal visual book height. */
+		.book-layout.guide-open {
+			grid-template-columns: 0px minmax(910px, 1.55fr) minmax(357px, 0.55fr);
+			gap: 15px;
+			padding-right: 48px;
+			max-width: calc(100vw - 18px);
+		}
+
+		.book-layout.left-guide-open {
+			grid-template-columns: minmax(357px, 0.55fr) minmax(910px, 1.55fr) 0px;
+			gap: 15px;
+			padding-left: 48px;
+			max-width: calc(100vw - 18px);
+		}
+
+		.book-layout.guide-open .main-tome,
+		.book-layout.left-guide-open .main-tome {
+			transform: scale(0.975);
+			transform-origin: left top;
+		}
+
+		/* Same scale as the main tome so the secondary book is the same visual height. */
+		.book-layout.guide-open .guide-tome {
+			transform: translateX(0px) scale(0.975);
+			transform-origin: left top;
+		}
+
+		.book-layout.left-guide-open .left-guide-tome {
+			transform: translateX(0px) scale(0.975);
+			transform-origin: right top;
+		}
+
+		.book-layout.guide-open .guide-book,
+		.book-layout.left-guide-open .guide-book {
+			height: var(--book-height);
+			padding: 14px;
+		}
+
+		.book-layout.guide-open .guide-page .page-title,
+		.book-layout.left-guide-open .guide-page .page-title {
+			font-size: 24px;
+			line-height: 1.05;
+		}
+
+		.book-layout.guide-open .close-guide-row,
+		.book-layout.left-guide-open .close-guide-row {
+			min-height: 40px;
+		}
+
+		@media (max-width: 1320px) {
+			.book-layout.guide-open,
+			.book-layout.left-guide-open {
+				grid-template-columns: 1fr;
+				gap: 14px;
+				padding-left: 10px;
+				padding-right: 10px;
+			}
+
+			.book-layout.guide-open .main-tome,
+			.book-layout.left-guide-open .main-tome,
+			.book-layout.guide-open .guide-tome,
+			.book-layout.left-guide-open .left-guide-tome {
+				transform: scale(1);
+			}
+		}
+
+
+
+		/* Roster information font lowered by 3px. */
+		.data-page #partyTable {
+			font-size: 12.4px;
+		}
+
+		.data-page #partyTable th {
+			font-size: 11.5px;
+		}
+
+		.data-page #partyTable input,
+		.data-page #partyTable select {
+			font-size: 12.6px;
+			min-height: 21px;
+			font-weight: 900;
+		}
+
+		.data-page #partyTable td input.stat {
+			font-size: 12.6px;
+			min-width: 30px;
+			max-width: 46px;
+		}
+
+		.data-page .status-pill {
+			font-size: 10.2px;
+			padding: 2px 4px;
+		}
+
+		.data-page #partyTable td:nth-child(12) .book-btn {
+			font-size: 10px;
+			padding: 2px 6px;
+		}
+
+		.book-layout.guide-open .data-page #partyTable,
+		.book-layout.left-guide-open .data-page #partyTable {
+			font-size: 10.4px;
+		}
+
+		.book-layout.guide-open .data-page #partyTable th,
+		.book-layout.left-guide-open .data-page #partyTable th {
+			font-size: 9.8px;
+		}
+
+		.book-layout.guide-open .data-page #partyTable input,
+		.book-layout.guide-open .data-page #partyTable select,
+		.book-layout.left-guide-open .data-page #partyTable input,
+		.book-layout.left-guide-open .data-page #partyTable select {
+			font-size: 10px;
+			min-height: 19px;
+		}
+
+
 </style>
 </head>
 
@@ -969,6 +1737,8 @@
 						<div class="map-designer-panel">
 							<div class="toolbar">
 								<button class="book-btn dark" onclick="setMapTool('move')">Move Tokens</button>
+								<button class="book-btn dark" onclick="setMapTool('moveItem')">Move Map Items</button>
+								<button class="book-btn danger" onclick="setMapTool('deleteItem')">Delete Map Item</button>
 								<button class="book-btn" onclick="setMapTool('wall')">Add Wall</button>
 								<button class="book-btn" onclick="setMapTool('door')">Add Door</button>
 								<button class="book-btn" onclick="setMapTool('chest')">Add Chest</button>
@@ -976,6 +1746,10 @@
 								<button class="book-btn" onclick="setMapTool('pillar')">Add Pillar</button>
 								<button class="book-btn" onclick="setMapTool('tree')">Add Tree</button>
 								<button class="book-btn" onclick="setMapTool('text')">Add Text</button>
+								<label><strong>Item Size</strong> <input type="number" id="mapItemSizeInput" value="1" min="0.5" max="12" step="0.5" style="width:62px" onchange="setMapItemSize(this.value)"></label>
+								<button class="book-btn" onclick="scaleSelectedMapItem(-0.5)">Shrink Selected</button>
+								<button class="book-btn" onclick="scaleSelectedMapItem(0.5)">Grow Selected</button>
+								<button class="book-btn danger" onclick="deleteSelectedMapItem()">Delete Selected</button>
 								<button class="book-btn danger" onclick="undoMapItem()">Undo Map Item</button>
 								<button class="book-btn" onclick="addSampleMapItems()">Add Sample Items</button>
 							</div>
@@ -1025,15 +1799,15 @@
 										<th>Status</th>
 										<th>Name</th>
 										<th>Type</th>
-										<th>Body</th>
-										<th>Mind</th>
-										<th>Spirit</th>
+										<th>B</th>
+										<th>M</th>
+										<th>S</th>
 										<th>AC</th>
-										<th>Bonus</th>
-										<th>Init Roll</th>
+										<th>Bon</th>
+										<th>Init</th>
 										<th>Effects</th>
-										<th>Loot?</th>
-										<th>Remove</th>
+										<th>Loot</th>
+										<th>Del</th>
 									</tr>
 								</thead>
 								<tbody id="partyBody"></tbody>
@@ -1051,7 +1825,9 @@
 							<div class="toolbar">
 								<label><strong>Discord Message ID</strong></label>
 								<input type="text" id="discordMessageID" placeholder="Saved after first send" style="min-width:260px">
+								<button class="book-btn" onclick="checkDiscordSetup()">Check Discord Link</button>
 								<button class="book-btn danger" onclick="clearDiscordMessageID()">Start New Discord Post</button>
+								<span id="discordWebhookStatus" class="small">Discord link not checked yet.</span>
 							</div>
 
 							<div class="loot-output" id="lootOutput">Loot and summary output will appear here.</div>
@@ -1103,9 +1879,11 @@
 		let gridWidth = 10;
 		let gridHeight = 10;
 		let draggingId = null;
+		let draggingMapItemIndex = null;
+		let selectedMapItemIndex = null;
 		let playerColors = {};
 
-		const DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1382809889684062298/We1eJedsfCJq11wfDdUU9zmzrQC5JbiUs6JqYgCQHmzBzguMMJE0TPyMCgCQ4VfO93Rt";
+		const DISCORD_WEBHOOK_URL = String(window.FALLEN_GATE_DISCORD_WEBHOOK_URL || "https://discord.com/api/webhooks/1382809889684062298/We1eJedsfCJq11wfDdUU9zmzrQC5JbiUs6JqYgCQHmzBzguMMJE0TPyMCgCQ4VfO93Rt").trim();
 		const DISCORD_MESSAGE_STORAGE_KEY = "fallenGateDiscordMessageID";
 		let eventMessageID = null;
 
@@ -1117,6 +1895,10 @@
 		let mapItems = [];
 		let mapBackgroundImageData = "";
 		let mapBackgroundImage = null;
+		let mapItemSize = 1;
+
+		const TOKEN_GRAB_RADIUS = 38;
+		const MAP_ITEM_GRAB_PADDING = 24;
 
 		function initDMTool() {
 			data = window.FALLEN_GATE_DATA || {};
@@ -1130,6 +1912,7 @@
 
 			buildTypeOptions();
 			loadSavedDiscordMessageID();
+			checkDiscordSetup();
 			drawGrid();
 		}
 
@@ -1289,7 +2072,29 @@
 				addMonsterFromGuide(event.data.monsterName);
 				return;
 			}
+
+			if (event.data.type === "openGuideItem") {
+				openLinkedGuideFromSheet(event.data.guide, event.data.name);
+				return;
+			}
 		});
+
+		function openLinkedGuideFromSheet(guide, name) {
+			const cleanName = String(name || "").trim();
+
+			if (!cleanName) return;
+
+			if (guide === "spellbook") {
+				openGuide("spellbookGuide", "Spellbook", "./spellbook.html?focus=" + encodeURIComponent(cleanName));
+				return;
+			}
+
+			if (guide === "skills") {
+				openGuide("skillsGuide", "Warrior Skills", "./skills.html?focus=" + encodeURIComponent(cleanName));
+				return;
+			}
+		}
+
 
 		function addMonsterFromGuide(monsterName) {
 			const cleanName = String(monsterName || "").trim();
@@ -1419,14 +2224,14 @@
 
 		function statusPill(p) {
 			if (isDefeated(p)) {
-				return "<span class='status-pill defeated'>Defeated</span>";
+				return "<span class='status-pill defeated' title='Defeated'>Down</span>";
 			}
 
 			if (hasEnteredCombat(p)) {
-				return "<span class='status-pill active'>Active</span>";
+				return "<span class='status-pill active' title='Active'>Live</span>";
 			}
 
-			return "<span class='status-pill'>Pending Init</span>";
+			return "<span class='status-pill' title='Pending Init'>Wait</span>";
 		}
 
 		function setType(id, value) {
@@ -1642,6 +2447,35 @@
 			});
 		}
 
+		function drawGrabHints() {
+			ctx.save();
+			ctx.setLineDash([6, 5]);
+			ctx.lineWidth = 2;
+			ctx.strokeStyle = "rgba(70, 45, 12, 0.32)";
+			ctx.fillStyle = "rgba(201, 151, 57, 0.08)";
+
+			if (mapTool === "move") {
+				participants.forEach(function (p) {
+					ctx.beginPath();
+					ctx.arc(p.x, p.y, TOKEN_GRAB_RADIUS, 0, Math.PI * 2);
+					ctx.fill();
+					ctx.stroke();
+				});
+			}
+
+			if (mapTool === "moveItem") {
+				mapItems.forEach(function (item) {
+					ctx.beginPath();
+					ctx.arc(item.x, item.y, 30 * getMapItemSize(item) + MAP_ITEM_GRAB_PADDING, 0, Math.PI * 2);
+					ctx.fill();
+					ctx.stroke();
+				});
+			}
+
+			ctx.restore();
+		}
+
+
 		function drawToken(p) {
 			const radius = hasEnteredCombat(p) ? 14 : 10;
 			const defeated = isDefeated(p);
@@ -1679,6 +2513,8 @@
 			mapTool = tool || "move";
 			const labels = {
 				move: "Move Tokens",
+				moveItem: "Move Map Items",
+				deleteItem: "Delete Map Item",
 				wall: "Add Wall",
 				door: "Add Door",
 				chest: "Add Chest",
@@ -1688,7 +2524,15 @@
 				text: "Add Text"
 			};
 
-			updateMapStatus("Map Tool: " + (labels[mapTool] || mapTool) + ". Click on the map to place it.");
+			if (mapTool === "move") {
+				updateMapStatus("Map Tool: Move Tokens. Drag near a player or monster token; the grab area is larger than the token.");
+			} else if (mapTool === "moveItem") {
+				updateMapStatus("Map Tool: Move Map Items. Drag near a wall, door, chest, trap, pillar, tree, or text; the grab area is larger than the item.");
+			} else if (mapTool === "deleteItem") {
+				updateMapStatus("Map Tool: Delete Map Item. Click near a wall, door, chest, trap, pillar, tree, or text to remove it.");
+			} else {
+				updateMapStatus("Map Tool: " + (labels[mapTool] || mapTool) + ". Click on the map to place it.");
+			}
 		}
 
 		function drawMapBackground() {
@@ -1715,16 +2559,55 @@
 		}
 
 
+		function getMapItemSize(item) {
+			const size = Number(item && item.size ? item.size : 1);
+			return Number.isFinite(size) && size > 0 ? size : 1;
+		}
+
+		function setMapItemSize(value) {
+			const number = Number(value);
+			mapItemSize = Number.isFinite(number) ? Math.min(12, Math.max(0.5, number)) : 1;
+			const input = document.getElementById("mapItemSizeInput");
+
+			if (input) input.value = mapItemSize;
+
+			updateMapStatus("New map items will use size " + mapItemSize + ". Select an item and use Grow/Shrink to resize old items.");
+		}
+
+		function scaleSelectedMapItem(delta) {
+			let index = selectedMapItemIndex;
+
+			if (index === null || !mapItems[index]) {
+				index = mapItems.length ? mapItems.length - 1 : null;
+			}
+
+			if (index === null || !mapItems[index]) {
+				updateMapStatus("No map item selected. Use Move Map Items and click an item first.");
+				return;
+			}
+
+			const item = mapItems[index];
+			item.size = Math.min(12, Math.max(0.5, getMapItemSize(item) + delta));
+			selectedMapItemIndex = index;
+			drawGrid();
+			updateMapStatus("Map item resized to " + item.size + ". Save Map to This Browser or Download Map File to keep it.");
+		}
+
+
+
 		function drawMapItemLabel(item, label) {
-			ctx.font = "bold 11px Arial";
+			const size = getMapItemSize(item);
+			ctx.font = "bold " + Math.max(10, Math.round(11 * Math.min(size, 1.8))) + "px Arial";
 			ctx.fillStyle = "rgba(35, 21, 13, 0.92)";
 			ctx.textAlign = "center";
-			ctx.fillText(label, item.x, item.y + 32);
+			ctx.fillText(label + (size !== 1 ? " x" + size : ""), item.x, item.y + (32 * size));
 			ctx.textAlign = "left";
 		}
 
 		function drawMapItems() {
-			mapItems.forEach(function (item) {
+			mapItems.forEach(function (item, index) {
+				const size = getMapItemSize(item);
+
 				ctx.save();
 
 				ctx.shadowColor = "rgba(0,0,0,0.35)";
@@ -1732,93 +2615,110 @@
 				ctx.shadowOffsetX = 2;
 				ctx.shadowOffsetY = 2;
 
-				if (item.type === "wall") {
-					ctx.strokeStyle = "#2b1b10";
-					ctx.lineWidth = 10;
+				if (selectedMapItemIndex === index) {
+					ctx.save();
+					ctx.setLineDash([6, 4]);
+					ctx.lineWidth = 2;
+					ctx.strokeStyle = "rgba(115, 69, 137, 0.85)";
 					ctx.beginPath();
-					ctx.moveTo(item.x - 34, item.y);
-					ctx.lineTo(item.x + 34, item.y);
+					ctx.arc(item.x, item.y, 34 * size + 8, 0, Math.PI * 2);
+					ctx.stroke();
+					ctx.restore();
+				}
+
+				if (item.type === "wall") {
+					const half = 34 * size;
+					ctx.strokeStyle = "#2b1b10";
+					ctx.lineWidth = Math.max(8, 10 * Math.min(size, 2));
+					ctx.beginPath();
+					ctx.moveTo(item.x - half, item.y);
+					ctx.lineTo(item.x + half, item.y);
 					ctx.stroke();
 
 					ctx.strokeStyle = "#8b6a3a";
-					ctx.lineWidth = 3;
+					ctx.lineWidth = Math.max(2, 3 * Math.min(size, 2));
 					ctx.beginPath();
-					ctx.moveTo(item.x - 34, item.y - 1);
-					ctx.lineTo(item.x + 34, item.y - 1);
+					ctx.moveTo(item.x - half, item.y - 1);
+					ctx.lineTo(item.x + half, item.y - 1);
 					ctx.stroke();
 
 					drawMapItemLabel(item, "Wall");
 				} else if (item.type === "door") {
+					const w = 40 * size;
+					const h = 22 * size;
 					ctx.fillStyle = "#c99739";
-					ctx.fillRect(item.x - 20, item.y - 11, 40, 22);
+					ctx.fillRect(item.x - w / 2, item.y - h / 2, w, h);
 					ctx.strokeStyle = "#3a2413";
-					ctx.lineWidth = 3;
-					ctx.strokeRect(item.x - 20, item.y - 11, 40, 22);
+					ctx.lineWidth = Math.max(2, 3 * Math.min(size, 2));
+					ctx.strokeRect(item.x - w / 2, item.y - h / 2, w, h);
 					ctx.fillStyle = "#3a2413";
 					ctx.beginPath();
-					ctx.arc(item.x + 12, item.y, 3, 0, Math.PI * 2);
+					ctx.arc(item.x + 12 * size, item.y, Math.max(2, 3 * size), 0, Math.PI * 2);
 					ctx.fill();
 
 					drawMapItemLabel(item, "Door");
 				} else if (item.type === "chest") {
+					const w = 34 * size;
+					const h = 24 * size;
 					ctx.fillStyle = "#8b5a2b";
-					ctx.fillRect(item.x - 17, item.y - 12, 34, 24);
+					ctx.fillRect(item.x - w / 2, item.y - h / 2, w, h);
 					ctx.strokeStyle = "#3a2413";
-					ctx.lineWidth = 3;
-					ctx.strokeRect(item.x - 17, item.y - 12, 34, 24);
+					ctx.lineWidth = Math.max(2, 3 * Math.min(size, 2));
+					ctx.strokeRect(item.x - w / 2, item.y - h / 2, w, h);
 					ctx.fillStyle = "#e2bf62";
-					ctx.fillRect(item.x - 4, item.y - 12, 8, 24);
-					ctx.fillRect(item.x - 17, item.y - 1, 34, 4);
+					ctx.fillRect(item.x - 4 * size, item.y - h / 2, 8 * size, h);
+					ctx.fillRect(item.x - w / 2, item.y - 1 * size, w, 4 * size);
 
 					drawMapItemLabel(item, "Chest");
 				} else if (item.type === "trap") {
+					const r = 20 * size;
 					ctx.fillStyle = "rgba(140, 25, 25, 0.18)";
 					ctx.strokeStyle = "#8c1919";
-					ctx.lineWidth = 4;
+					ctx.lineWidth = Math.max(3, 4 * Math.min(size, 2));
 					ctx.beginPath();
-					ctx.moveTo(item.x, item.y - 20);
-					ctx.lineTo(item.x + 20, item.y + 17);
-					ctx.lineTo(item.x - 20, item.y + 17);
+					ctx.moveTo(item.x, item.y - r);
+					ctx.lineTo(item.x + r, item.y + 17 * size);
+					ctx.lineTo(item.x - r, item.y + 17 * size);
 					ctx.closePath();
 					ctx.fill();
 					ctx.stroke();
 					ctx.fillStyle = "#8c1919";
-					ctx.font = "bold 20px Arial";
+					ctx.font = "bold " + Math.max(18, 20 * size) + "px Arial";
 					ctx.textAlign = "center";
-					ctx.fillText("!", item.x, item.y + 9);
+					ctx.fillText("!", item.x, item.y + 9 * size);
 					ctx.textAlign = "left";
 
 					drawMapItemLabel(item, "Trap");
 				} else if (item.type === "pillar") {
 					ctx.fillStyle = "#9f9275";
 					ctx.beginPath();
-					ctx.arc(item.x, item.y, 20, 0, Math.PI * 2);
+					ctx.arc(item.x, item.y, 20 * size, 0, Math.PI * 2);
 					ctx.fill();
 					ctx.strokeStyle = "#4b3a24";
-					ctx.lineWidth = 3;
+					ctx.lineWidth = Math.max(2, 3 * Math.min(size, 2));
 					ctx.stroke();
 					ctx.beginPath();
-					ctx.arc(item.x, item.y, 10, 0, Math.PI * 2);
+					ctx.arc(item.x, item.y, 10 * size, 0, Math.PI * 2);
 					ctx.stroke();
 
 					drawMapItemLabel(item, "Pillar");
 				} else if (item.type === "tree") {
 					ctx.fillStyle = "#6b3a13";
-					ctx.fillRect(item.x - 5, item.y + 8, 10, 18);
+					ctx.fillRect(item.x - 5 * size, item.y + 8 * size, 10 * size, 18 * size);
 					ctx.fillStyle = "#2e6b35";
 					ctx.beginPath();
-					ctx.arc(item.x, item.y, 22, 0, Math.PI * 2);
+					ctx.arc(item.x, item.y, 22 * size, 0, Math.PI * 2);
 					ctx.fill();
 					ctx.fillStyle = "#3d8a45";
 					ctx.beginPath();
-					ctx.arc(item.x - 8, item.y - 6, 10, 0, Math.PI * 2);
+					ctx.arc(item.x - 8 * size, item.y - 6 * size, 10 * size, 0, Math.PI * 2);
 					ctx.fill();
 
 					drawMapItemLabel(item, "Tree");
 				} else if (item.type === "text") {
 					ctx.shadowBlur = 2;
 					ctx.fillStyle = "#3a1a49";
-					ctx.font = "bold 18px Georgia";
+					ctx.font = "bold " + Math.max(18, 18 * size) + "px Georgia";
 					ctx.fillText(item.text || "Note", item.x, item.y);
 				}
 
@@ -1826,10 +2726,80 @@
 			});
 		}
 
-		function addMapItemAt(x, y) {
-			if (mapTool === "move") return false;
 
-			let item = { type: mapTool, x: Math.round(x), y: Math.round(y) };
+
+		function findMapItemAt(x, y) {
+			const pad = MAP_ITEM_GRAB_PADDING;
+
+			for (let i = mapItems.length - 1; i >= 0; i--) {
+				const item = mapItems[i];
+				const size = getMapItemSize(item);
+
+				if (!item) continue;
+
+				if (item.type === "wall") {
+					if (Math.abs(y - item.y) <= 14 * size + pad && x >= item.x - 42 * size - pad && x <= item.x + 42 * size + pad) return i;
+				} else if (item.type === "door") {
+					if (Math.abs(x - item.x) <= 28 * size + pad && Math.abs(y - item.y) <= 18 * size + pad) return i;
+				} else if (item.type === "chest") {
+					if (Math.abs(x - item.x) <= 24 * size + pad && Math.abs(y - item.y) <= 20 * size + pad) return i;
+				} else if (item.type === "trap") {
+					if (distance(x, y, item.x, item.y) <= 28 * size + pad) return i;
+				} else if (item.type === "pillar") {
+					if (distance(x, y, item.x, item.y) <= 26 * size + pad) return i;
+				} else if (item.type === "tree") {
+					if (distance(x, y, item.x, item.y) <= 30 * size + pad) return i;
+				} else if (item.type === "text") {
+					const textLength = String(item.text || "Note").length;
+					const width = Math.max(44, textLength * 10 * size);
+					if (x >= item.x - 10 - pad && x <= item.x + width + pad && y >= item.y - 28 * size - pad && y <= item.y + 14 * size + pad) return i;
+				} else {
+					if (distance(x, y, item.x, item.y) <= 25 * size + pad) return i;
+				}
+			}
+
+			return null;
+		}
+
+
+		function deleteSelectedMapItem() {
+			let index = selectedMapItemIndex;
+
+			if (index === null || !mapItems[index]) {
+				updateMapStatus("No map item selected. Use Move Map Items and click an item first, or use Delete Map Item.");
+				return;
+			}
+
+			const removed = mapItems.splice(index, 1)[0];
+			selectedMapItemIndex = null;
+			draggingMapItemIndex = null;
+			drawGrid();
+			updateMapStatus("Deleted selected " + (removed.type || "map item") + ". Map items on grid: " + mapItems.length + ".");
+		}
+
+
+		function deleteMapItemAt(x, y) {
+			const index = findMapItemAt(x, y);
+
+			if (index === null || !mapItems[index]) {
+				updateMapStatus("Delete Map Item: no item found there. Click closer to the item you want removed.");
+				return true;
+			}
+
+			const removed = mapItems.splice(index, 1)[0];
+			selectedMapItemIndex = null;
+			draggingMapItemIndex = null;
+			drawGrid();
+			updateMapStatus("Deleted " + (removed.type || "map item") + ". Map items on grid: " + mapItems.length + ".");
+			return true;
+		}
+
+
+		function addMapItemAt(x, y) {
+			if (mapTool === "move" || mapTool === "moveItem" || mapTool === "deleteItem") return false;
+
+			const clamped = clampCanvasPoint({ x: x, y: y });
+			let item = { type: mapTool, x: Math.round(clamped.x), y: Math.round(clamped.y), size: mapItemSize };
 
 			if (mapTool === "text") {
 				const text = prompt("Map label text:", "Note");
@@ -1838,20 +2808,21 @@
 			}
 
 			mapItems.push(item);
+			selectedMapItemIndex = mapItems.length - 1;
 			drawGrid();
-			updateMapStatus("Added " + mapTool + ". Map items on grid: " + mapItems.length + ". Use Save Map to This Browser or Download Map File to keep it.");
+			updateMapStatus("Added " + mapTool + " size " + mapItemSize + ". Map items on grid: " + mapItems.length + ". Use Grow/Shrink Selected to resize it.");
 			return true;
 		}
 
 		function addSampleMapItems() {
 			const cx = canvas.width / 2;
 			const cy = canvas.height / 2;
-			mapItems.push({ type: "wall", x: Math.round(cx - 80), y: Math.round(cy - 60) });
-			mapItems.push({ type: "door", x: Math.round(cx), y: Math.round(cy - 60) });
-			mapItems.push({ type: "chest", x: Math.round(cx + 80), y: Math.round(cy - 60) });
-			mapItems.push({ type: "trap", x: Math.round(cx - 80), y: Math.round(cy + 40) });
-			mapItems.push({ type: "pillar", x: Math.round(cx), y: Math.round(cy + 40) });
-			mapItems.push({ type: "tree", x: Math.round(cx + 80), y: Math.round(cy + 40) });
+			mapItems.push({ type: "wall", x: Math.round(cx - 80), y: Math.round(cy - 60), size: 2 });
+			mapItems.push({ type: "door", x: Math.round(cx), y: Math.round(cy - 60), size: 1 });
+			mapItems.push({ type: "chest", x: Math.round(cx + 80), y: Math.round(cy - 60), size: 1 });
+			mapItems.push({ type: "trap", x: Math.round(cx - 80), y: Math.round(cy + 40), size: 1.5 });
+			mapItems.push({ type: "pillar", x: Math.round(cx), y: Math.round(cy + 40), size: 1 });
+			mapItems.push({ type: "tree", x: Math.round(cx + 80), y: Math.round(cy + 40), size: 1.5 });
 			drawGrid();
 			updateMapStatus("Sample map items added. Map items on grid: " + mapItems.length + ".");
 		}
@@ -1859,6 +2830,7 @@
 
 		function undoMapItem() {
 			mapItems.pop();
+			selectedMapItemIndex = mapItems.length ? mapItems.length - 1 : null;
 			drawGrid();
 			updateMapStatus("Removed last map item. Map items on grid: " + mapItems.length + ".");
 		}
@@ -1866,6 +2838,7 @@
 		function clearMapDesign() {
 			if (!confirm("Clear map items and background image? Tokens stay on the roster.")) return;
 			mapItems = [];
+			selectedMapItemIndex = null;
 			mapBackgroundImageData = "";
 			mapBackgroundImage = null;
 			const input = document.getElementById("mapImageInput");
@@ -1993,14 +2966,43 @@
 		canvas.addEventListener("mousedown", function (e) {
 			const point = getCanvasPoint(e);
 
-			// If a map-design tool is selected, place the map item instead of dragging a token.
-			if (addMapItemAt(point.x, point.y)) {
+			if (mapTool === "deleteItem") {
+				deleteMapItemAt(point.x, point.y);
 				draggingId = null;
+				draggingMapItemIndex = null;
 				return;
 			}
 
-			const found = [...participants].reverse().find(p => distance(point.x, point.y, p.x, p.y) <= 18);
+			if (mapTool === "deleteItem") {
+				deleteMapItemAt(point.x, point.y);
+				draggingId = null;
+				draggingMapItemIndex = null;
+				e.preventDefault();
+				return;
+			}
+
+			if (mapTool === "moveItem") {
+				draggingMapItemIndex = findMapItemAt(point.x, point.y);
+				selectedMapItemIndex = draggingMapItemIndex;
+				draggingId = null;
+
+				if (draggingMapItemIndex === null) {
+					updateMapStatus("Move Map Items: click closer to any wall, door, chest, trap, pillar, tree, or text label. The grab area has been enlarged.");
+				}
+
+				return;
+			}
+
+			// If a map-design tool is selected, place the map item instead of dragging a token.
+			if (addMapItemAt(point.x, point.y)) {
+				draggingId = null;
+				draggingMapItemIndex = null;
+				return;
+			}
+
+			const found = [...participants].reverse().find(p => distance(point.x, point.y, p.x, p.y) <= TOKEN_GRAB_RADIUS);
 			draggingId = found ? found.id : null;
+			draggingMapItemIndex = null;
 		});
 
 		canvas.addEventListener("touchstart", function (e) {
@@ -2012,31 +3014,82 @@
 				y: touch.clientY - rect.top
 			};
 
+			if (mapTool === "moveItem") {
+				draggingMapItemIndex = findMapItemAt(point.x, point.y);
+				selectedMapItemIndex = draggingMapItemIndex;
+				draggingId = null;
+				e.preventDefault();
+				return;
+			}
+
 			if (addMapItemAt(point.x, point.y)) {
 				e.preventDefault();
 				draggingId = null;
+				draggingMapItemIndex = null;
 			}
 		}, { passive: false });
 
 
 		canvas.addEventListener("mousemove", function (e) {
-			if (!draggingId) return;
+			const point = getCanvasPoint(e);
+			dragActiveItemOrToken(point, "mouse");
+		});
 
-			const p = findParticipant(draggingId);
-			if (!p) return;
+		canvas.addEventListener("touchmove", function (e) {
+			if (draggingMapItemIndex === null || !mapItems[draggingMapItemIndex]) return;
+			if (!e.touches || e.touches.length === 0) return;
+
+			const touch = e.touches[0];
+			const rect = canvas.getBoundingClientRect();
+			const point = {
+				x: touch.clientX - rect.left,
+				y: touch.clientY - rect.top
+			};
+
+			mapItems[draggingMapItemIndex].x = Math.round(point.x);
+			mapItems[draggingMapItemIndex].y = Math.round(point.y);
+			drawGrid();
+			updateMapStatus("Moving map item. Release touch to drop it.");
+			e.preventDefault();
+		}, { passive: false });
+
+		canvas.addEventListener("touchend", function () {
+			if (draggingMapItemIndex !== null) {
+				updateMapStatus("Map item moved. Save Map to This Browser or Download Map File to keep it.");
+			}
+
+			draggingMapItemIndex = null;
+			draggingId = null;
+		});
+
+
+		window.addEventListener("mousemove", function (e) {
+			if (draggingId === null && draggingMapItemIndex === null) return;
 
 			const point = getCanvasPoint(e);
-			p.x = point.x;
-			p.y = point.y;
-			drawGrid();
+			dragActiveItemOrToken(point, "mouse");
+		});
+
+		window.addEventListener("mouseup", function () {
+			if (draggingMapItemIndex !== null) {
+				updateMapStatus("Map item moved. Save Map to This Browser or Download Map File to keep it.");
+			}
+
+			draggingId = null;
+			draggingMapItemIndex = null;
 		});
 
 		canvas.addEventListener("mouseup", function () {
+			if (draggingMapItemIndex !== null) {
+				updateMapStatus("Map item moved. Save Map to This Browser or Download Map File to keep it.");
+			}
+
 			draggingId = null;
+			draggingMapItemIndex = null;
 		});
 
 		canvas.addEventListener("mouseleave", function () {
-			draggingId = null;
+			// Do not immediately drop while leaving the canvas; this makes edge placement easier.
 		});
 
 		function getCanvasPoint(e) {
@@ -2045,6 +3098,35 @@
 				x: e.clientX - rect.left,
 				y: e.clientY - rect.top
 			};
+		}
+
+		function clampCanvasPoint(point) {
+			return {
+				x: Math.max(0, Math.min(canvas.width, point.x)),
+				y: Math.max(0, Math.min(canvas.height, point.y))
+			};
+		}
+
+		function dragActiveItemOrToken(point, sourceLabel) {
+			const clamped = clampCanvasPoint(point);
+
+			if (draggingMapItemIndex !== null && mapItems[draggingMapItemIndex]) {
+				mapItems[draggingMapItemIndex].x = Math.round(clamped.x);
+				mapItems[draggingMapItemIndex].y = Math.round(clamped.y);
+				drawGrid();
+				updateMapStatus("Moving map item. Release " + sourceLabel + " to drop it.");
+				return true;
+			}
+
+			if (!draggingId) return false;
+
+			const p = findParticipant(draggingId);
+			if (!p) return false;
+
+			p.x = clamped.x;
+			p.y = clamped.y;
+			drawGrid();
+			return true;
 		}
 
 		function distance(x1, y1, x2, y2) {
@@ -2345,8 +3427,8 @@
 		}
 
 		async function shareToDiscord(silent = false, updateOnly = false) {
-			if (!DISCORD_WEBHOOK_URL || DISCORD_WEBHOOK_URL.includes("PASTE_YOUR_NEW_DISCORD_WEBHOOK_URL_HERE")) {
-				if (!silent) alert("Add your Discord webhook URL in DISCORD_WEBHOOK_URL first.");
+			if (!DISCORD_WEBHOOK_URL || DISCORD_WEBHOOK_URL.includes("https://discord.com/api/webhooks/1382809889684062298/We1eJedsfCJq11wfDdUU9zmzrQC5JbiUs6JqYgCQHmzBzguMMJE0TPyMCgCQ4VfO93Rt")) {
+				if (!silent) checkDiscordSetup();
 				return;
 			}
 
