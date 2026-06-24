@@ -3,5 +3,6 @@
 
 window.FALLEN_GATE_CHARACTER_SHEET_FILES = [
   "./Thy_Prowler.js",
-  "./Lucie.js"
+  "./Lucie.js",
+  "STEVEG01.js”
 ];
