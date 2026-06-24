@@ -1152,6 +1152,58 @@ function goToPage(id) {
 function nextPage() { showPage(currentPage + 1); }
 function prevPage() { showPage(currentPage - 1); }
 
+
+
+function normalizeFocusText(value) {
+  return String(value || "").toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+}
+
+function focusBookItemFromURL() {
+  const params = new URLSearchParams(window.location.search);
+  const focus = params.get("focus");
+
+  if (!focus) return;
+
+  const searchBox = document.getElementById("searchBox");
+  if (searchBox) searchBox.value = focus;
+
+  const target = normalizeFocusText(focus);
+
+  function titleOf(page) {
+    const title = page.querySelector(".item-title");
+    return normalizeFocusText(title ? title.textContent : "");
+  }
+
+  // First pass: exact item-title match. This avoids opening the magic-book,
+  // spell-type, or discipline section just because it lists the spell/skill.
+  let page = allPages.find(function (p) {
+    return titleOf(p) === target;
+  });
+
+  // Second pass: item-title contains the target or target contains the title.
+  if (!page) {
+    page = allPages.find(function (p) {
+      const title = titleOf(p);
+      return title && (title.includes(target) || target.includes(title));
+    });
+  }
+
+  // Last fallback: any page text contains the target.
+  if (!page) {
+    page = allPages.find(function (p) {
+      return normalizeFocusText(p.textContent).includes(target);
+    });
+  }
+
+  if (page) {
+    filteredPages = allPages.slice();
+    const index = filteredPages.indexOf(page);
+    showPage(index >= 0 ? index : 0);
+  } else {
+    searchPages();
+  }
+}
+
 function searchPages() {
   const q = document.getElementById("searchBox").value.trim().toLowerCase();
   if (!q) {
@@ -1162,7 +1214,10 @@ function searchPages() {
   showPage(0);
 }
 
-window.addEventListener("DOMContentLoaded", initBook);
+window.addEventListener("DOMContentLoaded", function () {
+  initBook();
+  focusBookItemFromURL();
+});
 </script>
 </body>
 </html>

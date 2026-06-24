@@ -290,6 +290,29 @@ p, li {
   background: rgba(255,255,255,0.34);
 }
 
+
+.sheet-top-actions {
+  margin: 8px 0 12px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.sheet-entry-link {
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+}
+
+.sheet-entry-link:hover {
+  outline: 2px solid rgba(201,151,57,0.45);
+  background: rgba(255,241,197,0.48);
+}
+
+.sheet-entry-link .item-meta {
+  pointer-events: none;
+}
+
 </style>
 </head>
 <body>
@@ -412,7 +435,8 @@ p, li {
       return html;
     }
 
-    function renderItemList(items, emptyText, cardClass) {
+
+    function renderItemList(items, emptyText, cardClass, linkType) {
       const list = normalizeList(items);
 
       if (list.length === 0) {
@@ -421,13 +445,39 @@ p, li {
 
       return '<div class="item-list">' + list.map(function (item) {
         const detail = itemDetail(item);
+        const name = itemName(item);
+
+        if (linkType) {
+          return `
+            <button type="button" class="${cardClass} sheet-entry-link" data-guide="${escapeAttr(linkType)}" data-name="${escapeAttr(name)}" onclick="openLinkedGuideItem(this)" title="Open ${escapeAttr(name)}">
+              <strong>${escapeHtml(name)}</strong>
+              ${detail ? `<span class="item-meta">${escapeHtml(detail)}</span>` : ""}
+            </button>
+          `;
+        }
+
         return `
           <div class="${cardClass}">
-            <strong>${escapeHtml(itemName(item))}</strong>
+            <strong>${escapeHtml(name)}</strong>
             ${detail ? `<span class="item-meta">${escapeHtml(detail)}</span>` : ""}
           </div>
         `;
       }).join("") + '</div>';
+    }
+
+    function openLinkedGuideItem(button) {
+      const guide = button.getAttribute("data-guide") || "";
+      const name = button.getAttribute("data-name") || "";
+
+      if (!guide || !name) return;
+
+      if (window.parent && window.parent !== window) {
+        window.parent.postMessage({
+          type: "openGuideItem",
+          guide: guide,
+          name: name
+        }, "*");
+      }
     }
 
     function sheetRaceName(sheet) {
@@ -464,7 +514,8 @@ p, li {
       return abilities;
     }
 
-    function renderWarriorSkillList(items, emptyText, cardClass) {
+
+    function renderWarriorSkillList(items, emptyText, cardClass, linkType) {
       const list = normalizeList(items);
 
       if (list.length === 0) {
@@ -473,9 +524,21 @@ p, li {
 
       return '<div class="item-list">' + list.map(function (item) {
         const detail = itemDetail(item);
+        const name = itemName(item);
+        const displayName = warriorSkillName(item);
+
+        if (linkType) {
+          return `
+            <button type="button" class="${cardClass} sheet-entry-link" data-guide="${escapeAttr(linkType)}" data-name="${escapeAttr(name)}" onclick="openLinkedGuideItem(this)" title="Open ${escapeAttr(name)}">
+              <strong>${escapeHtml(displayName)}</strong>
+              ${detail ? `<span class="item-meta">${escapeHtml(detail)}</span>` : ""}
+            </button>
+          `;
+        }
+
         return `
           <div class="${cardClass}">
-            <strong>${escapeHtml(warriorSkillName(item))}</strong>
+            <strong>${escapeHtml(displayName)}</strong>
             ${detail ? `<span class="item-meta">${escapeHtml(detail)}</span>` : ""}
           </div>
         `;
@@ -544,6 +607,9 @@ p, li {
           <section class="book-page" id="sheet_${escapeAttr(code)}">
             <h2 class="item-title">${escapeHtml(s.name || code)}</h2>
             <div class="category">Sheet Code: ${escapeHtml(code)}</div>
+            <div class="sheet-top-actions">
+              <button class="book-btn dark" onclick="sendSheet('${escapeAttr(code)}')">Add This Sheet to Encounter</button>
+            </div>
             <div class="stats-line">${escapeHtml(s.rank || s.type || "No rank selected")}</div>
 
             ${renderSheetImages(s)}
@@ -562,10 +628,10 @@ p, li {
             ${renderItemList(raceAbilities, "No race abilities listed.", "known-card")}
 
             <div class="section-title">Spells Known</div>
-            ${renderItemList(spells, "No spells listed.", "known-card")}
+            ${renderItemList(spells, "No spells listed.", "known-card", "spellbook")}
 
             <div class="section-title">Warrior Skills Known</div>
-            ${renderWarriorSkillList(warriorSkills, "No warrior skills listed.", "known-card")}
+            ${renderWarriorSkillList(warriorSkills, "No warrior skills listed.", "known-card", "skills")}
 
             <div class="section-title">Inventory — Jewelry</div>
             ${renderItemList(jewelry, "No jewelry listed.", "inventory-card")}
@@ -576,7 +642,6 @@ p, li {
             <div class="section-title">Notes</div>
             <p class="sheet-notes">${escapeHtml(s.notes || "No notes.")}</p>
 
-            <button class="book-btn dark" onclick="sendSheet('${escapeAttr(code)}')">Add This Sheet to Encounter</button>
           </section>
         `;
       }).join("");
