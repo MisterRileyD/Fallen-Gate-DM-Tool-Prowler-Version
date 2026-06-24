@@ -1,0 +1,27 @@
+{
+  "updated_files": [
+    "index.html",
+    "how_to_use_dm_tool.html"
+  ],
+  "changes": [
+    "Made the main book wider when a secondary book is open.",
+    "Left the main book's alone/no-secondary width unchanged.",
+    "Set the secondary book to the same visual height scale as the main book.",
+    "Removed the previous secondary-book 82% shrink.",
+    "Kept a responsive stacked fallback on narrower screens."
+  ],
+  "verify": {
+    "main_wider_layout_css": true,
+    "main_column_900": true,
+    "same_scale_for_books": true,
+    "guide_height_matches_book": true,
+    "alone_layout_not_changed": true,
+    "syntax_checks": {
+      "index.html": "ok",
+      "how_to_use_dm_tool.html": "ok",
+      "spellbook.html": "ok",
+      "skills.html": "ok",
+      "character_sheets.html": "ok"
+    }
+  }
+}

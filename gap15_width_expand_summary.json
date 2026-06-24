@@ -1,0 +1,25 @@
+{
+  "updated_files": [
+    "index.html",
+    "how_to_use_dm_tool.html"
+  ],
+  "changes": [
+    "Changed the gap between main and secondary book to 15px.",
+    "Expanded the main book minimum width by 10px: 900px to 910px.",
+    "Expanded the secondary book minimum width by 17px: 340px to 357px.",
+    "Removed the extra 20px side translate so the visual gap stays near 15px."
+  ],
+  "verify": {
+    "gap_15": true,
+    "main_width_910": true,
+    "secondary_width_357": true,
+    "side_translate_zero": true,
+    "syntax_checks": {
+      "index.html": "ok",
+      "how_to_use_dm_tool.html": "ok",
+      "spellbook.html": "ok",
+      "skills.html": "ok",
+      "character_sheets.html": "ok"
+    }
+  }
+}
