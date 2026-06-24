@@ -187,6 +187,59 @@ a {
   font-weight: 900;
   font-family: Arial, Helvetica, sans-serif;
 }
+
+.button-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 10px 0 16px;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 13px;
+  background: rgba(255,255,255,0.22);
+  border: 1px solid rgba(90,61,20,0.35);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.button-table th,
+.button-table td {
+  border-bottom: 1px solid rgba(90,61,20,0.22);
+  padding: 7px 8px;
+  vertical-align: top;
+  text-align: left;
+}
+
+.button-table th {
+  background: rgba(90,42,98,0.92);
+  color: #ffe8a2;
+  font-weight: 900;
+}
+
+.button-table tr:last-child td {
+  border-bottom: none;
+}
+
+.button-name {
+  font-weight: 900;
+  color: #4d245d;
+  white-space: nowrap;
+}
+
+.warning-note {
+  border: 1px solid rgba(150, 45, 35, 0.42);
+  background: rgba(255, 220, 210, 0.32);
+  border-radius: 10px;
+  padding: 9px 11px;
+  margin: 10px 0;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 13px;
+}
+
+.quick-list {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
 </style>
 </head>
 <body>
@@ -210,6 +263,11 @@ a {
     <button class="index-card" onclick="goToPage('character_sheet_features')"><strong>Character Sheets</strong>New sheet form, edit old sheet, and copy code</button>
     <button class="index-card" onclick="goToPage('character_sheet_steps')"><strong>Making Sheets</strong>Step-by-step sheet workflow</button>
     <button class="index-card" onclick="goToPage('character_sheet_discord')"><strong>Upload to Discord</strong>Where to upload copied sheet code</button>
+
+    <button class="index-card" onclick="goToPage('all_buttons_index')"><strong>All Buttons</strong>Full button and function glossary</button>
+    <button class="index-card" onclick="goToPage('encounter_buttons_help')"><strong>Encounter Buttons</strong>Roster, stats, turn order, death rules</button>
+    <button class="index-card" onclick="goToPage('battle_map_buttons_help')"><strong>Map Buttons</strong>Grid, tokens, items, rotate, save/load</button>
+    <button class="index-card" onclick="goToPage('discord_loot_buttons_help')"><strong>Loot & Discord</strong>Loot split, summaries, Discord post tools</button>
   </div>
 </section>
 
@@ -560,6 +618,325 @@ a {
   <div class="category">Layout Help</div>
   <p>When the main book is by itself, its minimum width was reduced by <strong>10px</strong>.</p>
   <p>The Encounter Data roster information font was lowered by about <strong>3px</strong>, including table text, stat boxes, dropdowns, status labels, and the delete button.</p>
+</section>
+
+
+<section class="book-page" id="map_item_rotation_help">
+  <h2 class="item-title">Rotating Map Items</h2>
+  <div class="category">Map Help</div>
+  <p>Map items can now rotate on the Battle Map. Use the <strong>Rotate</strong> box before placing a new wall, door, chest, trap, pillar, tree, or text label.</p>
+  <p>Use <strong>Move Map Items</strong> to select an existing item, then click <strong>Rotate Left</strong> or <strong>Rotate Right</strong>. Rotation is saved with the map when you use <strong>Save Map to This Browser</strong> or <strong>Download Map File</strong>.</p>
+  <p>Hit detection now follows the rotated shape, so rotated walls and doors are easier to select in the same direction they are drawn.</p>
+</section>
+
+
+<section class="book-page" id="minus4_stat_removal_help">
+  <h2 class="item-title">Minus 4 Stat Removal</h2>
+  <div class="category">Encounter Data Help</div>
+  <p>Body, Mind, and Spirit now use a removal threshold of <strong>-4</strong>.</p>
+  <p>If a player or enemy reaches <strong>-4 or lower</strong> in Body, Mind, or Spirit, that row is removed from the encounter and removed from turn order.</p>
+  <p>At 0 or lower, the row can still show as Down and leave the active turn order. It is not removed from the roster until one of those stats reaches -4.</p>
+  <p>The old remove button now says <strong>Remove -4 Rows</strong>, so it only clears rows that have hit the -4 removal threshold.</p>
+</section>
+
+
+<section class="book-page" id="turn_order_no_scroll_help">
+  <h2 class="item-title">Turn Order No Scrollbar</h2>
+  <div class="category">Encounter Data Help</div>
+  <p>The turn order list no longer shows the small vertical scrollbar. The list now expands naturally inside the Current Turn box.</p>
+</section>
+
+
+<section class="book-page" id="turn_order_fit_6_help">
+  <h2 class="item-title">Turn Order Fits 6 Names</h2>
+  <div class="category">Encounter Data Help</div>
+  <p>The Current Turn / turn order box has been adjusted to fit up to <strong>6 names</strong> without showing a scrollbar.</p>
+  <p>The turn order rows use smaller text, shorter row height, and tighter spacing while keeping the Current Turn label readable.</p>
+</section>
+
+
+<section class="book-page" id="scrolls_past_minus3_zero_stat_help">
+  <h2 class="item-title">Scrolling Turn Order / Roster and Past -3</h2>
+  <div class="category">Encounter Data Help</div>
+  <p>The Current Turn box is taller again and the turn order now scrolls when there are many names.</p>
+  <p>The Encounter Data roster table also scrolls, with the header staying visible.</p>
+  <p>A new <strong>Past -3</strong> checkbox lets a player or enemy stay on the roster even after a vital Body, Mind, or Spirit stat goes below -3.</p>
+  <p>Monsters that start with 0 in Body, Mind, or Spirit are not treated as dead because of that starting 0. Only stats that started above 0 count for Down and -4 removal.</p>
+</section>
+
+
+<section class="book-page" id="turn_roster_death_rules_help">
+  <h2 class="item-title">Turn/Roster Scrolling and Death Rules</h2>
+  <div class="category">Encounter Data Help</div>
+  <p>The Current Turn list now shows about <strong>6 names</strong> before scrolling.</p>
+  <p>The Encounter Data roster now scrolls in its own box so it does not run into the loot split and Discord controls.</p>
+  <p>The old Past -3 checkbox was replaced with three rule checkboxes:</p>
+  <p><strong>1 Zero</strong>: one Body/Mind/Spirit stat can be 0 or lower. The next stat to reach 0 or lower makes the row Down.</p>
+  <p><strong>2 Zero</strong>: two Body/Mind/Spirit stats can be 0 or lower. The last remaining stat reaching 0 or lower makes the row Down.</p>
+  <p><strong>-3 Spell</strong>: the row can stay Live through 0, -1, -2, and -3. At -4 or lower, it becomes Down.</p>
+  <p>If none of those boxes are checked, the row becomes Down when any Body, Mind, or Spirit reaches 0 or lower.</p>
+</section>
+
+
+<section class="book-page" id="turn_roster_sheetcode_working_help">
+  <h2 class="item-title">Turn/Roster Scroll and Sheet Code Fix</h2>
+  <div class="category">Encounter Data Help</div>
+  <p>The Current Turn list now forces enough height to show about <strong>6 names</strong> before it scrolls.</p>
+  <p>The Encounter Data roster now stays inside its own scroll box so it should not run into the loot split or Discord controls.</p>
+  <p>Character sheet code lookup was made stronger. It refreshes the loaded sheet list, waits briefly if sheets are still loading, and accepts matching codes even if capitalization or symbols differ.</p>
+  <p>Rows become Down by the selected death-rule checkboxes, but they are not auto-deleted. Use <strong>Remove Dead Rows</strong> to clear Down rows.</p>
+</section>
+
+
+<section class="book-page" id="stats_sheetcode_loader_fix_help">
+  <h2 class="item-title">Stats and Sheet Code Loader Fix</h2>
+  <div class="category">Encounter Data Help</div>
+  <p>Type selection now forces Body, Mind, Spirit, AC, and Bonus to fill from the selected rank, monster, or dragon right away.</p>
+  <p>The roster also checks rows while rendering, so if a type was selected but the stats were still blank, it fills them automatically.</p>
+  <p>The character sheet code loader is included in the pack and loads files listed in <strong>character_sheets_manifest.js</strong>.</p>
+  <p>The pack includes the fixed manifest and the available character sheet files so codes like <strong>THY_PROWLER</strong>, <strong>LUCIE</strong>, and <strong>STEVEG01</strong> can load if those files stay in the same folder.</p>
+</section>
+
+
+<section class="book-page" id="all_buttons_index">
+  <h2 class="item-title">All Buttons and Functions</h2>
+  <div class="category">Full Glossary</div>
+  <p>This section explains what each button, checkbox, input, and main function in the DM Tool is meant to do.</p>
+  <div class="card-grid">
+    <button class="index-card" onclick="goToPage('main_navigation_buttons_help')"><strong>Main Navigation</strong>Side tabs and guide books</button>
+    <button class="index-card" onclick="goToPage('battle_map_buttons_help')"><strong>Battle Map</strong>Grid, tokens, map items, save/load</button>
+    <button class="index-card" onclick="goToPage('encounter_buttons_help')"><strong>Encounter Data</strong>Roster, stats, turn order</button>
+    <button class="index-card" onclick="goToPage('death_rule_buttons_help')"><strong>Death Rules</strong>0-stat, -3 spell, Down status</button>
+    <button class="index-card" onclick="goToPage('discord_loot_buttons_help')"><strong>Loot / Discord</strong>Loot split, summaries, webhooks</button>
+    <button class="index-card" onclick="goToPage('guide_book_buttons_help')"><strong>Guide Books</strong>Monster, Spellbook, Warrior Skills, Race Guide</button>
+    <button class="index-card" onclick="goToPage('character_sheet_buttons_help')"><strong>Character Sheets</strong>Sheet Index and sheet code tools</button>
+    <button class="index-card" onclick="goToPage('sheet_form_buttons_help')"><strong>Sheet Form</strong>Create, edit, generate, and copy sheets</button>
+    <button class="index-card" onclick="goToPage('troubleshooting_functions_help')"><strong>Troubleshooting</strong>Common problems and fixes</button>
+  </div>
+</section>
+
+<section class="book-page" id="main_navigation_buttons_help">
+  <h2 class="item-title">Main Navigation Buttons</h2>
+  <div class="category">Tabs and Book Layout</div>
+  <table class="button-table">
+    <thead><tr><th>Button / Tab</th><th>What it does</th></tr></thead>
+    <tbody>
+      <tr><td class="button-name">Click Book Cover</td><td>Opens the Fallen Gate DM Tool from the starting cover screen.</td></tr>
+      <tr><td class="button-name">Event Name</td><td>Names the current encounter. This name appears in copied summaries and Discord posts.</td></tr>
+      <tr><td class="button-name">Dice System</td><td>Opens the Dice System guide on the left side.</td></tr>
+      <tr><td class="button-name">How to Use DM Tool</td><td>Opens this help book on the left side.</td></tr>
+      <tr><td class="button-name">Monster Guide</td><td>Opens the Monster Guide on the right side.</td></tr>
+      <tr><td class="button-name">Spellbook</td><td>Opens the Spellbook on the right side.</td></tr>
+      <tr><td class="button-name">Warrior Skills</td><td>Opens the Warrior Skills book on the right side.</td></tr>
+      <tr><td class="button-name">Race Guide</td><td>Opens the Race Guide on the right side.</td></tr>
+      <tr><td class="button-name">Character Sheets</td><td>Opens the saved Character Sheets book on the right side.</td></tr>
+      <tr><td class="button-name">Close Book</td><td>Closes the side guide book and returns focus to the main Battle Map / Encounter Data book.</td></tr>
+      <tr><td class="button-name">Index</td><td>Returns the open guide book to its index page.</td></tr>
+      <tr><td class="button-name">← Back</td><td>Moves to the previous page inside the current guide book.</td></tr>
+      <tr><td class="button-name">Next →</td><td>Moves to the next page inside the current guide book.</td></tr>
+      <tr><td class="button-name">Search Box</td><td>Filters the current guide book pages by the words typed into the search box.</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section class="book-page" id="battle_map_buttons_help">
+  <h2 class="item-title">Battle Map Buttons and Functions</h2>
+  <div class="category">Map Grid</div>
+  <table class="button-table">
+    <thead><tr><th>Button / Field</th><th>What it does</th></tr></thead>
+    <tbody>
+      <tr><td class="button-name">Grid Width</td><td>Sets how many squares wide the battle map grid is.</td></tr>
+      <tr><td class="button-name">Grid Height</td><td>Sets how many squares tall the battle map grid is.</td></tr>
+      <tr><td class="button-name">Update Grid</td><td>Applies the Grid Width and Grid Height values to redraw the map.</td></tr>
+      <tr><td class="button-name">Center Tokens</td><td>Moves all player/enemy tokens back toward the center area of the map.</td></tr>
+      <tr><td class="button-name">Move Tokens</td><td>Switches the map into token movement mode. Drag player/enemy tokens to move them.</td></tr>
+      <tr><td class="button-name">Move Map Items</td><td>Switches the map into item movement mode. Drag walls, doors, chests, traps, pillars, trees, or text labels.</td></tr>
+      <tr><td class="button-name">Delete Map Item</td><td>Click a placed map item to remove it from the map.</td></tr>
+      <tr><td class="button-name">Add Wall</td><td>Adds a wall item to the map.</td></tr>
+      <tr><td class="button-name">Add Door</td><td>Adds a door item to the map.</td></tr>
+      <tr><td class="button-name">Add Chest</td><td>Adds a chest item to the map.</td></tr>
+      <tr><td class="button-name">Add Trap</td><td>Adds a trap item to the map.</td></tr>
+      <tr><td class="button-name">Add Pillar</td><td>Adds a pillar item to the map.</td></tr>
+      <tr><td class="button-name">Add Tree</td><td>Adds a tree item to the map.</td></tr>
+      <tr><td class="button-name">Add Text</td><td>Adds a text label to the map. The tool asks what text you want placed.</td></tr>
+      <tr><td class="button-name">Item Size</td><td>Sets the size for newly placed map items.</td></tr>
+      <tr><td class="button-name">Shrink Selected</td><td>Makes the selected map item smaller.</td></tr>
+      <tr><td class="button-name">Grow Selected</td><td>Makes the selected map item larger.</td></tr>
+      <tr><td class="button-name">Rotate Left</td><td>Rotates the selected map item left, usually by 15 degrees.</td></tr>
+      <tr><td class="button-name">Rotate Right</td><td>Rotates the selected map item right, usually by 15 degrees.</td></tr>
+      <tr><td class="button-name">Delete Selected</td><td>Deletes the currently selected map item.</td></tr>
+      <tr><td class="button-name">Undo Map Item</td><td>Removes the most recently placed map item.</td></tr>
+      <tr><td class="button-name">Add Sample Items</td><td>Places example map items so users can see how the map designer works.</td></tr>
+      <tr><td class="button-name">Save Map to This Browser</td><td>Saves the current map design to the browser's local storage.</td></tr>
+      <tr><td class="button-name">Load Saved Map</td><td>Loads the map design saved in this browser.</td></tr>
+      <tr><td class="button-name">Download Map File</td><td>Downloads the current map design as a file that can be saved to the computer.</td></tr>
+      <tr><td class="button-name">Load Map File</td><td>Loads a downloaded map design file back into the tool.</td></tr>
+      <tr><td class="button-name">Background Image</td><td>Lets the user choose an image to show behind the grid.</td></tr>
+      <tr><td class="button-name">Clear Background</td><td>Removes the map background image.</td></tr>
+      <tr><td class="button-name">Clear Map Design</td><td>Clears placed map items and resets the map design.</td></tr>
+    </tbody>
+  </table>
+  <div class="note-box">Map tokens come from the Encounter Data roster. If a player or enemy is added to the roster, their token can appear on the map.</div>
+</section>
+
+<section class="book-page" id="encounter_buttons_help">
+  <h2 class="item-title">Encounter Data Buttons and Fields</h2>
+  <div class="category">Roster / Turn Order</div>
+  <table class="button-table">
+    <thead><tr><th>Button / Field</th><th>What it does</th></tr></thead>
+    <tbody>
+      <tr><td class="button-name">Current Turn</td><td>Shows whose turn is currently active.</td></tr>
+      <tr><td class="button-name">Turn Order List</td><td>Shows active players/enemies in order. It shows several names, then scrolls if more are present.</td></tr>
+      <tr><td class="button-name">Next Turn</td><td>Moves the current active turn to the bottom and advances to the next active combatant.</td></tr>
+      <tr><td class="button-name">Sort by Init</td><td>Sorts active combatants from highest initiative to lowest initiative.</td></tr>
+      <tr><td class="button-name">Add Player / Enemy</td><td>Adds a blank roster row. Use this for custom players, NPCs, or enemies.</td></tr>
+      <tr><td class="button-name">Sheet code input</td><td>Type a saved character sheet code here, such as THY_PROWLER, LUCIE, or STEVEG01.</td></tr>
+      <tr><td class="button-name">Add Sheet Code</td><td>Adds a saved character sheet to the encounter roster using the typed sheet code.</td></tr>
+      <tr><td class="button-name">Open Sheets</td><td>Opens the Character Sheets book.</td></tr>
+      <tr><td class="button-name">Refresh Order</td><td>Rebuilds the active turn order from roster rows that have a Type and Initiative.</td></tr>
+      <tr><td class="button-name">Remove Dead Rows</td><td>Removes roster rows that are currently Down by their selected death rule.</td></tr>
+      <tr><td class="button-name">Status</td><td>Shows Wait, Live, or Down. Wait means missing type or initiative. Live means active. Down means the row met its death/down rule.</td></tr>
+      <tr><td class="button-name">Name</td><td>Player, enemy, NPC, or creature name.</td></tr>
+      <tr><td class="button-name">Type</td><td>Rank, dragon, or monster type. Choosing a Type fills Body, Mind, Spirit, AC, and Bonus.</td></tr>
+      <tr><td class="button-name">B / M / S</td><td>Body, Mind, and Spirit values. These decide Down status based on death rule checkboxes.</td></tr>
+      <tr><td class="button-name">AC</td><td>Armor Class or defense value.</td></tr>
+      <tr><td class="button-name">Bon</td><td>Combat bonus or roll bonus.</td></tr>
+      <tr><td class="button-name">Init</td><td>Initiative roll. The row joins active turn order after it has Type and Init.</td></tr>
+      <tr><td class="button-name">Effects</td><td>Notes about status effects, category, sheet source, spells, or special conditions.</td></tr>
+      <tr><td class="button-name">Loot</td><td>Check this if the player/enemy should be included in loot division.</td></tr>
+      <tr><td class="button-name">Del / X</td><td>Deletes that single row manually.</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section class="book-page" id="death_rule_buttons_help">
+  <h2 class="item-title">Death Rule Checkboxes</h2>
+  <div class="category">Body / Mind / Spirit Rules</div>
+  <table class="button-table">
+    <thead><tr><th>Checkbox</th><th>What it does</th></tr></thead>
+    <tbody>
+      <tr><td class="button-name">No checkbox</td><td>Normal rule. The row becomes Down when any Body, Mind, or Spirit reaches 0 or lower.</td></tr>
+      <tr><td class="button-name">1 Zero</td><td>Allows one Body, Mind, or Spirit stat to be 0 or lower without becoming Down. The next stat that reaches 0 or lower makes the row Down.</td></tr>
+      <tr><td class="button-name">2 Zero</td><td>Allows two Body, Mind, or Spirit stats to be 0 or lower. The last remaining stat reaching 0 or lower makes the row Down.</td></tr>
+      <tr><td class="button-name">-3 Spell</td><td>Spell rule. The row can stay Live at 0, -1, -2, and -3. It becomes Down at -4 or lower.</td></tr>
+      <tr><td class="button-name">Remove Dead Rows</td><td>Clears rows that are already Down. It does not remove Live rows.</td></tr>
+    </tbody>
+  </table>
+  <div class="warning-note"><strong>Important:</strong> These checkboxes replace the old Past -3 checkbox. Only use one special rule at a time for a row.</div>
+</section>
+
+<section class="book-page" id="discord_loot_buttons_help">
+  <h2 class="item-title">Loot and Discord Buttons</h2>
+  <div class="category">Output / Sharing</div>
+  <table class="button-table">
+    <thead><tr><th>Button / Field</th><th>What it does</th></tr></thead>
+    <tbody>
+      <tr><td class="button-name">Show / Divide Loot</td><td>Creates a loot split using the rows that have Loot checked.</td></tr>
+      <tr><td class="button-name">Copy Loot Split</td><td>Copies the loot split text to the clipboard. Some layouts show this button above and below the output box; both do the same thing.</td></tr>
+      <tr><td class="button-name">Copy Turn Summary</td><td>Copies a plain-text encounter summary with current turn, turn order, stats, effects, and loot information.</td></tr>
+      <tr><td class="button-name">Send / Update Discord</td><td>Sends the encounter summary to Discord or updates the existing Discord post if a message ID is saved.</td></tr>
+      <tr><td class="button-name">Discord Message ID</td><td>Stores the Discord message ID after the first send. Keeping it lets the tool update the same post.</td></tr>
+      <tr><td class="button-name">Check Discord Link</td><td>Checks if the Discord webhook/config looks set.</td></tr>
+      <tr><td class="button-name">Start New Discord Post</td><td>Clears the saved Discord Message ID so the next Send creates a new Discord post instead of editing the old one.</td></tr>
+      <tr><td class="button-name">Loot Output Box</td><td>Shows loot split text, added-sheet messages, turn summary text, or Discord status messages.</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section class="book-page" id="guide_book_buttons_help">
+  <h2 class="item-title">Guide Book Buttons</h2>
+  <div class="category">Monster / Spell / Skill / Race Books</div>
+  <table class="button-table">
+    <thead><tr><th>Button / Function</th><th>What it does</th></tr></thead>
+    <tbody>
+      <tr><td class="button-name">Guide Index</td><td>Returns that guide book to its index page.</td></tr>
+      <tr><td class="button-name">Search</td><td>Filters entries by name, category, book, who can cast, type, cost, or other visible text.</td></tr>
+      <tr><td class="button-name">Previous</td><td>Moves to the previous page inside the guide.</td></tr>
+      <tr><td class="button-name">Next</td><td>Moves to the next page inside the guide.</td></tr>
+      <tr><td class="button-name">Add Enemy / Add to Roster</td><td>In the Monster Guide, adds that monster to Encounter Data.</td></tr>
+      <tr><td class="button-name">Copy Monster / Copy Spell / Copy Skill</td><td>Copies the visible entry text to the clipboard for pasting into Discord or notes.</td></tr>
+      <tr><td class="button-name">Spellbook magic book cards</td><td>Opens spell categories such as Neutral Magic, Light Magic, and Dark Magic.</td></tr>
+      <tr><td class="button-name">Warrior Skill discipline cards</td><td>Opens skill groups such as Slashing, Piercing, Blunt, Hand to Hand, Thrown, General, Projectile, and Defense.</td></tr>
+      <tr><td class="button-name">Race Guide cards</td><td>Opens race ability sections and race reference information.</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section class="book-page" id="character_sheet_buttons_help">
+  <h2 class="item-title">Character Sheet Book Buttons</h2>
+  <div class="category">Saved Sheets</div>
+  <table class="button-table">
+    <thead><tr><th>Button / Field</th><th>What it does</th></tr></thead>
+    <tbody>
+      <tr><td class="button-name">Sheet Form</td><td>Opens the character sheet form page where new sheets can be made or old sheets can be edited.</td></tr>
+      <tr><td class="button-name">Sheet Index</td><td>Returns to the list of saved character sheets.</td></tr>
+      <tr><td class="button-name">Search code/name/spell</td><td>Filters saved character sheets by code, character name, spells, race, skills, or visible text.</td></tr>
+      <tr><td class="button-name">Add Code</td><td>Adds the currently opened sheet to the Encounter Data roster.</td></tr>
+      <tr><td class="button-name">Copy Code</td><td>Copies the sheet code, such as THY_PROWLER, so it can be pasted into the Add Sheet Code box.</td></tr>
+      <tr><td class="button-name">Add This Sheet to Encounter</td><td>Adds that specific sheet to the current encounter roster.</td></tr>
+      <tr><td class="button-name">Spell / Skill links on sheet</td><td>Clicking a spell or warrior skill can open the related Spellbook or Warrior Skills entry.</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section class="book-page" id="sheet_form_buttons_help">
+  <h2 class="item-title">Character Sheet Form Buttons</h2>
+  <div class="category">Creating / Editing Sheets</div>
+  <table class="button-table">
+    <thead><tr><th>Button / Field</th><th>What it does</th></tr></thead>
+    <tbody>
+      <tr><td class="button-name">New Sheet</td><td>Clears the form so a new character sheet can be made.</td></tr>
+      <tr><td class="button-name">Edit / Load Existing Sheet</td><td>Loads an existing sheet from file or from the listed sheets, when available.</td></tr>
+      <tr><td class="button-name">Sheet Code</td><td>The code players or DMs type into Add Sheet Code. Keep it unique.</td></tr>
+      <tr><td class="button-name">Character Name / Player / Rank</td><td>Basic sheet identity information.</td></tr>
+      <tr><td class="button-name">Race / Race Abilities</td><td>Records race and selected race abilities.</td></tr>
+      <tr><td class="button-name">Body / Mind / Spirit / AC / Bonus</td><td>Base stats that load into the Encounter Data roster.</td></tr>
+      <tr><td class="button-name">Profile Picture / ID Image</td><td>Optional uploaded images that display on the saved sheet.</td></tr>
+      <tr><td class="button-name">Spells</td><td>Checked spells are saved to the character sheet.</td></tr>
+      <tr><td class="button-name">Warrior Skills</td><td>Checked warrior skills are saved to the character sheet.</td></tr>
+      <tr><td class="button-name">Generate JS Sheet</td><td>Creates the .js sheet code from the form.</td></tr>
+      <tr><td class="button-name">Copy Output</td><td>Copies the generated sheet code so it can be saved as a .js file or posted for the DM Tool update.</td></tr>
+      <tr><td class="button-name">Download JS Sheet</td><td>Downloads the generated character sheet as a .js file, when available.</td></tr>
+      <tr><td class="button-name">Import / Load File</td><td>Loads an existing .js character sheet file into the form for editing, when available.</td></tr>
+    </tbody>
+  </table>
+  <div class="note-box">The static website cannot permanently add new sheets by itself. The sheet code must be saved as a .js file and listed in character_sheets_manifest.js.</div>
+</section>
+
+<section class="book-page" id="troubleshooting_functions_help">
+  <h2 class="item-title">Important Functions and Troubleshooting</h2>
+  <div class="category">Common Problems</div>
+  <table class="button-table">
+    <thead><tr><th>Problem / Function</th><th>What to check</th></tr></thead>
+    <tbody>
+      <tr><td class="button-name">Stats not loading</td><td>Make sure datafile.js is in the same folder as index.html. Choose a Type again or refresh the page.</td></tr>
+      <tr><td class="button-name">Sheet code not working</td><td>Make sure character_sheets.js, character_sheets_manifest.js, and the sheet .js files are in the same folder as index.html.</td></tr>
+      <tr><td class="button-name">New sheet not appearing</td><td>The sheet file must be listed inside character_sheets_manifest.js.</td></tr>
+      <tr><td class="button-name">Discord not sending</td><td>Check discord_config.js and make sure the webhook URL is set.</td></tr>
+      <tr><td class="button-name">Map not saving</td><td>Use Save Map to This Browser for browser storage, or Download Map File for a portable file.</td></tr>
+      <tr><td class="button-name">Turn order missing a row</td><td>The row needs a Type and an Init value to join active turn order.</td></tr>
+      <tr><td class="button-name">Row says Wait</td><td>The row is missing Type or Init.</td></tr>
+      <tr><td class="button-name">Row says Down</td><td>The row met its death-rule checkbox condition.</td></tr>
+      <tr><td class="button-name">refreshCharacterSheets()</td><td>Reloads the saved sheet list from character_sheets.js and the manifest.</td></tr>
+      <tr><td class="button-name">hydrateStatsFromType()</td><td>Fills missing stats from the selected Type.</td></tr>
+      <tr><td class="button-name">syncTurnOrder()</td><td>Rebuilds active turn order from valid roster rows.</td></tr>
+      <tr><td class="button-name">renderTable()</td><td>Redraws the Encounter Data roster.</td></tr>
+      <tr><td class="button-name">drawGrid()</td><td>Redraws map grid, tokens, items, and background.</td></tr>
+    </tbody>
+  </table>
+</section>
+
+
+<section class="book-page" id="rotation_input_apply_fix_help">
+  <h2 class="item-title">Rotate Box Fix</h2>
+  <div class="category">Battle Map Help</div>
+  <p>The <strong>Rotate</strong> number box now works two ways:</p>
+  <ul>
+    <li>If no map item is selected, it sets the rotation for the next wall, door, chest, trap, pillar, tree, or text item you place.</li>
+    <li>If a map item is selected, changing the Rotate number immediately rotates that selected item.</li>
+    <li>Rotate Left and Rotate Right also update the Rotate number box.</li>
+  </ul>
+  <p>Items like pillars, traps, and trees may look almost the same when rotated because they are round or symmetrical. Walls, doors, and text show rotation most clearly.</p>
 </section>
 
 </main>

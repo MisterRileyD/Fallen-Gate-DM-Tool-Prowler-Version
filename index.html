@@ -639,6 +639,8 @@
 			color: #6f1515;
 		}
 
+		/* Minus-four removal note: Body, Mind, or Spirit at -4 removes the row. */
+
 		.loot-output {
 			max-height: 240px;
 			min-height: 72px;
@@ -1661,6 +1663,136 @@
 			min-height: 19px;
 		}
 
+		/* FINAL FIX: turn order six-visible scroll + roster contained scroll. */
+		.data-page {
+			display: flex !important;
+			flex-direction: column !important;
+			gap: 6px !important;
+			min-height: 0 !important;
+			overflow: hidden !important;
+		}
+
+		.data-page .page-title {
+			flex: 0 0 auto !important;
+			margin-bottom: 2px !important;
+		}
+
+		.data-page .turn-box {
+			flex: 0 0 210px !important;
+			min-height: 210px !important;
+			max-height: 210px !important;
+			overflow: hidden !important;
+			align-items: flex-start !important;
+			gap: 8px !important;
+		}
+
+		.data-page .turn-box > div:first-child {
+			min-width: 0 !important;
+			flex: 1 1 auto !important;
+		}
+
+		.data-page .current-turn {
+			font-size: 16px !important;
+			line-height: 1.1 !important;
+			margin-bottom: 4px !important;
+		}
+
+		.data-page .order-list {
+			height: 154px !important;
+			max-height: 154px !important;
+			overflow-y: auto !important;
+			overflow-x: hidden !important;
+			padding-right: 5px !important;
+			margin-top: 3px !important;
+			margin-bottom: 0 !important;
+			scrollbar-width: thin !important;
+		}
+
+		.data-page .order-list li {
+			min-height: 21px !important;
+			padding: 2px 6px !important;
+			margin-bottom: 1px !important;
+			font-size: 12px !important;
+			line-height: 1.1 !important;
+		}
+
+		.data-page .order-list li span:last-child {
+			font-size: 10.5px !important;
+		}
+
+		.data-page > .toolbar {
+			flex: 0 0 auto !important;
+		}
+
+		.data-page .table-wrap {
+			flex: 0 0 230px !important;
+			min-height: 120px !important;
+			max-height: 230px !important;
+			overflow-y: auto !important;
+			overflow-x: auto !important;
+			position: relative !important;
+			z-index: 1 !important;
+		}
+
+		.data-page #partyTable {
+			margin-bottom: 0 !important;
+		}
+
+		.data-page #partyTable thead th {
+			position: sticky !important;
+			top: 0 !important;
+			z-index: 8 !important;
+		}
+
+		.data-page > div:last-child {
+			flex: 0 0 auto !important;
+			position: relative !important;
+			z-index: 3 !important;
+			background: rgba(244, 230, 197, 0.72) !important;
+			border-radius: 8px !important;
+			padding-top: 2px !important;
+		}
+
+		.book-layout.guide-open .data-page .turn-box,
+		.book-layout.left-guide-open .data-page .turn-box {
+			flex-basis: 202px !important;
+			min-height: 202px !important;
+			max-height: 202px !important;
+		}
+
+		.book-layout.guide-open .data-page .order-list,
+		.book-layout.left-guide-open .data-page .order-list {
+			height: 146px !important;
+			max-height: 146px !important;
+		}
+
+		.book-layout.guide-open .data-page .table-wrap,
+		.book-layout.left-guide-open .data-page .table-wrap {
+			flex-basis: 215px !important;
+			max-height: 215px !important;
+		}
+
+		/* Death-rule checkbox columns kept compact. */
+		.data-page #partyTable th:nth-child(12),
+		.data-page #partyTable td:nth-child(12),
+		.data-page #partyTable th:nth-child(13),
+		.data-page #partyTable td:nth-child(13),
+		.data-page #partyTable th:nth-child(14),
+		.data-page #partyTable td:nth-child(14) {
+			text-align: center !important;
+			width: 44px !important;
+			min-width: 40px !important;
+			max-width: 48px !important;
+		}
+
+		.data-page #partyTable th:nth-child(15),
+		.data-page #partyTable td:nth-child(15) {
+			text-align: center !important;
+			width: 38px !important;
+			min-width: 34px !important;
+			max-width: 44px !important;
+		}
+
 
 </style>
 </head>
@@ -1747,7 +1879,10 @@
 								<button class="book-btn" onclick="setMapTool('tree')">Add Tree</button>
 								<button class="book-btn" onclick="setMapTool('text')">Add Text</button>
 								<label><strong>Item Size</strong> <input type="number" id="mapItemSizeInput" value="1" min="0.5" max="12" step="0.5" style="width:62px" onchange="setMapItemSize(this.value)"></label>
+								<label><strong>Rotate</strong> <input type="number" id="mapItemRotationInput" value="0" min="0" max="359" step="15" style="width:66px" oninput="setMapItemRotation(this.value)" onchange="setMapItemRotation(this.value)">°</label>
 								<button class="book-btn" onclick="scaleSelectedMapItem(-0.5)">Shrink Selected</button>
+								<button class="book-btn" onclick="rotateSelectedMapItem(-15)">Rotate Left</button>
+								<button class="book-btn" onclick="rotateSelectedMapItem(15)">Rotate Right</button>
 								<button class="book-btn" onclick="scaleSelectedMapItem(0.5)">Grow Selected</button>
 								<button class="book-btn danger" onclick="deleteSelectedMapItem()">Delete Selected</button>
 								<button class="book-btn danger" onclick="undoMapItem()">Undo Map Item</button>
@@ -1789,7 +1924,7 @@
 							<button class="book-btn" onclick="addCharacterFromInput()">Add Sheet Code</button>
 							<button class="book-btn" onclick="openGuide('characterSheetsGuide', 'Character Sheets', './character_sheets.html')">Open Sheets</button>
 							<button class="book-btn" onclick="syncTurnOrder()">Refresh Order</button>
-							<button class="book-btn danger" onclick="clearDefeated()">Remove Defeated Rows</button>
+							<button class="book-btn danger" onclick="clearDefeated()">Remove Dead Rows</button>
 						</div>
 
 						<div class="table-wrap">
@@ -1807,6 +1942,9 @@
 										<th>Init</th>
 										<th>Effects</th>
 										<th>Loot</th>
+										<th>1 Zero</th>
+										<th>2 Zero</th>
+										<th>-3 Spell</th>
 										<th>Del</th>
 									</tr>
 								</thead>
@@ -1866,7 +2004,7 @@
 
 
 		window.addEventListener("fallenGateCharacterSheetsReady", function () {
-			characterSheets = window.FALLEN_GATE_CHARACTER_SHEETS || {};
+			refreshCharacterSheets();
 		});
 
 		let data = {};
@@ -1896,6 +2034,7 @@
 		let mapBackgroundImageData = "";
 		let mapBackgroundImage = null;
 		let mapItemSize = 1;
+		let mapItemRotation = 0;
 
 		const TOKEN_GRAB_RADIUS = 38;
 		const MAP_ITEM_GRAB_PADDING = 24;
@@ -1911,6 +2050,9 @@
 			}
 
 			buildTypeOptions();
+			refreshCharacterSheets();
+			setTimeout(refreshCharacterSheets, 300);
+			setTimeout(refreshCharacterSheets, 900);
 			loadSavedDiscordMessageID();
 			checkDiscordSetup();
 			drawGrid();
@@ -1985,6 +2127,117 @@
 			}, 1250);
 		}
 
+		function normalizeSheetLookupCode(value) {
+			return String(value || "").trim().toUpperCase().replace(/[^A-Z0-9]/g, "");
+		}
+
+		function refreshCharacterSheets() {
+			characterSheets = window.FALLEN_GATE_CHARACTER_SHEETS || characterSheets || {};
+			return characterSheets;
+		}
+
+		function resolveCharacterSheet(code) {
+			const sheets = refreshCharacterSheets();
+			const raw = String(code || "").trim();
+			const upper = raw.toUpperCase();
+			const normalized = normalizeSheetLookupCode(raw);
+
+			if (sheets[raw]) return { code: raw, sheet: sheets[raw] };
+			if (sheets[upper]) return { code: upper, sheet: sheets[upper] };
+
+			const keys = Object.keys(sheets);
+			for (let i = 0; i < keys.length; i++) {
+				if (normalizeSheetLookupCode(keys[i]) === normalized) {
+					return { code: keys[i], sheet: sheets[keys[i]] };
+				}
+			}
+
+			return null;
+		}
+
+
+		function normalizeTypeValue(value) {
+			return String(value || "").trim().toLowerCase().replace(/&amp;/g, "&").replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/\s+/g, " ");
+		}
+
+		function resolveTypeStats(typeValue) {
+			if (!typeValue || !String(typeValue).includes("!!")) return null;
+
+			const parts = String(typeValue).split("!!");
+			const group = parts[0];
+			const key = parts.slice(1).join("!!");
+
+			if (data[group] && data[group][key]) {
+				return { group: group, key: key, stats: data[group][key] };
+			}
+
+			if (!data[group]) return null;
+
+			const wanted = normalizeTypeValue(key);
+			const keys = Object.keys(data[group]);
+
+			for (let i = 0; i < keys.length; i++) {
+				if (normalizeTypeValue(keys[i]) === wanted) {
+					return { group: group, key: keys[i], stats: data[group][keys[i]] };
+				}
+			}
+
+			return null;
+		}
+
+		function isBlankStat(value) {
+			return value === "" || value === null || value === undefined || Number.isNaN(Number(value));
+		}
+
+		function autoSetZeroRulesFromStartingStats(p) {
+			normalizeDeathRuleFields(p);
+
+			const zeroCount = ["bodyStart", "mindStart", "spiritStart"].filter(function (key) {
+				return Number(p[key]) === 0;
+			}).length;
+
+			p.oneZeroRule = zeroCount === 1;
+			p.twoZeroRule = zeroCount >= 2;
+			if (zeroCount > 0) p.minus3SpellRule = false;
+		}
+
+		function hydrateStatsFromType(p, force = false) {
+			if (!p || !p.type) return false;
+
+			const resolved = resolveTypeStats(p.type);
+			if (!resolved || !resolved.stats) return false;
+
+			const stats = resolved.stats;
+			let changed = false;
+
+			function setStat(field, sourceField) {
+				const raw = stats[sourceField];
+				if (force || isBlankStat(p[field])) {
+					p[field] = raw === "" || raw === undefined || raw === null ? 0 : Number(raw || 0);
+					changed = true;
+				}
+			}
+
+			setStat("body", "body");
+			setStat("mind", "mind");
+			setStat("spirit", "spirit");
+			setStat("ac", "ac");
+			setStat("bonus", "bonus");
+
+			if (force || isBlankStat(p.bodyStart)) p.bodyStart = Number(stats.body || 0);
+			if (force || isBlankStat(p.mindStart)) p.mindStart = Number(stats.mind || 0);
+			if (force || isBlankStat(p.spiritStart)) p.spiritStart = Number(stats.spirit || 0);
+
+			if (resolved.group === "monsters" && stats.monster_title && !p.effects) {
+				p.effects = "Category: " + stats.monster_title;
+				changed = true;
+			}
+
+			autoSetZeroRulesFromStartingStats(p);
+			return changed;
+		}
+
+
 		function addCharacterFromInput() {
 			const input = document.getElementById("characterCodeInput");
 			const code = input ? input.value.trim() : "";
@@ -1997,16 +2250,24 @@
 			addCharacterFromSheetCode(code);
 		}
 
-		function addCharacterFromSheetCode(code) {
-			const cleanCode = String(code || "").trim().toUpperCase();
-			const sheet = characterSheets[cleanCode];
+		function addCharacterFromSheetCode(code, retryCount = 0) {
+			const rawCode = String(code || "").trim();
+			const found = resolveCharacterSheet(rawCode);
 
-			if (!sheet) {
-				alert("No character sheet found for code: " + cleanCode);
+			if (!found) {
+				if (retryCount < 10) {
+					setTimeout(function () {
+						addCharacterFromSheetCode(rawCode, retryCount + 1);
+					}, 250);
+					return;
+				}
+
+				const available = Object.keys(refreshCharacterSheets()).sort();
+				alert("No character sheet found for code: " + rawCode + (available.length ? "\n\nLoaded sheet codes: " + available.join(", ") : "\n\nNo character sheets are loaded. Check character_sheets_manifest.js and the sheet .js files."));
 				return;
 			}
 
-			addParticipantFromSheet(cleanCode, sheet);
+			addParticipantFromSheet(found.code, found.sheet);
 		}
 
 		function addParticipantFromSheet(code, sheet) {
@@ -2018,26 +2279,40 @@
 				playerColors[colorKey] = getRandomColor();
 			}
 
-			const typeValue = sheet.type || "";
+			let typeValue = sheet.type || "";
+			if (!typeValue && sheet.rank && data.ranks && data.ranks[sheet.rank]) {
+				typeValue = "ranks!!" + sheet.rank;
+			}
 			const typeStats = getStatsFromTypeValue(typeValue);
+
+			const bodyValue = Number(sheet.body ?? typeStats.body ?? 0);
+			const mindValue = Number(sheet.mind ?? typeStats.mind ?? 0);
+			const spiritValue = Number(sheet.spirit ?? typeStats.spirit ?? 0);
 
 			const participant = {
 				id,
 				name,
 				type: typeValue,
-				body: sheet.body ?? typeStats.body ?? "",
-				mind: sheet.mind ?? typeStats.mind ?? "",
-				spirit: sheet.spirit ?? typeStats.spirit ?? "",
-				ac: sheet.ac ?? typeStats.ac ?? "",
-				bonus: sheet.bonus ?? typeStats.bonus ?? "",
+				body: Number.isFinite(bodyValue) ? bodyValue : 0,
+				mind: Number.isFinite(mindValue) ? mindValue : 0,
+				spirit: Number.isFinite(spiritValue) ? spiritValue : 0,
+				bodyStart: Number.isFinite(bodyValue) ? bodyValue : 0,
+				mindStart: Number.isFinite(mindValue) ? mindValue : 0,
+				spiritStart: Number.isFinite(spiritValue) ? spiritValue : 0,
+				ac: Number(sheet.ac ?? typeStats.ac ?? 0),
+				bonus: Number(sheet.bonus ?? typeStats.bonus ?? 0),
 				init: sheet.init ?? "",
 				effects: sheet.effects || ("Sheet " + code),
 				loot: Boolean(sheet.loot),
+				oneZeroRule: false,
+				twoZeroRule: false,
+				minus3SpellRule: false,
 				x: 70 + (participants.length % 6) * 52,
 				y: 70 + Math.floor(participants.length / 6) * 52,
 				color: playerColors[colorKey]
 			};
 
+			autoSetZeroRulesFromStartingStats(participant);
 			participants.push(participant);
 			renderTable();
 			syncTurnOrder();
@@ -2050,14 +2325,8 @@
 		}
 
 		function getStatsFromTypeValue(typeValue) {
-			if (!typeValue || !typeValue.includes("!!")) return {};
-
-			const parts = typeValue.split("!!");
-			const group = parts[0];
-			const key = parts.slice(1).join("!!");
-
-			if (!data[group] || !data[group][key]) return {};
-			return data[group][key];
+			const resolved = resolveTypeStats(typeValue);
+			return resolved ? resolved.stats : {};
 		}
 
 		window.addEventListener("message", function (event) {
@@ -2136,9 +2405,18 @@
 				spirit: Number(monster.spirit || 0),
 				ac: Number(monster.ac || 0),
 				bonus: Number(monster.bonus || 0),
+				bodyStart: Number(monster.body || 0),
+				mindStart: Number(monster.mind || 0),
+				spiritStart: Number(monster.spirit || 0),
 				init: "",
 				effects: monster.monster_title ? "Category: " + monster.monster_title : "",
 				loot: false,
+				oneZeroRule: false,
+				twoZeroRule: false,
+				minus3SpellRule: false,
+				bodyStart: "",
+				mindStart: "",
+				spiritStart: "",
 				x: 70 + (participants.length % 6) * 52,
 				y: 70 + Math.floor(participants.length / 6) * 52,
 				color: playerColors[colorKey]
@@ -2177,6 +2455,12 @@
 				init: "",
 				effects: "",
 				loot: false,
+				oneZeroRule: false,
+				twoZeroRule: false,
+				minus3SpellRule: false,
+				bodyStart: "",
+				mindStart: "",
+				spiritStart: "",
 				x: 70 + (participants.length % 6) * 52,
 				y: 70 + Math.floor(participants.length / 6) * 52,
 				color: playerColors[colorKey]
@@ -2188,11 +2472,22 @@
 			drawGrid();
 		}
 
+		function normalizeDeathRuleFields(p) {
+			if (p.oneZeroRule === undefined) p.oneZeroRule = false;
+			if (p.twoZeroRule === undefined) p.twoZeroRule = false;
+			if (p.minus3SpellRule === undefined) p.minus3SpellRule = Boolean(p.allowPastMinus3);
+			if (p.bodyStart === undefined) p.bodyStart = "";
+			if (p.mindStart === undefined) p.mindStart = "";
+			if (p.spiritStart === undefined) p.spiritStart = "";
+		}
+
 		function renderTable() {
 			const tbody = document.getElementById("partyBody");
 			tbody.innerHTML = "";
 
 			participants.forEach(function (p) {
+				normalizeDeathRuleFields(p);
+				hydrateStatsFromType(p, false);
 				const tr = document.createElement("tr");
 				tr.id = "row_" + p.id;
 
@@ -2214,6 +2509,9 @@
 					<td><input class="stat" type="number" value="${escapeAttr(p.init)}" onchange="updateField(${p.id}, 'init', this.value)"></td>
 					<td><input value="${escapeAttr(p.effects)}" onchange="updateField(${p.id}, 'effects', this.value)"></td>
 					<td><input class="check" type="checkbox" ${p.loot ? "checked" : ""} onchange="updateLoot(${p.id}, this.checked)"></td>
+					<td><input class="check" type="checkbox" ${p.oneZeroRule ? "checked" : ""} title="Allow one Body/Mind/Spirit stat to be 0 before this row is Down" onchange="updateDeathRule(${p.id}, 'oneZeroRule', this.checked)"></td>
+					<td><input class="check" type="checkbox" ${p.twoZeroRule ? "checked" : ""} title="Allow two Body/Mind/Spirit stats to be 0 before this row is Down" onchange="updateDeathRule(${p.id}, 'twoZeroRule', this.checked)"></td>
+					<td><input class="check" type="checkbox" ${p.minus3SpellRule ? "checked" : ""} title="Spell rule: can stay up through -3; Down at -4" onchange="updateDeathRule(${p.id}, 'minus3SpellRule', this.checked)"></td>
 					<td><button class="book-btn danger" onclick="removeParticipant(${p.id})">X</button></td>
 				`;
 
@@ -2224,7 +2522,19 @@
 
 		function statusPill(p) {
 			if (isDefeated(p)) {
-				return "<span class='status-pill defeated' title='Defeated'>Down</span>";
+				if (p.minus3SpellRule) {
+					return "<span class='status-pill defeated' title='Spell rule: Down at -4'>Down</span>";
+				}
+
+				if (p.twoZeroRule) {
+					return "<span class='status-pill defeated' title='Two-zero rule: Down when all three stats are 0 or lower'>Down</span>";
+				}
+
+				if (p.oneZeroRule) {
+					return "<span class='status-pill defeated' title='One-zero rule: Down when the next stat reaches 0'>Down</span>";
+				}
+
+				return "<span class='status-pill defeated' title='Down when any Body/Mind/Spirit reaches 0'>Down</span>";
 			}
 
 			if (hasEnteredCombat(p)) {
@@ -2239,22 +2549,7 @@
 			if (!p || !value) return;
 
 			p.type = value;
-			const parts = value.split("!!");
-			const group = parts[0];
-			const key = parts.slice(1).join("!!");
-			const character = data[group][key];
-
-			if (!character) return;
-
-			p.body = Number(character.body || 0);
-			p.mind = Number(character.mind || 0);
-			p.spirit = Number(character.spirit || 0);
-			p.ac = Number(character.ac || 0);
-			p.bonus = Number(character.bonus || 0);
-
-			if (group === "monsters" && character.monster_title && !p.effects) {
-				p.effects = "Category: " + character.monster_title;
-			}
+			hydrateStatsFromType(p, true);
 
 			renderTable();
 			syncTurnOrder();
@@ -2267,6 +2562,12 @@
 
 			if (["body", "mind", "spirit", "ac", "bonus", "init"].includes(field)) {
 				p[field] = value === "" ? "" : Number(value);
+				if (["body", "mind", "spirit"].includes(field)) {
+					const startKey = field + "Start";
+					if ((p[startKey] === "" || p[startKey] === undefined) && Number(p[field]) > 0) {
+						p[startKey] = Number(p[field]);
+					}
+				}
 			} else {
 				p[field] = value;
 			}
@@ -2279,6 +2580,7 @@
 				p.color = playerColors[colorKey];
 			}
 
+
 			syncTurnOrder();
 			renderTable();
 			drawGrid();
@@ -2290,6 +2592,42 @@
 			p.loot = checked;
 		}
 
+		function updateDeathRule(id, rule, checked) {
+			const p = findParticipant(id);
+			if (!p) return;
+			normalizeDeathRuleFields(p);
+
+			p[rule] = Boolean(checked);
+
+			/* These are meant to be clear choices, so checking one clears the others. */
+			if (checked && rule === "oneZeroRule") {
+				p.twoZeroRule = false;
+				p.minus3SpellRule = false;
+			}
+
+			if (checked && rule === "twoZeroRule") {
+				p.oneZeroRule = false;
+				p.minus3SpellRule = false;
+			}
+
+			if (checked && rule === "minus3SpellRule") {
+				p.oneZeroRule = false;
+				p.twoZeroRule = false;
+			}
+
+			syncTurnOrder();
+			renderTable();
+			drawGrid();
+		}
+
+		function removalReason(p) {
+			const parts = [];
+			if (statValue(p, "body") <= STAT_REMOVAL_LIMIT) parts.push("Body " + statValue(p, "body"));
+			if (statValue(p, "mind") <= STAT_REMOVAL_LIMIT) parts.push("Mind " + statValue(p, "mind"));
+			if (statValue(p, "spirit") <= STAT_REMOVAL_LIMIT) parts.push("Spirit " + statValue(p, "spirit"));
+			return parts.join(", ");
+		}
+
 		function removeParticipant(id) {
 			participants = participants.filter(p => p.id !== id);
 			turnOrderIds = turnOrderIds.filter(turnId => turnId !== id);
@@ -2299,7 +2637,7 @@
 		}
 
 		function clearDefeated() {
-			participants = participants.filter(p => !isDefeated(p));
+			participants = participants.filter(p => !isRemovedByStats(p));
 			syncTurnOrder();
 			renderTable();
 			drawGrid();
@@ -2383,19 +2721,56 @@
 			current.textContent = top ? top.name : "No active turn";
 		}
 
+		const STAT_REMOVAL_LIMIT = -4;
+
 		/* A character is not active or defeated until it has a type and an Init Roll.
 		   This prevents a newly added row from being called dead/unliving. */
 		function hasEnteredCombat(p) {
 			return Boolean(p.type) && Number(p.init) > 0;
 		}
 
+		function statValue(p, stat) {
+			const value = Number(p[stat]);
+			return Number.isFinite(value) ? value : 0;
+		}
+
+		function zeroOrLowerCount(p) {
+			return ["body", "mind", "spirit"].filter(stat => statValue(p, stat) <= 0).length;
+		}
+
+		function hasHitRemovalLimit(p) {
+			if (!hasEnteredCombat(p)) return false;
+			return ["body", "mind", "spirit"].some(stat => statValue(p, stat) <= STAT_REMOVAL_LIMIT);
+		}
+
 		function isActiveForOrder(p) {
 			return hasEnteredCombat(p) && !isDefeated(p);
 		}
 
+		function isRemovedByStats(p) {
+			/* Manual remove button uses this. Rows are no longer auto-deleted just because they are Down. */
+			return isDefeated(p);
+		}
+
 		function isDefeated(p) {
 			if (!hasEnteredCombat(p)) return false;
-			return Number(p.body) <= 0 || Number(p.mind) <= 0 || Number(p.spirit) <= 0;
+			normalizeDeathRuleFields(p);
+
+			if (p.minus3SpellRule) {
+				return hasHitRemovalLimit(p);
+			}
+
+			const zeroCount = zeroOrLowerCount(p);
+
+			if (p.twoZeroRule) {
+				return zeroCount >= 3;
+			}
+
+			if (p.oneZeroRule) {
+				return zeroCount >= 2;
+			}
+
+			return zeroCount >= 1;
 		}
 
 		function findParticipant(id) {
@@ -2564,6 +2939,77 @@
 			return Number.isFinite(size) && size > 0 ? size : 1;
 		}
 
+		function normalizeMapRotation(value) {
+			let number = Number(value);
+			if (!Number.isFinite(number)) number = 0;
+			number = number % 360;
+			if (number < 0) number += 360;
+			return Math.round(number);
+		}
+
+		function getMapItemRotation(item) {
+			return normalizeMapRotation(item && item.rotation ? item.rotation : 0);
+		}
+
+		function syncMapRotationInputToSelected() {
+			const input = document.getElementById("mapItemRotationInput");
+			if (!input) return;
+
+			if (selectedMapItemIndex !== null && mapItems[selectedMapItemIndex]) {
+				input.value = getMapItemRotation(mapItems[selectedMapItemIndex]);
+			} else {
+				input.value = mapItemRotation;
+			}
+		}
+
+		function setMapItemRotation(value) {
+			mapItemRotation = normalizeMapRotation(value);
+			const input = document.getElementById("mapItemRotationInput");
+
+			if (input) input.value = mapItemRotation;
+
+			if (selectedMapItemIndex !== null && mapItems[selectedMapItemIndex]) {
+				mapItems[selectedMapItemIndex].rotation = mapItemRotation;
+				drawGrid();
+				updateMapStatus("Selected map item rotation set to " + mapItemRotation + "°. New map items will also use this rotation.");
+				return;
+			}
+
+			updateMapStatus("New map items will use rotation " + mapItemRotation + "°. Select an item to apply this box to an existing item.");
+		}
+
+		function rotateSelectedMapItem(delta) {
+			let index = selectedMapItemIndex;
+
+			if (index === null || !mapItems[index]) {
+				index = mapItems.length ? mapItems.length - 1 : null;
+			}
+
+			if (index === null || !mapItems[index]) {
+				updateMapStatus("No map item selected. Use Move Map Items and click an item first.");
+				return;
+			}
+
+			const item = mapItems[index];
+			item.rotation = normalizeMapRotation(getMapItemRotation(item) + delta);
+			mapItemRotation = item.rotation;
+			selectedMapItemIndex = index;
+			syncMapRotationInputToSelected();
+			drawGrid();
+			updateMapStatus("Map item rotated to " + item.rotation + "°. Save Map to This Browser or Download Map File to keep it.");
+		}
+
+		function getLocalMapPoint(item, x, y) {
+			const rotation = -getMapItemRotation(item) * Math.PI / 180;
+			const dx = x - item.x;
+			const dy = y - item.y;
+			return {
+				x: dx * Math.cos(rotation) - dy * Math.sin(rotation),
+				y: dx * Math.sin(rotation) + dy * Math.cos(rotation)
+			};
+		}
+
+
 		function setMapItemSize(value) {
 			const number = Number(value);
 			mapItemSize = Number.isFinite(number) ? Math.min(12, Math.max(0.5, number)) : 1;
@@ -2595,18 +3041,27 @@
 
 
 
+
 		function drawMapItemLabel(item, label) {
 			const size = getMapItemSize(item);
+			const rotation = getMapItemRotation(item);
+			const pieces = [label];
+
+			if (size !== 1) pieces.push("x" + size);
+			if (rotation !== 0) pieces.push(rotation + "°");
+
 			ctx.font = "bold " + Math.max(10, Math.round(11 * Math.min(size, 1.8))) + "px Arial";
 			ctx.fillStyle = "rgba(35, 21, 13, 0.92)";
 			ctx.textAlign = "center";
-			ctx.fillText(label + (size !== 1 ? " x" + size : ""), item.x, item.y + (32 * size));
+			ctx.fillText(pieces.join(" "), item.x, item.y + (32 * size));
 			ctx.textAlign = "left";
 		}
 
 		function drawMapItems() {
 			mapItems.forEach(function (item, index) {
 				const size = getMapItemSize(item);
+				const rotation = getMapItemRotation(item) * Math.PI / 180;
+				let label = "";
 
 				ctx.save();
 
@@ -2626,103 +3081,108 @@
 					ctx.restore();
 				}
 
+				ctx.translate(item.x, item.y);
+				ctx.rotate(rotation);
+
 				if (item.type === "wall") {
 					const half = 34 * size;
 					ctx.strokeStyle = "#2b1b10";
 					ctx.lineWidth = Math.max(8, 10 * Math.min(size, 2));
 					ctx.beginPath();
-					ctx.moveTo(item.x - half, item.y);
-					ctx.lineTo(item.x + half, item.y);
+					ctx.moveTo(-half, 0);
+					ctx.lineTo(half, 0);
 					ctx.stroke();
 
 					ctx.strokeStyle = "#8b6a3a";
 					ctx.lineWidth = Math.max(2, 3 * Math.min(size, 2));
 					ctx.beginPath();
-					ctx.moveTo(item.x - half, item.y - 1);
-					ctx.lineTo(item.x + half, item.y - 1);
+					ctx.moveTo(-half, -1);
+					ctx.lineTo(half, -1);
 					ctx.stroke();
 
-					drawMapItemLabel(item, "Wall");
+					label = "Wall";
 				} else if (item.type === "door") {
 					const w = 40 * size;
 					const h = 22 * size;
 					ctx.fillStyle = "#c99739";
-					ctx.fillRect(item.x - w / 2, item.y - h / 2, w, h);
+					ctx.fillRect(-w / 2, -h / 2, w, h);
 					ctx.strokeStyle = "#3a2413";
 					ctx.lineWidth = Math.max(2, 3 * Math.min(size, 2));
-					ctx.strokeRect(item.x - w / 2, item.y - h / 2, w, h);
+					ctx.strokeRect(-w / 2, -h / 2, w, h);
 					ctx.fillStyle = "#3a2413";
 					ctx.beginPath();
-					ctx.arc(item.x + 12 * size, item.y, Math.max(2, 3 * size), 0, Math.PI * 2);
+					ctx.arc(12 * size, 0, Math.max(2, 3 * size), 0, Math.PI * 2);
 					ctx.fill();
 
-					drawMapItemLabel(item, "Door");
+					label = "Door";
 				} else if (item.type === "chest") {
 					const w = 34 * size;
 					const h = 24 * size;
 					ctx.fillStyle = "#8b5a2b";
-					ctx.fillRect(item.x - w / 2, item.y - h / 2, w, h);
+					ctx.fillRect(-w / 2, -h / 2, w, h);
 					ctx.strokeStyle = "#3a2413";
 					ctx.lineWidth = Math.max(2, 3 * Math.min(size, 2));
-					ctx.strokeRect(item.x - w / 2, item.y - h / 2, w, h);
+					ctx.strokeRect(-w / 2, -h / 2, w, h);
 					ctx.fillStyle = "#e2bf62";
-					ctx.fillRect(item.x - 4 * size, item.y - h / 2, 8 * size, h);
-					ctx.fillRect(item.x - w / 2, item.y - 1 * size, w, 4 * size);
+					ctx.fillRect(-4 * size, -h / 2, 8 * size, h);
+					ctx.fillRect(-w / 2, -1 * size, w, 4 * size);
 
-					drawMapItemLabel(item, "Chest");
+					label = "Chest";
 				} else if (item.type === "trap") {
 					const r = 20 * size;
 					ctx.fillStyle = "rgba(140, 25, 25, 0.18)";
 					ctx.strokeStyle = "#8c1919";
 					ctx.lineWidth = Math.max(3, 4 * Math.min(size, 2));
 					ctx.beginPath();
-					ctx.moveTo(item.x, item.y - r);
-					ctx.lineTo(item.x + r, item.y + 17 * size);
-					ctx.lineTo(item.x - r, item.y + 17 * size);
+					ctx.moveTo(0, -r);
+					ctx.lineTo(r, 17 * size);
+					ctx.lineTo(-r, 17 * size);
 					ctx.closePath();
 					ctx.fill();
 					ctx.stroke();
 					ctx.fillStyle = "#8c1919";
 					ctx.font = "bold " + Math.max(18, 20 * size) + "px Arial";
 					ctx.textAlign = "center";
-					ctx.fillText("!", item.x, item.y + 9 * size);
+					ctx.fillText("!", 0, 9 * size);
 					ctx.textAlign = "left";
 
-					drawMapItemLabel(item, "Trap");
+					label = "Trap";
 				} else if (item.type === "pillar") {
 					ctx.fillStyle = "#9f9275";
 					ctx.beginPath();
-					ctx.arc(item.x, item.y, 20 * size, 0, Math.PI * 2);
+					ctx.arc(0, 0, 20 * size, 0, Math.PI * 2);
 					ctx.fill();
 					ctx.strokeStyle = "#4b3a24";
 					ctx.lineWidth = Math.max(2, 3 * Math.min(size, 2));
 					ctx.stroke();
 					ctx.beginPath();
-					ctx.arc(item.x, item.y, 10 * size, 0, Math.PI * 2);
+					ctx.arc(0, 0, 10 * size, 0, Math.PI * 2);
 					ctx.stroke();
 
-					drawMapItemLabel(item, "Pillar");
+					label = "Pillar";
 				} else if (item.type === "tree") {
 					ctx.fillStyle = "#6b3a13";
-					ctx.fillRect(item.x - 5 * size, item.y + 8 * size, 10 * size, 18 * size);
+					ctx.fillRect(-5 * size, 8 * size, 10 * size, 18 * size);
 					ctx.fillStyle = "#2e6b35";
 					ctx.beginPath();
-					ctx.arc(item.x, item.y, 22 * size, 0, Math.PI * 2);
+					ctx.arc(0, 0, 22 * size, 0, Math.PI * 2);
 					ctx.fill();
 					ctx.fillStyle = "#3d8a45";
 					ctx.beginPath();
-					ctx.arc(item.x - 8 * size, item.y - 6 * size, 10 * size, 0, Math.PI * 2);
+					ctx.arc(-8 * size, -6 * size, 10 * size, 0, Math.PI * 2);
 					ctx.fill();
 
-					drawMapItemLabel(item, "Tree");
+					label = "Tree";
 				} else if (item.type === "text") {
 					ctx.shadowBlur = 2;
 					ctx.fillStyle = "#3a1a49";
 					ctx.font = "bold " + Math.max(18, 18 * size) + "px Georgia";
-					ctx.fillText(item.text || "Note", item.x, item.y);
+					ctx.fillText(item.text || "Note", 0, 0);
 				}
 
 				ctx.restore();
+
+				if (label) drawMapItemLabel(item, label);
 			});
 		}
 
@@ -2737,24 +3197,28 @@
 
 				if (!item) continue;
 
+				const local = getLocalMapPoint(item, x, y);
+				const lx = local.x;
+				const ly = local.y;
+
 				if (item.type === "wall") {
-					if (Math.abs(y - item.y) <= 14 * size + pad && x >= item.x - 42 * size - pad && x <= item.x + 42 * size + pad) return i;
+					if (Math.abs(ly) <= 14 * size + pad && lx >= -42 * size - pad && lx <= 42 * size + pad) return i;
 				} else if (item.type === "door") {
-					if (Math.abs(x - item.x) <= 28 * size + pad && Math.abs(y - item.y) <= 18 * size + pad) return i;
+					if (Math.abs(lx) <= 28 * size + pad && Math.abs(ly) <= 18 * size + pad) return i;
 				} else if (item.type === "chest") {
-					if (Math.abs(x - item.x) <= 24 * size + pad && Math.abs(y - item.y) <= 20 * size + pad) return i;
+					if (Math.abs(lx) <= 24 * size + pad && Math.abs(ly) <= 20 * size + pad) return i;
 				} else if (item.type === "trap") {
-					if (distance(x, y, item.x, item.y) <= 28 * size + pad) return i;
+					if (Math.sqrt(lx * lx + ly * ly) <= 28 * size + pad) return i;
 				} else if (item.type === "pillar") {
-					if (distance(x, y, item.x, item.y) <= 26 * size + pad) return i;
+					if (Math.sqrt(lx * lx + ly * ly) <= 26 * size + pad) return i;
 				} else if (item.type === "tree") {
-					if (distance(x, y, item.x, item.y) <= 30 * size + pad) return i;
+					if (Math.sqrt(lx * lx + ly * ly) <= 30 * size + pad) return i;
 				} else if (item.type === "text") {
 					const textLength = String(item.text || "Note").length;
 					const width = Math.max(44, textLength * 10 * size);
-					if (x >= item.x - 10 - pad && x <= item.x + width + pad && y >= item.y - 28 * size - pad && y <= item.y + 14 * size + pad) return i;
+					if (lx >= -10 - pad && lx <= width + pad && ly >= -28 * size - pad && ly <= 14 * size + pad) return i;
 				} else {
-					if (distance(x, y, item.x, item.y) <= 25 * size + pad) return i;
+					if (Math.sqrt(lx * lx + ly * ly) <= 25 * size + pad) return i;
 				}
 			}
 
@@ -2773,6 +3237,7 @@
 			const removed = mapItems.splice(index, 1)[0];
 			selectedMapItemIndex = null;
 			draggingMapItemIndex = null;
+			syncMapRotationInputToSelected();
 			drawGrid();
 			updateMapStatus("Deleted selected " + (removed.type || "map item") + ". Map items on grid: " + mapItems.length + ".");
 		}
@@ -2799,7 +3264,7 @@
 			if (mapTool === "move" || mapTool === "moveItem" || mapTool === "deleteItem") return false;
 
 			const clamped = clampCanvasPoint({ x: x, y: y });
-			let item = { type: mapTool, x: Math.round(clamped.x), y: Math.round(clamped.y), size: mapItemSize };
+			let item = { type: mapTool, x: Math.round(clamped.x), y: Math.round(clamped.y), size: mapItemSize, rotation: mapItemRotation };
 
 			if (mapTool === "text") {
 				const text = prompt("Map label text:", "Note");
@@ -2809,20 +3274,21 @@
 
 			mapItems.push(item);
 			selectedMapItemIndex = mapItems.length - 1;
+			syncMapRotationInputToSelected();
 			drawGrid();
-			updateMapStatus("Added " + mapTool + " size " + mapItemSize + ". Map items on grid: " + mapItems.length + ". Use Grow/Shrink Selected to resize it.");
+			updateMapStatus("Added " + mapTool + " size " + mapItemSize + " rotation " + mapItemRotation + "°. Map items on grid: " + mapItems.length + ". Use Grow/Shrink or Rotate Selected to change it.");
 			return true;
 		}
 
 		function addSampleMapItems() {
 			const cx = canvas.width / 2;
 			const cy = canvas.height / 2;
-			mapItems.push({ type: "wall", x: Math.round(cx - 80), y: Math.round(cy - 60), size: 2 });
-			mapItems.push({ type: "door", x: Math.round(cx), y: Math.round(cy - 60), size: 1 });
-			mapItems.push({ type: "chest", x: Math.round(cx + 80), y: Math.round(cy - 60), size: 1 });
-			mapItems.push({ type: "trap", x: Math.round(cx - 80), y: Math.round(cy + 40), size: 1.5 });
-			mapItems.push({ type: "pillar", x: Math.round(cx), y: Math.round(cy + 40), size: 1 });
-			mapItems.push({ type: "tree", x: Math.round(cx + 80), y: Math.round(cy + 40), size: 1.5 });
+			mapItems.push({ type: "wall", x: Math.round(cx - 80), y: Math.round(cy - 60), size: 2, rotation: 0 });
+			mapItems.push({ type: "door", x: Math.round(cx), y: Math.round(cy - 60), size: 1, rotation: 90 });
+			mapItems.push({ type: "chest", x: Math.round(cx + 80), y: Math.round(cy - 60), size: 1, rotation: 0 });
+			mapItems.push({ type: "trap", x: Math.round(cx - 80), y: Math.round(cy + 40), size: 1.5, rotation: 45 });
+			mapItems.push({ type: "pillar", x: Math.round(cx), y: Math.round(cy + 40), size: 1, rotation: 0 });
+			mapItems.push({ type: "tree", x: Math.round(cx + 80), y: Math.round(cy + 40), size: 1.5, rotation: 0 });
 			drawGrid();
 			updateMapStatus("Sample map items added. Map items on grid: " + mapItems.length + ".");
 		}
@@ -2831,6 +3297,7 @@
 		function undoMapItem() {
 			mapItems.pop();
 			selectedMapItemIndex = mapItems.length ? mapItems.length - 1 : null;
+			syncMapRotationInputToSelected();
 			drawGrid();
 			updateMapStatus("Removed last map item. Map items on grid: " + mapItems.length + ".");
 		}
@@ -2870,6 +3337,8 @@
 				gridWidth,
 				gridHeight,
 				backgroundImage: mapBackgroundImageData,
+				mapItemSize: mapItemSize,
+				mapItemRotation: mapItemRotation,
 				items: mapItems
 			};
 		}
@@ -2886,6 +3355,12 @@
 			if (heightInput) heightInput.value = gridHeight;
 
 			mapItems = Array.isArray(saved.items) ? saved.items : [];
+			mapItemSize = Number(saved.mapItemSize || mapItemSize || 1);
+			mapItemRotation = normalizeMapRotation(saved.mapItemRotation || mapItemRotation || 0);
+			const sizeInput = document.getElementById("mapItemSizeInput");
+			const rotationInput = document.getElementById("mapItemRotationInput");
+			if (sizeInput) sizeInput.value = mapItemSize;
+			if (rotationInput) rotationInput.value = mapItemRotation;
 			mapBackgroundImageData = saved.backgroundImage || "";
 
 			if (mapBackgroundImageData) {
@@ -2984,6 +3459,10 @@
 			if (mapTool === "moveItem") {
 				draggingMapItemIndex = findMapItemAt(point.x, point.y);
 				selectedMapItemIndex = draggingMapItemIndex;
+				syncMapRotationInputToSelected();
+				if (selectedMapItemIndex !== null && mapItems[selectedMapItemIndex]) {
+					setMapItemRotation(getMapItemRotation(mapItems[selectedMapItemIndex]));
+				}
 				draggingId = null;
 
 				if (draggingMapItemIndex === null) {
@@ -3017,6 +3496,9 @@
 			if (mapTool === "moveItem") {
 				draggingMapItemIndex = findMapItemAt(point.x, point.y);
 				selectedMapItemIndex = draggingMapItemIndex;
+				if (selectedMapItemIndex !== null && mapItems[selectedMapItemIndex]) {
+					setMapItemRotation(getMapItemRotation(mapItems[selectedMapItemIndex]));
+				}
 				draggingId = null;
 				e.preventDefault();
 				return;
