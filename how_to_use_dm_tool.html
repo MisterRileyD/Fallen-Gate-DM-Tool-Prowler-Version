@@ -939,6 +939,20 @@ a {
   <p>Items like pillars, traps, and trees may look almost the same when rotated because they are round or symmetrical. Walls, doors, and text show rotation most clearly.</p>
 </section>
 
+
+<section class="book-page" id="discord_generator_check_fix_help">
+  <h2 class="item-title">Discord Generator / Sender Check</h2>
+  <div class="category">Discord Help</div>
+  <p>The Discord sender needs <strong>discord_config.js</strong> to contain a real Discord webhook URL.</p>
+  <ul>
+    <li><strong>Check Discord Link</strong> now checks whether the webhook exists and looks like a Discord webhook.</li>
+    <li><strong>Send / Update Discord</strong> sends the encounter summary and map image.</li>
+    <li>After the first send, the tool saves the Discord Message ID so later sends update the same post.</li>
+    <li><strong>Start New Discord Post</strong> clears the saved Message ID so the next send creates a new post.</li>
+  </ul>
+  <p>If Discord fails after an old post was deleted, click <strong>Start New Discord Post</strong> and send again.</p>
+</section>
+
 </main>
     <footer class="book-footer">
       <button class="book-btn" onclick="goToPage('book_index')">Index</button>

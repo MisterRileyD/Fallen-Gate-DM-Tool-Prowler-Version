@@ -3875,6 +3875,53 @@
 		}
 
 
+
+		function getDiscordWebhookURL() {
+			return String(window.FALLEN_GATE_DISCORD_WEBHOOK_URL || DISCORD_WEBHOOK_URL || "").trim();
+		}
+
+		function isDiscordWebhookConfigured() {
+			const url = getDiscordWebhookURL();
+
+			if (!url) return false;
+			if (url.includes("https://discord.com/api/webhooks/1382809889684062298/We1eJedsfCJq11wfDdUU9zmzrQC5JbiUs6JqYgCQHmzBzguMMJE0TPyMCgCQ4VfO93Rt")) return false;
+
+			return /^https:\/\/(discord\.com|discordapp\.com)\/api\/webhooks\/\d+\/[^\/\s]+/i.test(url);
+		}
+
+		function setDiscordWebhookStatus(message, good = false) {
+			const status = document.getElementById("discordWebhookStatus");
+			if (!status) return;
+
+			status.textContent = message;
+			status.style.color = good ? "#1f6b2d" : "#8f1f1f";
+			status.style.fontWeight = "900";
+		}
+
+		function checkDiscordSetup() {
+			const url = getDiscordWebhookURL();
+
+			if (!url || url.includes("https://discord.com/api/webhooks/1382809889684062298/We1eJedsfCJq11wfDdUU9zmzrQC5JbiUs6JqYgCQHmzBzguMMJE0TPyMCgCQ4VfO93Rt")) {
+				setDiscordWebhookStatus("Discord webhook not set. Paste your webhook into discord_config.js.", false);
+				return false;
+			}
+
+			if (!isDiscordWebhookConfigured()) {
+				setDiscordWebhookStatus("Discord webhook looks wrong. It should be a Discord webhook URL.", false);
+				return false;
+			}
+
+			setDiscordWebhookStatus("Discord webhook is set. Send / Update Discord is ready.", true);
+			return true;
+		}
+
+		function limitDiscordText(text, limit = 3900) {
+			const clean = String(text || "");
+			if (clean.length <= limit) return clean;
+			return clean.slice(0, limit - 80) + "\n\n...summary shortened because Discord has a message limit.";
+		}
+
+
 		function loadSavedDiscordMessageID() {
 			const idBox = document.getElementById("discordMessageID");
 			const savedID = localStorage.getItem(DISCORD_MESSAGE_STORAGE_KEY);
@@ -3905,12 +3952,13 @@
 			const idBox = document.getElementById("discordMessageID");
 			if (idBox) idBox.value = "";
 
+			setDiscordWebhookStatus("Discord Message ID cleared. Next send will create a new post.", true);
 			alert("Saved Discord Message ID cleared. The next send will create a new first message.");
 		}
 
 		async function shareToDiscord(silent = false, updateOnly = false) {
-			if (!DISCORD_WEBHOOK_URL || DISCORD_WEBHOOK_URL.includes("https://discord.com/api/webhooks/1382809889684062298/We1eJedsfCJq11wfDdUU9zmzrQC5JbiUs6JqYgCQHmzBzguMMJE0TPyMCgCQ4VfO93Rt")) {
-				if (!silent) checkDiscordSetup();
+			if (!checkDiscordSetup()) {
+				if (!silent) alert("Discord webhook is not ready. Paste the webhook URL into discord_config.js, then reload the page.");
 				return;
 			}
 
@@ -3934,12 +3982,12 @@
 				}
 
 				const updatingExistingMessage = Boolean(eventMessageID);
-				let webhookUrl = DISCORD_WEBHOOK_URL;
+				let webhookUrl = getDiscordWebhookURL();
 				let method = "POST";
 
 				// After the first send, always edit the saved first message instead of posting a new one.
 				if (updatingExistingMessage) {
-					webhookUrl = DISCORD_WEBHOOK_URL + "/messages/" + eventMessageID;
+					webhookUrl = getDiscordWebhookURL() + "/messages/" + eventMessageID;
 					method = "PATCH";
 				}
 
@@ -3950,7 +3998,7 @@
 
 				const embed = {
 					title: document.getElementById("eventName").value || "Fallen Gate Encounter",
-					description: buildSummaryText() + "\n\n**Map:**",
+					description: limitDiscordText(buildSummaryText() + "\n\n**Map:**"),
 					color: 0xff0000,
 					image: { url: "attachment://map.png" },
 					footer: { text: "map grid cells are 5ft x 5ft | Updates edit the first DM Tool message" }
@@ -3985,12 +4033,15 @@
 
 				if (!updatingExistingMessage && result.id) {
 					saveDiscordMessageID(result.id);
+					setDiscordWebhookStatus("Discord message sent. Message ID saved.", true);
 					if (!silent) alert("First Discord message sent and saved. Future updates will edit this same message.");
 				} else {
+					setDiscordWebhookStatus("Discord message updated.", true);
 					if (!silent) alert("Discord message updated.");
 				}
 			} catch (error) {
 				console.error(error);
+				setDiscordWebhookStatus("Discord send/update failed. Check webhook, message ID, or click Start New Discord Post.", false);
 				if (!silent) alert("Failed to send/update Discord. If the old Discord message was deleted, click Start New Discord Post and send again.");
 			}
 		}
