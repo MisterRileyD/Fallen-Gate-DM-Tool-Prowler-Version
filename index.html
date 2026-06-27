@@ -10,7 +10,22 @@
 	<script src="./character_sheets_manifest.js"></script>
 	<script src="./character_sheets.js"></script>
 
-	<style>
+	<script>
+		/* ============================================================
+		   DISCORD WEBHOOK SETTING — ONLY EDIT THIS ONE LOCATION
+
+		   Paste your normal Discord webhook URL between the quotes below.
+		   Leave it blank if Discord is not being used yet.
+
+		   Example format:
+		   https://discord.com/api/webhooks/123456789/TOKEN
+
+		   Do NOT paste a Discord message URL or a /messages/ URL.
+		   ============================================================ */
+		window.FALLEN_GATE_DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1382809889684062298/We1eJedsfCJq11wfDdUU9zmzrQC5JbiUs6JqYgCQHmzBzguMMJE0TPyMCgCQ4VfO93Rt";
+	</script>
+
+<style>
 		:root {
 			/* Main book height. Raise/lower this if the book is too tall or short. */
 			--book-height: clamp(760px, 92vh, 1050px);
@@ -2020,10 +2035,6 @@
 		let selectedMapItemIndex = null;
 		let playerColors = {};
 
-		/* Discord webhook is code-only now.
-		   Paste your webhook URL between the quotes below.
-		   Keep it as a normal Discord webhook URL, not a /messages/ URL. */
-		const DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1382809889684062298/We1eJedsfCJq11wfDdUU9zmzrQC5JbiUs6JqYgCQHmzBzguMMJE0TPyMCgCQ4VfO93Rt";
 		const DISCORD_MESSAGE_STORAGE_KEY = "fallenGateDiscordMessageID";
 		let eventMessageID = null;
 
@@ -3875,17 +3886,13 @@
 		function emptyDash(value) {
 			return value === "" || value === null || value === undefined ? "-" : value;
 		}
-
 		function getDiscordWebhookURL() {
-			return String(DISCORD_WEBHOOK_URL || "").trim();
+			return String(window.FALLEN_GATE_DISCORD_WEBHOOK_URL || "").trim();
 		}
-
 		function isDiscordWebhookConfigured() {
 			const url = getDiscordWebhookURL();
 
 			if (!url) return false;
-			if (url.includes("https://discord.com/api/webhooks/1382809889684062298/We1eJedsfCJq11wfDdUU9zmzrQC5JbiUs6JqYgCQHmzBzguMMJE0TPyMCgCQ4VfO93Rt")) return false;
-			if (url.includes("https://discord.com/api/webhooks/1382809889684062298/We1eJedsfCJq11wfDdUU9zmzrQC5JbiUs6JqYgCQHmzBzguMMJE0TPyMCgCQ4VfO93Rt")) return false;
 
 			return /^https:\/\/(discord\.com|discordapp\.com)\/api\/webhooks\/\d+\/[^\/\s]+/i.test(url);
 		}
@@ -3898,17 +3905,16 @@
 			status.style.color = good ? "#1f6b2d" : "#8f1f1f";
 			status.style.fontWeight = "900";
 		}
-
 		function checkDiscordSetup() {
 			const url = getDiscordWebhookURL();
 
-			if (!url || url.includes("https://discord.com/api/webhooks/1382809889684062298/We1eJedsfCJq11wfDdUU9zmzrQC5JbiUs6JqYgCQHmzBzguMMJE0TPyMCgCQ4VfO93Rt") || url.includes("https://discord.com/api/webhooks/1382809889684062298/We1eJedsfCJq11wfDdUU9zmzrQC5JbiUs6JqYgCQHmzBzguMMJE0TPyMCgCQ4VfO93Rt")) {
-				setDiscordWebhookStatus("Discord webhook not set in code. Paste it into DISCORD_WEBHOOK_URL inside index.html.", false);
+			if (!url) {
+				setDiscordWebhookStatus("Discord webhook not set. Paste it into the one Discord Webhook Setting near the top of index.html.", false);
 				return false;
 			}
 
 			if (!isDiscordWebhookConfigured()) {
-				setDiscordWebhookStatus("Discord webhook in code looks wrong. Use a normal Discord webhook URL.", false);
+				setDiscordWebhookStatus("Discord webhook in code looks wrong. Use a normal Discord webhook URL, not a /messages/ URL.", false);
 				return false;
 			}
 
@@ -4003,7 +4009,7 @@
 
 		async function shareToDiscord(silent = false, updateOnly = false) {
 			if (!checkDiscordSetup()) {
-				if (!silent) alert("Discord webhook is not ready. Paste the webhook URL into DISCORD_WEBHOOK_URL inside index.html.");
+				if (!silent) alert("Discord webhook is not ready. Edit the ONE webhook setting near the top of index.html.");
 				return;
 			}
 
