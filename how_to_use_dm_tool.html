@@ -953,6 +953,20 @@ a {
   <p>If Discord fails after an old post was deleted, click <strong>Start New Discord Post</strong> and send again.</p>
 </section>
 
+
+<section class="book-page" id="discord_message_id_fix_help">
+  <h2 class="item-title">Discord Message ID Fix</h2>
+  <div class="category">Discord Help</div>
+  <p>The Discord tool now forces <strong>?wait=true</strong> on webhook sends so Discord returns a message object with an ID.</p>
+  <ul>
+    <li><strong>Send / Update Discord</strong> creates a new Discord post if no Message ID is saved.</li>
+    <li>After the first send, the returned Discord Message ID is saved into the Discord Message ID box and browser storage.</li>
+    <li><strong>Create Discord ID</strong> clears the old ID and sends a fresh post so a new ID can be created.</li>
+    <li><strong>Start New Discord Post</strong> only clears the saved ID. Use Send / Update Discord or Create Discord ID after that to create a new post.</li>
+  </ul>
+  <p>If Discord sends a post but returns no ID, check that the webhook URL in <strong>discord_config.js</strong> is the normal Discord webhook URL and does not include extra message paths.</p>
+</section>
+
 </main>
     <footer class="book-footer">
       <button class="book-btn" onclick="goToPage('book_index')">Index</button>

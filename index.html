@@ -1965,6 +1965,7 @@
 								<input type="text" id="discordMessageID" placeholder="Saved after first send" style="min-width:260px">
 								<button class="book-btn" onclick="checkDiscordSetup()">Check Discord Link</button>
 								<button class="book-btn danger" onclick="clearDiscordMessageID()">Start New Discord Post</button>
+								<button class="book-btn" onclick="createNewDiscordPost()">Create Discord ID</button>
 								<span id="discordWebhookStatus" class="small">Discord link not checked yet.</span>
 							</div>
 
@@ -3929,17 +3930,18 @@
 			if (savedID) {
 				eventMessageID = savedID;
 				if (idBox) idBox.value = savedID;
+				setDiscordWebhookStatus("Saved Discord Message ID loaded: " + savedID, true);
 			}
 		}
 
 		function saveDiscordMessageID(messageID) {
 			if (!messageID) return;
 
-			eventMessageID = messageID;
-			localStorage.setItem(DISCORD_MESSAGE_STORAGE_KEY, messageID);
+			eventMessageID = String(messageID).trim();
+			localStorage.setItem(DISCORD_MESSAGE_STORAGE_KEY, eventMessageID);
 
 			const idBox = document.getElementById("discordMessageID");
-			if (idBox) idBox.value = messageID;
+			if (idBox) idBox.value = eventMessageID;
 		}
 
 		function clearDiscordMessageID() {
@@ -3955,6 +3957,49 @@
 			setDiscordWebhookStatus("Discord Message ID cleared. Next send will create a new post.", true);
 			alert("Saved Discord Message ID cleared. The next send will create a new first message.");
 		}
+
+
+		function getDiscordWebhookPostURL() {
+			let url = getDiscordWebhookURL();
+
+			/* Keep the webhook base clean. Users sometimes paste ?wait=true into the config. */
+			url = url.split("?")[0].replace(/\/messages\/\d+$/i, "");
+
+			return url;
+		}
+
+		function getDiscordWebhookSendURL(messageID = "") {
+			const base = getDiscordWebhookPostURL();
+			const target = messageID ? base + "/messages/" + encodeURIComponent(messageID) : base;
+			return target + "?wait=true";
+		}
+
+		async function readDiscordResponse(response) {
+			const text = await response.text();
+
+			if (!text) {
+				return {};
+			}
+
+			try {
+				return JSON.parse(text);
+			} catch (error) {
+				return { raw: text };
+			}
+		}
+
+
+
+		async function createNewDiscordPost() {
+			eventMessageID = null;
+			localStorage.removeItem(DISCORD_MESSAGE_STORAGE_KEY);
+
+			const idBox = document.getElementById("discordMessageID");
+			if (idBox) idBox.value = "";
+
+			await shareToDiscord(false, false);
+		}
+
 
 		async function shareToDiscord(silent = false, updateOnly = false) {
 			if (!checkDiscordSetup()) {
@@ -3982,14 +4027,8 @@
 				}
 
 				const updatingExistingMessage = Boolean(eventMessageID);
-				let webhookUrl = getDiscordWebhookURL();
-				let method = "POST";
-
-				// After the first send, always edit the saved first message instead of posting a new one.
-				if (updatingExistingMessage) {
-					webhookUrl = getDiscordWebhookURL() + "/messages/" + eventMessageID;
-					method = "PATCH";
-				}
+				let method = updatingExistingMessage ? "PATCH" : "POST";
+				let webhookUrl = getDiscordWebhookSendURL(updatingExistingMessage ? eventMessageID : "");
 
 				const dataURL = canvas.toDataURL("image/png");
 				const binaryString = window.atob(dataURL.split(",")[1]);
@@ -4019,24 +4058,34 @@
 				formData.append("payload_json", JSON.stringify(payload));
 				formData.append("files[0]", blob, "map.png");
 
-				const response = await fetch(webhookUrl + "?wait=true", {
+				const response = await fetch(webhookUrl, {
 					method,
 					body: formData
 				});
 
+				const result = await readDiscordResponse(response);
+
 				if (!response.ok) {
-					const errorText = await response.text();
-					throw new Error(errorText);
+					const details = result && (result.message || result.raw) ? (result.message || result.raw) : ("HTTP " + response.status);
+					throw new Error(details);
 				}
 
-				const result = await response.json();
-
-				if (!updatingExistingMessage && result.id) {
+				/* Discord should return the message object because ?wait=true is forced.
+				   The ID is saved on first send and also refreshed on updates if Discord returns it. */
+				if (result && result.id) {
 					saveDiscordMessageID(result.id);
-					setDiscordWebhookStatus("Discord message sent. Message ID saved.", true);
-					if (!silent) alert("First Discord message sent and saved. Future updates will edit this same message.");
+				}
+
+				if (!updatingExistingMessage) {
+					if (result && result.id) {
+						setDiscordWebhookStatus("Discord message sent. Message ID saved: " + result.id, true);
+						if (!silent) alert("First Discord message sent and saved. Message ID: " + result.id);
+					} else {
+						setDiscordWebhookStatus("Discord message sent, but Discord did not return a Message ID. Check webhook permissions or remove ?wait=true from discord_config.js if you added it manually.", false);
+						if (!silent) alert("Discord sent the post, but no Message ID was returned. The tool needs that ID to update the same post later.");
+					}
 				} else {
-					setDiscordWebhookStatus("Discord message updated.", true);
+					setDiscordWebhookStatus("Discord message updated" + (eventMessageID ? " ID: " + eventMessageID : "") + ".", true);
 					if (!silent) alert("Discord message updated.");
 				}
 			} catch (error) {
