@@ -1958,14 +1958,7 @@
 								<button class="book-btn" onclick="copyTurnSummary()">Copy Turn Summary</button>
 								<button class="book-btn" onclick="shareToDiscord()">Send / Update Discord</button>
 							</div>
-
-							<div class="toolbar">
-								<label><strong>Discord Webhook</strong></label>
-								<input type="password" id="discordWebhookURL" placeholder="Paste webhook URL here" style="min-width:320px" onchange="saveDiscordWebhookFromInput()">
-								<button class="book-btn" onclick="saveDiscordWebhookFromInput()">Save Webhook</button>
-							</div>
-
-							<div class="toolbar">
+<div class="toolbar">
 								<label><strong>Discord Message ID</strong></label>
 								<input type="text" id="discordMessageID" placeholder="Saved after first send" style="min-width:260px">
 								<button class="book-btn" onclick="checkDiscordSetup()">Check Discord Link</button>
@@ -2027,7 +2020,10 @@
 		let selectedMapItemIndex = null;
 		let playerColors = {};
 
-		const DISCORD_WEBHOOK_STORAGE_KEY = "fallenGateDiscordWebhookURL";
+		/* Discord webhook is code-only now.
+		   Paste your webhook URL between the quotes below.
+		   Keep it as a normal Discord webhook URL, not a /messages/ URL. */
+		const DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1382809889684062298/We1eJedsfCJq11wfDdUU9zmzrQC5JbiUs6JqYgCQHmzBzguMMJE0TPyMCgCQ4VfO93Rt";
 		const DISCORD_MESSAGE_STORAGE_KEY = "fallenGateDiscordMessageID";
 		let eventMessageID = null;
 
@@ -2059,7 +2055,6 @@
 			refreshCharacterSheets();
 			setTimeout(refreshCharacterSheets, 300);
 			setTimeout(refreshCharacterSheets, 900);
-			loadSavedDiscordWebhookURL();
 			loadSavedDiscordMessageID();
 			checkDiscordSetup();
 			drawGrid();
@@ -3881,42 +3876,15 @@
 			return value === "" || value === null || value === undefined ? "-" : value;
 		}
 
-		function loadSavedDiscordWebhookURL() {
-			const input = document.getElementById("discordWebhookURL");
-			const savedURL = localStorage.getItem(DISCORD_WEBHOOK_STORAGE_KEY) || "";
-
-			if (input && savedURL) {
-				input.value = savedURL;
-			}
-		}
-
-		function saveDiscordWebhookFromInput() {
-			const input = document.getElementById("discordWebhookURL");
-			const url = input ? input.value.trim() : "";
-
-			if (!url) {
-				localStorage.removeItem(DISCORD_WEBHOOK_STORAGE_KEY);
-				setDiscordWebhookStatus("Discord webhook cleared. Paste a webhook URL to send to Discord.", false);
-				return false;
-			}
-
-			localStorage.setItem(DISCORD_WEBHOOK_STORAGE_KEY, url);
-			checkDiscordSetup();
-			return true;
-		}
-
 		function getDiscordWebhookURL() {
-			const input = document.getElementById("discordWebhookURL");
-			const typedURL = input && input.value ? input.value.trim() : "";
-			const savedURL = localStorage.getItem(DISCORD_WEBHOOK_STORAGE_KEY) || "";
-
-			return typedURL || savedURL;
+			return String(DISCORD_WEBHOOK_URL || "").trim();
 		}
 
 		function isDiscordWebhookConfigured() {
 			const url = getDiscordWebhookURL();
 
 			if (!url) return false;
+			if (url.includes("https://discord.com/api/webhooks/1382809889684062298/We1eJedsfCJq11wfDdUU9zmzrQC5JbiUs6JqYgCQHmzBzguMMJE0TPyMCgCQ4VfO93Rt")) return false;
 			if (url.includes("https://discord.com/api/webhooks/1382809889684062298/We1eJedsfCJq11wfDdUU9zmzrQC5JbiUs6JqYgCQHmzBzguMMJE0TPyMCgCQ4VfO93Rt")) return false;
 
 			return /^https:\/\/(discord\.com|discordapp\.com)\/api\/webhooks\/\d+\/[^\/\s]+/i.test(url);
@@ -3934,18 +3902,17 @@
 		function checkDiscordSetup() {
 			const url = getDiscordWebhookURL();
 
-			if (!url || url.includes("https://discord.com/api/webhooks/1382809889684062298/We1eJedsfCJq11wfDdUU9zmzrQC5JbiUs6JqYgCQHmzBzguMMJE0TPyMCgCQ4VfO93Rt")) {
-				setDiscordWebhookStatus("Discord webhook not set. Paste it into the Discord Webhook box, then click Save Webhook.", false);
+			if (!url || url.includes("https://discord.com/api/webhooks/1382809889684062298/We1eJedsfCJq11wfDdUU9zmzrQC5JbiUs6JqYgCQHmzBzguMMJE0TPyMCgCQ4VfO93Rt") || url.includes("https://discord.com/api/webhooks/1382809889684062298/We1eJedsfCJq11wfDdUU9zmzrQC5JbiUs6JqYgCQHmzBzguMMJE0TPyMCgCQ4VfO93Rt")) {
+				setDiscordWebhookStatus("Discord webhook not set in code. Paste it into DISCORD_WEBHOOK_URL inside index.html.", false);
 				return false;
 			}
 
 			if (!isDiscordWebhookConfigured()) {
-				setDiscordWebhookStatus("Discord webhook looks wrong. It should be a Discord webhook URL.", false);
+				setDiscordWebhookStatus("Discord webhook in code looks wrong. Use a normal Discord webhook URL.", false);
 				return false;
 			}
 
-			localStorage.setItem(DISCORD_WEBHOOK_STORAGE_KEY, url);
-			setDiscordWebhookStatus("Discord webhook is saved. Send / Update Discord is ready.", true);
+			setDiscordWebhookStatus("Discord webhook is set in code. Send / Update Discord is ready.", true);
 			return true;
 		}
 
@@ -4036,7 +4003,7 @@
 
 		async function shareToDiscord(silent = false, updateOnly = false) {
 			if (!checkDiscordSetup()) {
-				if (!silent) alert("Discord webhook is not ready. Paste the webhook URL into the Discord Webhook box, then click Save Webhook.");
+				if (!silent) alert("Discord webhook is not ready. Paste the webhook URL into DISCORD_WEBHOOK_URL inside index.html.");
 				return;
 			}
 
