@@ -489,8 +489,8 @@ a {
 <section class="book-page" id="discord_config_preserve_help">
   <h2 class="item-title">Discord Link Setup</h2>
   <div class="category">Discord Help</div>
-  <p>The Discord webhook now lives in <strong>discord_config.js</strong>. Paste the webhook URL in that file so future <strong>index.html</strong> updates do not wipe the Discord link.</p>
-  <p>If you do not see a new Discord post, check two things: first, the webhook must be pasted into <strong>discord_config.js</strong>; second, if a Discord Message ID is saved, <strong>Send / Update Discord</strong> edits that existing post instead of making a new one.</p>
+  <p>The Discord webhook now lives in <strong>the Discord Webhook box</strong>. Paste the webhook URL in that file so future <strong>index.html</strong> updates do not wipe the Discord link.</p>
+  <p>If you do not see a new Discord post, check two things: first, the webhook must be pasted into <strong>the Discord Webhook box</strong>; second, if a Discord Message ID is saved, <strong>Send / Update Discord</strong> edits that existing post instead of making a new one.</p>
   <p>To make a brand-new post, click <strong>Start New Discord Post</strong>, then click <strong>Send / Update Discord</strong>.</p>
 </section>
 
@@ -912,7 +912,7 @@ a {
       <tr><td class="button-name">Stats not loading</td><td>Make sure datafile.js is in the same folder as index.html. Choose a Type again or refresh the page.</td></tr>
       <tr><td class="button-name">Sheet code not working</td><td>Make sure character_sheets.js, character_sheets_manifest.js, and the sheet .js files are in the same folder as index.html.</td></tr>
       <tr><td class="button-name">New sheet not appearing</td><td>The sheet file must be listed inside character_sheets_manifest.js.</td></tr>
-      <tr><td class="button-name">Discord not sending</td><td>Check discord_config.js and make sure the webhook URL is set.</td></tr>
+      <tr><td class="button-name">Discord not sending</td><td>Check the Discord Webhook box and make sure the webhook URL is set.</td></tr>
       <tr><td class="button-name">Map not saving</td><td>Use Save Map to This Browser for browser storage, or Download Map File for a portable file.</td></tr>
       <tr><td class="button-name">Turn order missing a row</td><td>The row needs a Type and an Init value to join active turn order.</td></tr>
       <tr><td class="button-name">Row says Wait</td><td>The row is missing Type or Init.</td></tr>
@@ -943,7 +943,7 @@ a {
 <section class="book-page" id="discord_generator_check_fix_help">
   <h2 class="item-title">Discord Generator / Sender Check</h2>
   <div class="category">Discord Help</div>
-  <p>The Discord sender needs <strong>discord_config.js</strong> to contain a real Discord webhook URL.</p>
+  <p>The Discord sender needs <strong>the Discord Webhook box</strong> to contain a real Discord webhook URL.</p>
   <ul>
     <li><strong>Check Discord Link</strong> now checks whether the webhook exists and looks like a Discord webhook.</li>
     <li><strong>Send / Update Discord</strong> sends the encounter summary and map image.</li>
@@ -964,7 +964,22 @@ a {
     <li><strong>Create Discord ID</strong> clears the old ID and sends a fresh post so a new ID can be created.</li>
     <li><strong>Start New Discord Post</strong> only clears the saved ID. Use Send / Update Discord or Create Discord ID after that to create a new post.</li>
   </ul>
-  <p>If Discord sends a post but returns no ID, check that the webhook URL in <strong>discord_config.js</strong> is the normal Discord webhook URL and does not include extra message paths.</p>
+  <p>If Discord sends a post but returns no ID, check that the webhook URL in <strong>the Discord Webhook box</strong> is the normal Discord webhook URL and does not include extra message paths.</p>
+</section>
+
+
+<section class="book-page" id="no_discord_config_help">
+  <h2 class="item-title">Discord Without discord_config.js</h2>
+  <div class="category">Discord Help</div>
+  <p>The DM Tool no longer needs <strong>discord_config.js</strong>.</p>
+  <ul>
+    <li>Paste the Discord webhook URL into the <strong>Discord Webhook</strong> box.</li>
+    <li>Click <strong>Save Webhook</strong>.</li>
+    <li>Click <strong>Check Discord Link</strong> to confirm it is saved.</li>
+    <li>Click <strong>Create Discord ID</strong> or <strong>Send / Update Discord</strong> to send the first Discord post.</li>
+    <li>After the first send, the <strong>Discord Message ID</strong> box should fill automatically.</li>
+  </ul>
+  <p>The webhook is saved in this browser's local storage. If you use a different browser or computer, paste and save the webhook again.</p>
 </section>
 
 </main>
