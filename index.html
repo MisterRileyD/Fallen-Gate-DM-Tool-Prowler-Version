@@ -4594,6 +4594,48 @@
 		}
 
 
+		function buildDiscordFooterText(messageID = "") {
+			const baseText = "map grid cells are 5ft x 5ft | Updates edit the first DM Tool message";
+			const cleanID = String(messageID || "").trim();
+
+			return cleanID
+				? baseText + " | Message ID: " + cleanID
+				: baseText + " | Message ID: creating…";
+		}
+
+		async function addDiscordMessageIDToFirstPost(messageID, payload, mapBlob) {
+			const cleanID = String(messageID || "").trim();
+			if (!cleanID) return false;
+
+			const footerPayload = JSON.parse(JSON.stringify(payload));
+			if (!footerPayload.embeds || !footerPayload.embeds[0]) return false;
+
+			footerPayload.embeds[0].footer = {
+				text: buildDiscordFooterText(cleanID)
+			};
+
+			const footerFormData = new FormData();
+			footerFormData.append("payload_json", JSON.stringify(footerPayload));
+			footerFormData.append("files[0]", mapBlob, "map.png");
+
+			const footerResponse = await fetch(getDiscordWebhookSendURL(cleanID), {
+				method: "PATCH",
+				body: footerFormData
+			});
+
+			if (!footerResponse.ok) {
+				const footerResult = await readDiscordResponse(footerResponse);
+				const details = footerResult && (footerResult.message || footerResult.raw)
+					? (footerResult.message || footerResult.raw)
+					: ("HTTP " + footerResponse.status);
+				console.warn("Discord post was created, but its Message ID footer could not be added:", details);
+				return false;
+			}
+
+			return true;
+		}
+
+
 		async function shareToDiscord(silent = false, updateOnly = false) {
 			if (!checkDiscordSetup()) {
 				if (!silent) alert("Discord webhook is not ready. Edit the ONE webhook setting near the top of index.html.");
@@ -4634,7 +4676,7 @@
 					description: limitDiscordText(buildSummaryText() + "\n\n**Map:**"),
 					color: 0xff0000,
 					image: { url: "attachment://map.png" },
-					footer: { text: "map grid cells are 5ft x 5ft | Updates edit the first DM Tool message" }
+					footer: { text: buildDiscordFooterText(eventMessageID) }
 				};
 
 				const payload = {
@@ -4666,21 +4708,31 @@
 
 				/* Discord should return the message object because ?wait=true is forced.
 				   The ID is saved on first send and also refreshed on updates if Discord returns it. */
+				let messageIDFooterAdded = updatingExistingMessage;
+
 				if (result && result.id) {
 					saveDiscordMessageID(result.id, eventName);
+
+					if (!updatingExistingMessage) {
+						messageIDFooterAdded = await addDiscordMessageIDToFirstPost(result.id, payload, blob);
+					}
 				}
 
 				if (!updatingExistingMessage) {
 					if (result && result.id) {
-						setDiscordWebhookStatus("Discord message sent for event “" + eventName + "”. Message ID saved: " + result.id, true);
-						if (!silent) alert("New Discord post created for “" + eventName + "”. Message ID: " + result.id);
+						const footerStatus = messageIDFooterAdded
+							? " The Message ID was added to the bottom of the Discord post."
+							: " The Message ID was saved, but the footer update could not be completed.";
+
+						setDiscordWebhookStatus("Discord message sent for event “" + eventName + "”. Message ID saved: " + result.id + "." + footerStatus, messageIDFooterAdded);
+						if (!silent) alert("New Discord post created for “" + eventName + "”. Message ID: " + result.id + "." + footerStatus);
 					} else {
 						setDiscordWebhookStatus("Discord message sent, but Discord did not return a Message ID. Check webhook permissions or remove ?wait=true from discord_config.js if you added it manually.", false);
 						if (!silent) alert("Discord sent the post, but no Message ID was returned. The tool needs that ID to update the same post later.");
 					}
 				} else {
-					setDiscordWebhookStatus("Discord message updated for event “" + eventName + "”" + (eventMessageID ? " ID: " + eventMessageID : "") + ".", true);
-					if (!silent) alert("Discord message updated for “" + eventName + "”.");
+					setDiscordWebhookStatus("Discord message updated for event “" + eventName + "”" + (eventMessageID ? " ID: " + eventMessageID : "") + ". The Message ID is shown at the bottom of the post.", true);
+					if (!silent) alert("Discord message updated for “" + eventName + "”. Message ID shown in the footer: " + eventMessageID);
 				}
 			} catch (error) {
 				console.error(error);
