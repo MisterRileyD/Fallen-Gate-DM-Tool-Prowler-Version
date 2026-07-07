@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Turns Summary</title>
+  <style>
+:root {
+  --page-bg: #f4e6c5;
+  --page-line: #e7d4aa;
+  --ink: #24170e;
+  --purple: #4d245d;
+  --gold: #c99739;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  color: var(--ink);
+  font-family: Georgia, "Times New Roman", serif;
+  background:
+    linear-gradient(90deg, rgba(0,0,0,0.10), transparent 7%, transparent 93%, rgba(0,0,0,0.10)),
+    repeating-linear-gradient(0deg, var(--page-bg) 0 26px, var(--page-line) 27px 28px);
+  overflow: hidden;
+}
+
+.turn-book {
+  height: 100%;
+  padding: 8px;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: 8px;
+}
+
+h1 {
+  margin: 0;
+  color: var(--purple);
+  font-size: clamp(22px, 3.6vw, 32px);
+  border-bottom: 2px solid rgba(97,60,23,0.34);
+  padding-bottom: 5px;
+}
+
+/* Hide duplicate inner title because the side book already has the same title. */
+.turn-book > h1 {
+  display: none;
+}
+
+.toolbar {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 8px;
+  border: 1px solid rgba(90,61,20,0.26);
+  border-radius: 12px;
+  background: rgba(255,255,255,0.24);
+}
+
+.book-btn {
+  padding: 7px 10px;
+  border: 1px solid #6b3a13;
+  border-radius: 9px;
+  background: linear-gradient(#fff1c5, #d7b36a);
+  color: #291609;
+  font-weight: 900;
+  cursor: pointer;
+  box-shadow: 0 1px 0 rgba(255,255,255,0.35) inset;
+}
+
+.book-btn.dark {
+  background: linear-gradient(#734589, #3a1a49);
+  color: #ffe8a2;
+  border-color: #d1a650;
+}
+
+.book-btn.danger {
+  background: linear-gradient(#c84b3f, #8e2119);
+  color: #fff4cf;
+  border-color: #7a1c14;
+}
+
+.small {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 12px;
+  color: #5a3a1a;
+}
+
+.summary-area {
+  min-height: 0;
+  overflow-y: auto;
+  border: 1px solid rgba(90,61,20,0.33);
+  border-radius: 14px;
+  background:
+    linear-gradient(90deg, rgba(0,0,0,0.07), transparent 7%, transparent 93%, rgba(0,0,0,0.07)),
+    repeating-linear-gradient(0deg, rgba(244,230,197,0.96) 0 26px, rgba(231,212,170,0.96) 27px 28px);
+  box-shadow: inset 0 0 24px rgba(82,45,12,0.12);
+  padding: 12px;
+}
+
+.entry {
+  border: 1px solid rgba(90,61,20,0.32);
+  border-radius: 12px;
+  padding: 10px;
+  margin-bottom: 10px;
+  background: rgba(255,255,255,0.25);
+}
+
+.entry h2 {
+  margin: 0 0 5px;
+  color: var(--purple);
+  font-size: 18px;
+}
+
+.meta {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 12px;
+  color: #5a3a1a;
+  margin-bottom: 7px;
+}
+
+.note {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 13px;
+  margin: 6px 0;
+  font-weight: 700;
+}
+
+.changes-list {
+  margin: 6px 0;
+  border: 1px solid rgba(90,61,20,0.22);
+  border-radius: 10px;
+  background: rgba(255, 247, 217, 0.46);
+  padding: 7px;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 12px;
+}
+
+.changes-list h3 {
+  margin: 0 0 4px;
+  color: #4d245d;
+  font-size: 13px;
+}
+
+.columns {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: 8px;
+}
+
+.box {
+  border: 1px solid rgba(90,61,20,0.22);
+  border-radius: 10px;
+  background: rgba(255,252,236,0.40);
+  padding: 7px;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 12px;
+}
+
+.box h3 {
+  margin: 0 0 5px;
+  color: #4d245d;
+  font-size: 13px;
+}
+
+ul {
+  margin: 0;
+  padding-left: 17px;
+}
+
+li {
+  margin: 2px 0;
+}
+
+.empty {
+  padding: 14px;
+  border: 1px dashed rgba(90,61,20,0.35);
+  border-radius: 12px;
+  background: rgba(255,255,255,0.24);
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 14px;
+}
+
+@media (max-width: 680px) {
+  .columns {
+    grid-template-columns: 1fr;
+  }
+}
+  </style>
+</head>
+<body>
+  <div class="turn-book">
+    <h1>Turns Summary</h1>
+
+    <div class="toolbar">
+      <button class="book-btn" onclick="requestRefresh()">Refresh</button>
+      <button class="book-btn dark" onclick="copyLog()">Copy Full Log</button>
+      <button id="eventNamePositionButton" class="book-btn" onclick="toggleEventNamePosition()">Event Name Before Number</button>
+      <button class="book-btn danger" onclick="clearLog()">Clear Log</button>
+      <span id="status" class="small">Waiting for turn records...</span>
+    </div>
+
+    <div id="summaryArea" class="summary-area">
+      <div class="empty">No turns have been recorded yet. Enter an Init Roll or click Next Turn in Encounter Data.</div>
+    </div>
+  </div>
+
+  <script>
+let historyEntries = [];
+let eventName = "Fallen Gate Encounter";
+let currentTurn = "No active turn";
+const TURN_SUMMARY_EVENT_NAME_POSITION_KEY = "fallenGateTurnSummaryEventNamePosition";
+let eventNamePosition = localStorage.getItem(TURN_SUMMARY_EVENT_NAME_POSITION_KEY) === "after" ? "after" : "before";
+
+function escapeHtml(value) {
+  return String(value ?? "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
+function displayTurnTitle(title) {
+  return String(title || "Turn Update")
+    .replace(/^Next Turn:/, "Current Turn:")
+    .replace(/^Turn Continued:/, "Current Turn:");
+}
+
+
+function entryEventName(entry) {
+  return String((entry && entry.eventName) || eventName || "Fallen Gate Encounter");
+}
+
+function formatEntryHeading(entry) {
+  const eventLabel = entryEventName(entry);
+  const turnLabel = "#" + String(entry.number) + " — " + displayTurnTitle(entry.title);
+
+  return eventNamePosition === "after"
+    ? turnLabel + " — " + eventLabel
+    : eventLabel + " — " + turnLabel;
+}
+
+function updateEventNamePositionButton() {
+  const button = document.getElementById("eventNamePositionButton");
+  if (!button) return;
+
+  button.textContent = eventNamePosition === "after"
+    ? "Event Name After Description"
+    : "Event Name Before Number";
+
+  button.title = eventNamePosition === "after"
+    ? "Click to move the event name before the turn number."
+    : "Click to move the event name after the turn description.";
+}
+
+function toggleEventNamePosition() {
+  eventNamePosition = eventNamePosition === "after" ? "before" : "after";
+  localStorage.setItem(TURN_SUMMARY_EVENT_NAME_POSITION_KEY, eventNamePosition);
+  updateEventNamePositionButton();
+  render();
+
+  window.parent.postMessage({
+    type: "turnSummaryEventNamePositionChanged",
+    position: eventNamePosition
+  }, "*");
+}
+
+function normalizeHistoryTitles(entries) {
+  return (entries || []).map(function (entry) {
+    if (entry && entry.title) {
+      entry.title = displayTurnTitle(entry.title);
+    }
+    return entry;
+  });
+}
+
+function render() {
+  const area = document.getElementById("summaryArea");
+  const status = document.getElementById("status");
+
+  if (!historyEntries.length) {
+    area.innerHTML = '<div class="empty">No turns have been recorded yet. Enter an Init Roll or click Next Turn in Encounter Data.</div>';
+    status.textContent = "No turn records yet.";
+    return;
+  }
+
+  status.textContent = historyEntries.length + " turn record(s). Current Turn: " + currentTurn;
+
+  area.innerHTML = historyEntries.slice().reverse().map(function (entry) {
+    const order = (entry.turnOrder || []).map(function (row) {
+      return "<li>" + escapeHtml(row.position + ". " + row.name + " | Init " + row.init + " | " + row.status) + "</li>";
+    }).join("");
+
+    const people = (entry.participants || []).map(function (p) {
+      return "<li><strong>" + escapeHtml(p.name) + "</strong>: " + escapeHtml(p.status) +
+        " | B " + escapeHtml(p.body) +
+        " | M " + escapeHtml(p.mind) +
+        " | S " + escapeHtml(p.spirit) +
+        " | AC " + escapeHtml(p.ac) +
+        " | Bon " + escapeHtml(p.bonus) +
+        " | Init " + escapeHtml(p.init) +
+        (p.effects ? " | " + escapeHtml(p.effects) : "") + "</li>";
+    }).join("");
+
+    const changes = Array.isArray(entry.statChanges) && entry.statChanges.length
+      ? entry.statChanges.map(function (change) {
+          return "<li><strong>" + escapeHtml(change.name) + "</strong>: " + escapeHtml((change.changes || []).join("; ")) + "</li>";
+        }).join("")
+      : "<li>No Body, Mind, or Spirit changes from the previous record.</li>";
+
+    return `
+      <article class="entry">
+        <h2>${escapeHtml(formatEntryHeading(entry))}</h2>
+        <div class="meta">${escapeHtml(entry.time)} | Current Turn: ${escapeHtml(entry.currentTurn || currentTurn)}</div>
+        ${entry.note ? `<div class="note"><strong>Spell / Weapon / Note:</strong> ${escapeHtml(entry.note)}</div>` : ""}
+        <div class="changes-list">
+          <h3>Stat Changes Since Previous Record</h3>
+          <ul>${changes}</ul>
+        </div>
+        <div class="columns">
+          <div class="box">
+            <h3>Turn Order</h3>
+            <ul>${order || "<li>No active turn order.</li>"}</ul>
+          </div>
+          <div class="box">
+            <h3>Participants Snapshot</h3>
+            <ul>${people || "<li>No participants.</li>"}</ul>
+          </div>
+        </div>
+      </article>
+    `;
+  }).join("");
+}
+
+function buildTextLog() {
+  if (!historyEntries.length) return "No turns have been recorded yet.";
+
+  const lines = ["Turns Summary", "Event: " + eventName, "Current Turn: " + currentTurn];
+
+  historyEntries.forEach(function (entry) {
+    lines.push("");
+    lines.push(formatEntryHeading(entry));
+    lines.push("Time: " + entry.time);
+    lines.push("Current Turn: " + entry.currentTurn);
+    if (entry.note) lines.push("Spell / Weapon / Note: " + entry.note);
+
+    if (entry.statChanges && entry.statChanges.length) {
+      lines.push("Stat Changes:");
+      entry.statChanges.forEach(function (change) {
+        lines.push("- " + change.name + ": " + (change.changes || []).join("; "));
+      });
+    } else {
+      lines.push("Stat Changes: No Body, Mind, or Spirit changes from the previous record.");
+    }
+
+    lines.push("Turn Order:");
+    (entry.turnOrder || []).forEach(function (row) {
+      lines.push(row.position + ". " + row.name + " | Init " + row.init + " | " + row.status);
+    });
+
+    lines.push("Participants:");
+    (entry.participants || []).forEach(function (p) {
+      lines.push("- " + p.name + ": " + p.status + " | B " + p.body + " | M " + p.mind + " | S " + p.spirit + " | AC " + p.ac + " | Bon " + p.bonus + " | Init " + p.init + (p.effects ? " | " + p.effects : ""));
+    });
+  });
+
+  return lines.join("\n");
+}
+
+function copyLog() {
+  const text = buildTextLog();
+
+  navigator.clipboard.writeText(text).then(function () {
+    document.getElementById("status").textContent = "Turns Summary copied.";
+  }).catch(function () {
+    window.parent.postMessage({ type: "copyTurnSummaryLog" }, "*");
+  });
+}
+
+function clearLog() {
+  window.parent.postMessage({ type: "clearTurnSummary" }, "*");
+}
+
+function requestRefresh() {
+  window.parent.postMessage({ type: "refreshTurnSummary" }, "*");
+}
+
+window.addEventListener("message", function (event) {
+  if (!event.data || event.data.type !== "turnSummaryData") return;
+
+  historyEntries = normalizeHistoryTitles(Array.isArray(event.data.history) ? event.data.history : []);
+  eventName = event.data.eventName || "Fallen Gate Encounter";
+  currentTurn = event.data.currentTurn || "No active turn";
+  eventNamePosition = event.data.eventNamePosition === "after" ? "after" : "before";
+  localStorage.setItem(TURN_SUMMARY_EVENT_NAME_POSITION_KEY, eventNamePosition);
+  updateEventNamePositionButton();
+  render();
+});
+
+window.addEventListener("DOMContentLoaded", function () {
+  updateEventNamePositionButton();
+  requestRefresh();
+  render();
+});
+  </script>
+</body>
+</html>

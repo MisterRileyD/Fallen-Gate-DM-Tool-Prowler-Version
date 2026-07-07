@@ -259,6 +259,7 @@ a {
     <button class="index-card" onclick="goToPage('open_tome')"><strong>Open Tome</strong>Click the book cover to begin</button>
     <button class="index-card" onclick="goToPage('add_roster')"><strong>Add Roster</strong>Add players, enemies, ranks, and monsters</button>
     <button class="index-card" onclick="goToPage('turn_order')"><strong>Turn Order</strong>Initiative and Next Turn</button>
+    <button class="index-card" onclick="goToPage('turns_summary_help')"><strong>Turns Summary</strong>Automatic record of turn history</button>
     <button class="index-card" onclick="goToPage('guide_books')"><strong>Guide Books</strong>Monster, spell, skill, and sheet tabs</button>
     <button class="index-card" onclick="goToPage('character_sheet_features')"><strong>Character Sheets</strong>New sheet form, edit old sheet, and copy code</button>
     <button class="index-card" onclick="goToPage('character_sheet_steps')"><strong>Making Sheets</strong>Step-by-step sheet workflow</button>
@@ -489,8 +490,8 @@ a {
 <section class="book-page" id="discord_config_preserve_help">
   <h2 class="item-title">Discord Link Setup</h2>
   <div class="category">Discord Help</div>
-  <p>The Discord webhook now lives in <strong>DISCORD_WEBHOOK_URL inside index.html</strong>. Paste the webhook URL in that file so future <strong>index.html</strong> updates do not wipe the Discord link.</p>
-  <p>If you do not see a new Discord post, check two things: first, the webhook must be pasted into <strong>DISCORD_WEBHOOK_URL inside index.html</strong>; second, if a Discord Message ID is saved, <strong>Send / Update Discord</strong> edits that existing post instead of making a new one.</p>
+  <p>The Discord webhook now lives in <strong>the ONE webhook setting near the top of index.html</strong>. Paste the webhook URL in that file so future <strong>index.html</strong> updates do not wipe the Discord link.</p>
+  <p>If you do not see a new Discord post, check two things: first, the webhook must be pasted into <strong>the ONE webhook setting near the top of index.html</strong>; second, if a Discord Message ID is saved, <strong>Send / Update Discord</strong> edits that existing post instead of making a new one.</p>
   <p>To make a brand-new post, click <strong>Start New Discord Post</strong>, then click <strong>Send / Update Discord</strong>.</p>
 </section>
 
@@ -912,7 +913,7 @@ a {
       <tr><td class="button-name">Stats not loading</td><td>Make sure datafile.js is in the same folder as index.html. Choose a Type again or refresh the page.</td></tr>
       <tr><td class="button-name">Sheet code not working</td><td>Make sure character_sheets.js, character_sheets_manifest.js, and the sheet .js files are in the same folder as index.html.</td></tr>
       <tr><td class="button-name">New sheet not appearing</td><td>The sheet file must be listed inside character_sheets_manifest.js.</td></tr>
-      <tr><td class="button-name">Discord not sending</td><td>Check DISCORD_WEBHOOK_URL inside index.html and make sure the webhook URL is set.</td></tr>
+      <tr><td class="button-name">Discord not sending</td><td>Check the ONE webhook setting near the top of index.html and make sure the webhook URL is set.</td></tr>
       <tr><td class="button-name">Map not saving</td><td>Use Save Map to This Browser for browser storage, or Download Map File for a portable file.</td></tr>
       <tr><td class="button-name">Turn order missing a row</td><td>The row needs a Type and an Init value to join active turn order.</td></tr>
       <tr><td class="button-name">Row says Wait</td><td>The row is missing Type or Init.</td></tr>
@@ -943,7 +944,7 @@ a {
 <section class="book-page" id="discord_generator_check_fix_help">
   <h2 class="item-title">Discord Generator / Sender Check</h2>
   <div class="category">Discord Help</div>
-  <p>The Discord sender needs <strong>DISCORD_WEBHOOK_URL inside index.html</strong> to contain a real Discord webhook URL.</p>
+  <p>The Discord sender needs <strong>the ONE webhook setting near the top of index.html</strong> to contain a real Discord webhook URL.</p>
   <ul>
     <li><strong>Check Discord Link</strong> now checks whether the webhook exists and looks like a Discord webhook.</li>
     <li><strong>Send / Update Discord</strong> sends the encounter summary and map image.</li>
@@ -964,7 +965,7 @@ a {
     <li><strong>Create Discord ID</strong> clears the old ID and sends a fresh post so a new ID can be created.</li>
     <li><strong>Start New Discord Post</strong> only clears the saved ID. Use Send / Update Discord or Create Discord ID after that to create a new post.</li>
   </ul>
-  <p>If Discord sends a post but returns no ID, check that the webhook URL in <strong>DISCORD_WEBHOOK_URL inside index.html</strong> is the normal Discord webhook URL and does not include extra message paths.</p>
+  <p>If Discord sends a post but returns no ID, check that the webhook URL in <strong>the ONE webhook setting near the top of index.html</strong> is the normal Discord webhook URL and does not include extra message paths.</p>
 </section>
 
 
@@ -982,6 +983,200 @@ a {
     <li>Click <strong>Check Discord Link</strong>.</li>
   </ol>
   <p>The webhook is hidden from the DM Tool interface, but it is still inside the page code. Do not share the site files publicly if the real webhook is pasted inside.</p>
+</section>
+
+
+<section class="book-page" id="single_webhook_location_help">
+  <h2 class="item-title">One Discord Webhook Location</h2>
+  <div class="category">Discord Help</div>
+  <p>The Discord webhook now has only one edit location.</p>
+  <ol>
+    <li>Open <strong>index.html</strong>.</li>
+    <li>Near the top of the file, find the block named <strong>DISCORD WEBHOOK SETTING — ONLY EDIT THIS ONE LOCATION</strong>.</li>
+    <li>Replace <strong>the blank quotes</strong> with your normal Discord webhook URL.</li>
+    <li>Save <strong>index.html</strong> and reload the tool.</li>
+    <li>Click <strong>Check Discord Link</strong>.</li>
+  </ol>
+  <p>Do not paste a Discord message URL or a <strong>/messages/</strong> URL. Use the normal webhook URL only.</p>
+</section>
+
+
+<section class="book-page" id="one_webhook_blank_location_help">
+  <h2 class="item-title">One Webhook Location / No Placeholder Text</h2>
+  <div class="category">Discord Help</div>
+  <p>The webhook setting now has one clean location and no repeated placeholder text.</p>
+  <ol>
+    <li>Open <strong>index.html</strong>.</li>
+    <li>Near the top, find <strong>DISCORD WEBHOOK SETTING — ONLY EDIT THIS ONE LOCATION</strong>.</li>
+    <li>Paste the webhook between the blank quotes after <strong>window.FALLEN_GATE_DISCORD_WEBHOOK_URL =</strong>.</li>
+    <li>Save <strong>index.html</strong> and reload the tool.</li>
+    <li>Click <strong>Check Discord Link</strong>.</li>
+  </ol>
+  <p>The checker no longer searches for placeholder words. It only checks whether the setting is blank and whether the URL looks like a normal Discord webhook.</p>
+</section>
+
+
+<section class="book-page" id="turns_summary_help">
+  <h2 class="item-title">Turns Summary Book</h2>
+  <div class="category">Turn Records</div>
+  <p><strong>Turns Summary</strong> is the third left-side book tab.</p>
+  <ul>
+    <li>It records when an Init Roll is first entered for a player or enemy.</li>
+    <li>It records each time <strong>Next Turn</strong> is clicked.</li>
+    <li>It records when <strong>Sort by Init</strong> is clicked.</li>
+    <li>Each record saves the current turn, turn order, participant stats, status, and effects at that moment.</li>
+    <li><strong>Refresh</strong> reloads the latest records from the Encounter Data book.</li>
+    <li><strong>Copy Full Log</strong> copies the whole turn record.</li>
+    <li><strong>Clear Log</strong> clears the stored turn record.</li>
+  </ul>
+  <p>The log is saved in this browser, so it can survive a page refresh on the same computer/browser.</p>
+</section>
+
+
+<section class="book-page" id="turn_summary_stat_damage_help">
+  <h2 class="item-title">Turns Summary Stat Changes and Damage Notes</h2>
+  <div class="category">Turn Records</div>
+  <p>The Encounter Data page now has an optional <strong>Spell / Weapon Damage</strong> box.</p>
+  <ul>
+    <li>Type a spell, weapon, damage amount, or quick note before clicking <strong>Next Turn</strong>, <strong>Sort by Init</strong>, or entering a first Init Roll.</li>
+    <li>The note is saved into the next Turns Summary record and then cleared.</li>
+    <li>Click <strong>Record Note</strong> to save the note without advancing the turn.</li>
+    <li>Turns Summary now compares Body, Mind, and Spirit against the previous record.</li>
+    <li>Each record shows how much changed, such as <strong>Body 10 → 7 (-3)</strong>.</li>
+  </ul>
+</section>
+
+
+<section class="book-page" id="turn_summary_current_turn_label_help">
+  <h2 class="item-title">Turns Summary Current Turn Label</h2>
+  <div class="category">Turn Records</div>
+  <p>Turn records now title the active turn as <strong>Current Turn</strong> instead of <strong>Next Turn</strong>.</p>
+  <p>Example: <strong>#6 — Current Turn: MisterRileyD</strong>.</p>
+</section>
+
+
+<section class="book-page" id="turns_summary_cleanup_help">
+  <h2 class="item-title">Turns Summary Cleanup</h2>
+  <div class="category">Turn Records</div>
+  <p>The Turns Summary side book now shows only one main title.</p>
+  <p>Old saved records that were titled <strong>Next Turn</strong> or <strong>Turn Continued</strong> now display as <strong>Current Turn</strong>.</p>
+</section>
+
+
+<section class="book-page" id="temporary_monsters_help">
+  <h2 class="item-title">Temporary Monster Form and Page</h2>
+  <div class="category">Monster Guide</div>
+  <p>The Monster Guide now includes <strong>Temporary Monster Form</strong> and <strong>Temporary Monsters</strong>.</p>
+  <ul>
+    <li>The form includes Name, Body, Mind, Spirit, AC, and Combat Bonus.</li>
+    <li>Optional fields include Image, Category, Class, Movement, Size, and Full Monster Notes.</li>
+    <li>The Loot / Treasure section lets users add multiple loot items with a starting and ending roll range.</li>
+    <li><strong>Roll Treasure</strong> rolls from 1 through the highest ending range and shows the matching loot.</li>
+    <li><strong>Add Monster to Roster</strong> sends the temporary monster and its stats into Encounter Data.</li>
+    <li>Temporary monsters are saved in the current browser and can be edited or deleted.</li>
+  </ul>
+</section>
+
+
+<section class="book-page" id="temporary_monster_d20_loot_help">
+  <h2 class="item-title">Temporary Monster D20 Loot Rules</h2>
+  <div class="category">Monster Guide</div>
+  <ul>
+    <li>Temporary monster treasure always rolls a <strong>D20 from 1 to 20</strong>.</li>
+    <li>Unless <strong>No Loot for this Monster</strong> is checked, the loot ranges must cover every number from 1 through 20.</li>
+    <li>The form will show which D20 numbers are missing and will not save until the table is complete.</li>
+    <li>Checking <strong>No Loot for this Monster</strong> bypasses the loot function and allows the monster to save without a loot table.</li>
+    <li>Start and End range fields only accept values from 1 through 20.</li>
+  </ul>
+</section>
+
+
+<section class="book-page" id="temporary_monster_toolbar_help">
+  <h2 class="item-title">Create Temporary Monster Button</h2>
+  <div class="category">Monster Guide</div>
+  <p><strong>Create Temporary Monster</strong> is now in the top Monster Guide toolbar beside the <strong>Next</strong> button.</p>
+  <p>The Temporary Monster Form card was removed from the Monster Index. The <strong>Temporary Monsters</strong> index card remains for viewing saved temporary monsters.</p>
+</section>
+
+
+<section class="book-page" id="temporary_loot_integration_overlap_help">
+  <h2 class="item-title">Temporary Monster Loot Integration</h2>
+  <div class="category">Loot / Treasure</div>
+  <ul>
+    <li>Defeated temporary monsters now count when <strong>Show / Divide Loot</strong> is used.</li>
+    <li>The temporary monster must have entered combat with an Init Roll and must be Down.</li>
+    <li>If the monster is marked <strong>No Loot</strong>, the loot function explains that loot is bypassed.</li>
+    <li>Every D20 number from 1 through 20 must appear exactly once in the temporary monster loot table.</li>
+    <li>No D20 number may be used by two different loot ranges.</li>
+    <li>The form reports both missing and overlapping numbers before saving.</li>
+  </ul>
+</section>
+
+
+<section class="book-page" id="repeat_token_movement_help">
+  <h2 class="item-title">Move Tokens Repeatedly</h2>
+  <div class="category">Battle Map</div>
+  <ul>
+    <li>Select <strong>Move Tokens</strong>.</li>
+    <li>Click or touch the token circle or the token's visible name.</li>
+    <li>Drag it to the new location and release it.</li>
+    <li>The token can be selected and moved again as many times as needed.</li>
+    <li>Mouse, touch, and pen now use the same movement system.</li>
+  </ul>
+  <p>The map now keeps pointer capture during dragging and correctly converts displayed map coordinates to canvas coordinates.</p>
+</section>
+
+
+<section class="book-page" id="temporary_loot_end_higher_help">
+  <h2 class="item-title">Temporary Loot Ending Range Rule</h2>
+  <div class="category">Loot / Treasure</div>
+  <ul>
+    <li>The ending roll must always be higher than the starting roll.</li>
+    <li>Valid example: <strong>1–3</strong>.</li>
+    <li>Invalid examples: <strong>3–3</strong> and <strong>5–2</strong>.</li>
+    <li>The starting number is limited to 1–19, and the ending number is limited to 2–20.</li>
+    <li>An invalid row is outlined and the monster cannot be saved until it is corrected.</li>
+  </ul>
+</section>
+
+
+<section class="book-page" id="temporary_form_add_roster_help">
+  <h2 class="item-title">Add Temporary Monster to Roster</h2>
+  <div class="category">Temporary Monster Form</div>
+  <p>The bottom of the Temporary Monster Form now includes <strong>Add Temporary Monster to Roster</strong>.</p>
+  <ul>
+    <li>The button validates the form and D20 loot rules.</li>
+    <li>It saves the temporary monster in the browser.</li>
+    <li>It immediately adds that monster and its stats to Encounter Data.</li>
+    <li>If the form is incomplete or the loot ranges are invalid, the monster is not added until the errors are corrected.</li>
+  </ul>
+</section>
+
+
+<section class="book-page" id="discord_id_per_event_help">
+  <h2 class="item-title">Discord Message ID Per Event Name</h2>
+  <div class="category">Discord</div>
+  <ul>
+    <li>Each different Event Name now keeps its own Discord Message ID.</li>
+    <li>When a new Event Name is entered, the Message ID box clears.</li>
+    <li>The first Discord send for that new event creates a new Discord post and saves its returned Message ID.</li>
+    <li>Returning to an event name used before reloads that event's saved Message ID.</li>
+    <li><strong>Start New Discord Post</strong> clears only the ID for the current event.</li>
+    <li><strong>Create Discord ID</strong> creates a new Discord post and ID only for the current event.</li>
+  </ul>
+  <p>Event names ignore capitalization and extra spaces when matching saved IDs.</p>
+</section>
+
+
+<section class="book-page" id="turn_summary_event_name_position_help">
+  <h2 class="item-title">Event Name in Turns Summary</h2>
+  <div class="category">Turns Summary</div>
+  <p>Each turn heading now includes the Event Name together with the record number and turn description.</p>
+  <p><strong>Event Name Before Number</strong> displays:</p>
+  <p><code>Forest Ambush — #5 — Current Turn: MisterRileyD</code></p>
+  <p><strong>Event Name After Description</strong> displays:</p>
+  <p><code>#5 — Current Turn: MisterRileyD — Forest Ambush</code></p>
+  <p>Use the switch button in the Turns Summary toolbar to change positions. The chosen position is saved in the browser and is also used by Copy Full Log.</p>
 </section>
 
 </main>

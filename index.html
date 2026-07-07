@@ -22,7 +22,7 @@
 
 		   Do NOT paste a Discord message URL or a /messages/ URL.
 		   ============================================================ */
-		window.FALLEN_GATE_DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1382809889684062298/We1eJedsfCJq11wfDdUU9zmzrQC5JbiUs6JqYgCQHmzBzguMMJE0TPyMCgCQ4VfO93Rt";
+		window.FALLEN_GATE_DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1524086033958830111/j45VgQrSGIHaHswsho422ATDAfSGEp4qQhe1Scz6XVM1QVVbv_hKZe4hJk0UC1xRv2ox";
 	</script>
 
 <style>
@@ -521,6 +521,9 @@
 			border-radius: 10px;
 			display: block;
 			cursor: grab;
+			touch-action: none;
+			user-select: none;
+			-webkit-user-select: none;
 		}
 
 		#mapCanvas:active {
@@ -1808,6 +1811,10 @@
 		}
 
 
+
+		.turn-note-toolbar input {
+			flex: 1 1 260px;
+		}
 </style>
 </head>
 
@@ -1834,13 +1841,14 @@
 			<h1>Fallen Gate DM Tool</h1>
 			<div class="event-row">
 				<label for="eventName"><strong>Event Name:</strong></label>
-				<input type="text" id="eventName" placeholder="Encounter name" />
+				<input type="text" id="eventName" placeholder="Encounter name" onchange="handleEventNameChange()" onkeyup="if(event.key === 'Enter'){ handleEventNameChange(); this.blur(); }" />
 			</div>
 		</div>
 
 
 		<nav class="left-tab-bar" aria-label="Secondary guide books">
 			<button id="tabDiceSystem" class="left-tab" onclick="openLeftGuide('diceSystemGuide', 'Dice System', './dice_system.html')"><span>Dice System</span></button>
+			<button id="tabTurnsSummary" class="left-tab" onclick="openTurnsSummaryBook()"><span>Turns Summary</span></button>
 			<button id="tabHowToUse" class="left-tab" onclick="openLeftGuide('howToUseGuide', 'How to Use DM Tool', './how_to_use_dm_tool.html')"><span>How to Use DM Tool</span></button>
 		</nav>
 
@@ -1932,6 +1940,12 @@
 							</div>
 						</div>
 
+						<div class="toolbar turn-note-toolbar">
+							<label><strong>Spell / Weapon Damage</strong></label>
+							<input type="text" id="turnActionNote" placeholder="Optional: Fire Slash, -2 Body / -1 Spirit" style="min-width:320px">
+							<button class="book-btn" onclick="recordTurnActionNote()">Record Note</button>
+						</div>
+
 						<div class="toolbar">
 							<button class="book-btn dark" onclick="addParticipant()">Add Player / Enemy</button>
 							<input type="text" id="characterCodeInput" placeholder="Sheet code, ex: A001" style="width:150px">
@@ -1975,7 +1989,7 @@
 							</div>
 <div class="toolbar">
 								<label><strong>Discord Message ID</strong></label>
-								<input type="text" id="discordMessageID" placeholder="Saved after first send" style="min-width:260px">
+								<input type="text" id="discordMessageID" placeholder="Saved after first send" style="min-width:260px" onchange="saveManualDiscordMessageIDForEvent()">
 								<button class="book-btn" onclick="checkDiscordSetup()">Check Discord Link</button>
 								<button class="book-btn danger" onclick="clearDiscordMessageID()">Start New Discord Post</button>
 								<button class="book-btn" onclick="createNewDiscordPost()">Create Discord ID</button>
@@ -2033,10 +2047,16 @@
 		let draggingId = null;
 		let draggingMapItemIndex = null;
 		let selectedMapItemIndex = null;
+		let activeMapPointerId = null;
 		let playerColors = {};
 
 		const DISCORD_MESSAGE_STORAGE_KEY = "fallenGateDiscordMessageID";
+		const DISCORD_EVENT_MESSAGE_IDS_STORAGE_KEY = "fallenGateDiscordMessageIDsByEvent";
+		const TURN_SUMMARY_STORAGE_KEY = "fallenGateTurnSummaryHistory";
+		const TURN_SUMMARY_EVENT_NAME_POSITION_KEY = "fallenGateTurnSummaryEventNamePosition";
 		let eventMessageID = null;
+		let turnSummaryHistory = [];
+		let turnSummarySequence = 1;
 
 		const canvas = document.getElementById("mapCanvas");
 		const ctx = canvas.getContext("2d");
@@ -2067,6 +2087,8 @@
 			setTimeout(refreshCharacterSheets, 300);
 			setTimeout(refreshCharacterSheets, 900);
 			loadSavedDiscordMessageID();
+			handleEventNameChange();
+			loadTurnSummaryHistory();
 			checkDiscordSetup();
 			drawGrid();
 		}
@@ -2345,6 +2367,26 @@
 		window.addEventListener("message", function (event) {
 			if (!event.data) return;
 
+			if (event.data.type === "clearTurnSummary") {
+				clearTurnsSummary();
+				return;
+			}
+
+			if (event.data.type === "copyTurnSummaryLog") {
+				copyTurnsSummary();
+				return;
+			}
+
+			if (event.data.type === "refreshTurnSummary") {
+				sendTurnsSummaryToBook();
+				return;
+			}
+
+			if (event.data.type === "turnSummaryEventNamePositionChanged") {
+				setTurnSummaryEventNamePosition(event.data.position);
+				return;
+			}
+
 			if (event.data.type === "addCharacterSheet") {
 				addCharacterFromSheetCode(event.data.code);
 				return;
@@ -2352,6 +2394,11 @@
 
 			if (event.data.type === "addMonsterToRoster") {
 				addMonsterFromGuide(event.data.monsterName);
+				return;
+			}
+
+			if (event.data.type === "addTemporaryMonsterToRoster") {
+				addTemporaryMonsterFromGuide(event.data.monster);
 				return;
 			}
 
@@ -2443,6 +2490,64 @@
 			setLootOutput("Added <strong>" + escapeHtml(rosterName) + "</strong> to the encounter roster from the Monster Guide.", "");
 		}
 
+
+		function addTemporaryMonsterFromGuide(monster) {
+			if (!monster || !String(monster.name || "").trim()) {
+				alert("Temporary monster data is missing a name.");
+				return;
+			}
+
+			const id = nextId++;
+			const rosterName = String(monster.name).trim();
+			const colorKey = rosterName.toLowerCase();
+
+			if (!playerColors[colorKey]) {
+				playerColors[colorKey] = getRandomColor();
+			}
+
+			const details = [];
+			if (monster.category) details.push("Category: " + monster.category);
+			if (monster.monsterClass) details.push("Class: " + monster.monsterClass);
+			if (monster.movement) details.push("Movement: " + monster.movement);
+			if (monster.size) details.push("Size: " + monster.size);
+			details.push("Temporary Monster");
+
+			const participant = {
+				id,
+				name: rosterName,
+				type: "temporary!!" + rosterName,
+				body: Number(monster.body || 0),
+				mind: Number(monster.mind || 0),
+				spirit: Number(monster.spirit || 0),
+				ac: Number(monster.ac || 0),
+				bonus: Number(monster.bonus || 0),
+				bodyStart: Number(monster.body || 0),
+				mindStart: Number(monster.mind || 0),
+				spiritStart: Number(monster.spirit || 0),
+				init: "",
+				effects: details.join(" | "),
+				loot: false,
+				oneZeroRule: false,
+				twoZeroRule: false,
+				minus3SpellRule: false,
+				temporaryMonster: monster,
+				x: 70 + (participants.length % 6) * 52,
+				y: 70 + Math.floor(participants.length / 6) * 52,
+				color: playerColors[colorKey]
+			};
+
+			autoSetZeroRulesFromStartingStats(participant);
+			participants.push(participant);
+			renderTable();
+			syncTurnOrder();
+			drawGrid();
+
+			setLootOutput("Added temporary monster <strong>" + escapeHtml(rosterName) + "</strong> to the encounter roster.", "");
+		}
+
+		window.addTemporaryMonsterFromGuide = addTemporaryMonsterFromGuide;
+
+
 		window.addMonsterFromGuide = addMonsterFromGuide;
 
 		function addParticipant() {
@@ -2529,7 +2634,15 @@
 				`;
 
 				tbody.appendChild(tr);
-				tr.querySelector("select").value = p.type;
+
+				const typeSelect = tr.querySelector("select");
+				if (p.type && String(p.type).startsWith("temporary!!")) {
+					const temporaryOption = document.createElement("option");
+					temporaryOption.value = p.type;
+					temporaryOption.textContent = "Temporary — " + String(p.type).split("!!").slice(1).join("!!");
+					typeSelect.insertBefore(temporaryOption, typeSelect.children[1] || null);
+				}
+				typeSelect.value = p.type;
 			});
 		}
 
@@ -2573,6 +2686,8 @@
 			const p = findParticipant(id);
 			if (!p) return;
 
+			const previousInitForSummary = field === "init" ? Number(p.init || 0) : null;
+
 			if (["body", "mind", "spirit", "ac", "bonus", "init"].includes(field)) {
 				p[field] = value === "" ? "" : Number(value);
 				if (["body", "mind", "spirit"].includes(field)) {
@@ -2595,6 +2710,15 @@
 
 
 			syncTurnOrder();
+
+			if (field === "init") {
+				const newInitForSummary = Number(p.init || 0);
+				if (newInitForSummary > 0 && !(previousInitForSummary > 0)) {
+					const turnNote = getTurnActionNote(true);
+					addTurnSummaryEntry("init", "Initial Roll Entered: " + (p.name || "Unnamed"), ((p.name || "Unnamed") + " entered the turn order with Init " + newInitForSummary + ".") + (turnNote ? " | " + turnNote : ""));
+				}
+			}
+
 			renderTable();
 			drawGrid();
 		}
@@ -2649,6 +2773,272 @@
 			drawGrid();
 		}
 
+
+		function loadTurnSummaryHistory() {
+			try {
+				const saved = localStorage.getItem(TURN_SUMMARY_STORAGE_KEY);
+				turnSummaryHistory = saved ? JSON.parse(saved) : [];
+			} catch (error) {
+				turnSummaryHistory = [];
+			}
+
+			turnSummarySequence = turnSummaryHistory.length + 1;
+		}
+
+		function saveTurnSummaryHistory() {
+			localStorage.setItem(TURN_SUMMARY_STORAGE_KEY, JSON.stringify(turnSummaryHistory));
+		}
+
+		function currentTurnSummaryName() {
+			const top = turnOrderIds.length ? findParticipant(turnOrderIds[0]) : null;
+			return top ? top.name : "No active turn";
+		}
+
+		function turnOrderSnapshot() {
+			return turnOrderIds.map(function (id, index) {
+				const p = findParticipant(id);
+				if (!p) return null;
+				return {
+					position: index + 1,
+					name: p.name || "Unnamed",
+					init: p.init === "" ? "-" : p.init,
+					status: statusText(p)
+				};
+			}).filter(Boolean);
+		}
+
+		function participantSnapshot() {
+			return participants.map(function (p) {
+				return {
+					id: p.id,
+					name: p.name || "Unnamed",
+					type: readableTypeName(p.type),
+					status: statusText(p),
+					body: emptyDash(p.body),
+					mind: emptyDash(p.mind),
+					spirit: emptyDash(p.spirit),
+					ac: emptyDash(p.ac),
+					bonus: emptyDash(p.bonus),
+					init: emptyDash(p.init),
+					effects: p.effects || ""
+				};
+			});
+		}
+
+		function readableTypeName(typeValue) {
+			if (!typeValue) return "";
+			const parts = String(typeValue).split("!!");
+			return parts.length > 1 ? parts.slice(1).join("!!") : String(typeValue);
+		}
+
+
+		function numericStatForSummary(value) {
+			if (value === "" || value === "-" || value === null || value === undefined) return null;
+			const number = Number(value);
+			return Number.isFinite(number) ? number : null;
+		}
+
+		function formatStatDelta(delta) {
+			if (delta > 0) return "+" + delta;
+			return String(delta);
+		}
+
+		function snapshotKey(person) {
+			if (person.id !== undefined && person.id !== null && person.id !== "") return "id:" + person.id;
+			return "name:" + String(person.name || "Unnamed").toLowerCase();
+		}
+
+		function calculateStatChanges(previousParticipants, currentParticipants) {
+			const previousByKey = {};
+			const changes = [];
+
+			(previousParticipants || []).forEach(function (person) {
+				previousByKey[snapshotKey(person)] = person;
+			});
+
+			(currentParticipants || []).forEach(function (person) {
+				const old = previousByKey[snapshotKey(person)];
+				if (!old) return;
+
+				const statParts = [];
+
+				["body", "mind", "spirit"].forEach(function (stat) {
+					const before = numericStatForSummary(old[stat]);
+					const after = numericStatForSummary(person[stat]);
+
+					if (before === null || after === null) return;
+					const delta = after - before;
+					if (delta === 0) return;
+
+					const label = stat.charAt(0).toUpperCase() + stat.slice(1);
+					statParts.push(label + " " + before + " → " + after + " (" + formatStatDelta(delta) + ")");
+				});
+
+				if (statParts.length) {
+					changes.push({
+						name: person.name || "Unnamed",
+						changes: statParts
+					});
+				}
+			});
+
+			return changes;
+		}
+
+		function getTurnActionNote(clearAfterRead = true) {
+			const input = document.getElementById("turnActionNote");
+			if (!input) return "";
+
+			const note = input.value.trim();
+
+			if (clearAfterRead && note) {
+				input.value = "";
+			}
+
+			return note;
+		}
+
+		function recordTurnActionNote() {
+			const note = getTurnActionNote(true);
+
+			if (!note) {
+				alert("Type a spell, weapon, damage, or turn note first.");
+				return;
+			}
+
+			addTurnSummaryEntry("note", "Spell / Weapon Damage Note", note);
+		}
+
+
+		function addTurnSummaryEntry(kind, title, note) {
+			const currentParticipants = participantSnapshot();
+			const previousEntry = turnSummaryHistory.length ? turnSummaryHistory[turnSummaryHistory.length - 1] : null;
+			const statChanges = previousEntry ? calculateStatChanges(previousEntry.participants || [], currentParticipants) : [];
+			const actionNote = note || "";
+
+			const entry = {
+				id: Date.now() + "_" + turnSummarySequence,
+				number: turnSummarySequence++,
+				time: new Date().toLocaleString(),
+				eventName: (document.getElementById("eventName") && document.getElementById("eventName").value) || "Fallen Gate Encounter",
+				kind: kind || "turn",
+				title: title || "Turn Update",
+				note: actionNote,
+				currentTurn: currentTurnSummaryName(),
+				turnOrder: turnOrderSnapshot(),
+				participants: currentParticipants,
+				statChanges: statChanges
+			};
+
+			turnSummaryHistory.push(entry);
+
+			if (turnSummaryHistory.length > 250) {
+				turnSummaryHistory = turnSummaryHistory.slice(-250);
+			}
+
+			saveTurnSummaryHistory();
+			sendTurnsSummaryToBook();
+		}
+
+		function clearTurnsSummary() {
+			const confirmed = confirm("Clear the Turns Summary record?");
+			if (!confirmed) return;
+
+			turnSummaryHistory = [];
+			turnSummarySequence = 1;
+			saveTurnSummaryHistory();
+			sendTurnsSummaryToBook();
+		}
+
+
+		function getTurnSummaryEventNamePosition() {
+			const saved = localStorage.getItem(TURN_SUMMARY_EVENT_NAME_POSITION_KEY);
+			return saved === "after" ? "after" : "before";
+		}
+
+		function setTurnSummaryEventNamePosition(position) {
+			const normalized = position === "after" ? "after" : "before";
+			localStorage.setItem(TURN_SUMMARY_EVENT_NAME_POSITION_KEY, normalized);
+			sendTurnsSummaryToBook();
+		}
+
+		function formatTurnSummaryHeading(entry, position = getTurnSummaryEventNamePosition()) {
+			const eventLabel = String(entry && entry.eventName ? entry.eventName : "Fallen Gate Encounter");
+			const turnLabel = "#" + String(entry && entry.number !== undefined ? entry.number : "") + " — " + String(entry && entry.title ? entry.title : "Turn Update");
+
+			return position === "after"
+				? turnLabel + " — " + eventLabel
+				: eventLabel + " — " + turnLabel;
+		}
+
+		function buildTurnsSummaryText() {
+			if (!turnSummaryHistory.length) {
+				return "No turns have been recorded yet.";
+			}
+
+			const lines = ["Turns Summary"];
+
+			turnSummaryHistory.forEach(function (entry) {
+				lines.push("");
+				lines.push(formatTurnSummaryHeading(entry));
+				lines.push("Time: " + entry.time);
+				lines.push("Event: " + entry.eventName);
+				lines.push("Current Turn: " + entry.currentTurn);
+				if (entry.note) lines.push("Spell / Weapon / Note: " + entry.note);
+
+				if (entry.statChanges && entry.statChanges.length) {
+					lines.push("Stat Changes:");
+					entry.statChanges.forEach(function (change) {
+						lines.push("- " + change.name + ": " + change.changes.join("; "));
+					});
+				} else {
+					lines.push("Stat Changes: No Body, Mind, or Spirit changes from the previous record.");
+				}
+
+				lines.push("Turn Order:");
+				(entry.turnOrder || []).forEach(function (row) {
+					lines.push(row.position + ". " + row.name + " | Init " + row.init + " | " + row.status);
+				});
+
+				lines.push("Participants:");
+				(entry.participants || []).forEach(function (p) {
+					lines.push("- " + p.name + ": " + p.status + " | B " + p.body + " | M " + p.mind + " | S " + p.spirit + " | AC " + p.ac + " | Bon " + p.bonus + " | Init " + p.init + (p.effects ? " | " + p.effects : ""));
+				});
+			});
+
+			return lines.join("\\n");
+		}
+
+		function copyTurnsSummary() {
+			const text = buildTurnsSummaryText();
+
+			navigator.clipboard.writeText(text).then(function () {
+				alert("Turns Summary copied.");
+			}).catch(function () {
+				document.getElementById("lootOutput").textContent = text;
+			});
+		}
+
+		function sendTurnsSummaryToBook() {
+			const frame = document.getElementById("leftGuideFrame");
+			if (!frame || !frame.contentWindow) return;
+
+			frame.contentWindow.postMessage({
+				type: "turnSummaryData",
+				history: turnSummaryHistory,
+				eventName: (document.getElementById("eventName") && document.getElementById("eventName").value) || "Fallen Gate Encounter",
+				currentTurn: currentTurnSummaryName(),
+				eventNamePosition: getTurnSummaryEventNamePosition()
+			}, "*");
+		}
+
+		function openTurnsSummaryBook() {
+			openLeftGuide("turnsSummaryGuide", "Turns Summary", "./turns_summary.html");
+			setTimeout(sendTurnsSummaryToBook, 250);
+			setTimeout(sendTurnsSummaryToBook, 700);
+		}
+
+
 		function clearDefeated() {
 			participants = participants.filter(p => !isRemovedByStats(p));
 			syncTurnOrder();
@@ -2663,6 +3053,8 @@
 				.map(p => p.id);
 
 			renderTurnOrder();
+			const turnNote = getTurnActionNote(true);
+			addTurnSummaryEntry("sort", "Turn Order Sorted by Initiative", "Sort by Init was clicked." + (turnNote ? " | " + turnNote : ""));
 		}
 
 		function syncTurnOrder() {
@@ -2684,15 +3076,29 @@
 		async function nextTurn() {
 			syncTurnOrder();
 
-			if (turnOrderIds.length <= 1) {
+			if (turnOrderIds.length === 0) {
 				renderTurnOrder();
 				await autoUpdateDiscordAfterTurnChange();
 				return;
 			}
 
+			if (turnOrderIds.length === 1) {
+				const only = findParticipant(turnOrderIds[0]);
+				renderTurnOrder();
+				const turnNote = getTurnActionNote(true);
+				addTurnSummaryEntry("turn", "Current Turn: " + (only ? only.name : "No active turn"), "Next Turn was clicked with only one active combatant." + (turnNote ? " | " + turnNote : ""));
+				await autoUpdateDiscordAfterTurnChange();
+				return;
+			}
+
 			const current = turnOrderIds.shift();
+			const previous = findParticipant(current);
 			turnOrderIds.push(current);
 			renderTurnOrder();
+
+			const next = findParticipant(turnOrderIds[0]);
+			const turnNote = getTurnActionNote(true);
+			addTurnSummaryEntry("turn", "Current Turn: " + (next ? next.name : "No active turn"), "Previous turn: " + (previous ? previous.name : "Unknown") + "." + (turnNote ? " | " + turnNote : ""));
 
 			await autoUpdateDiscordAfterTurnChange();
 		}
@@ -2732,6 +3138,7 @@
 
 			const top = findParticipant(turnOrderIds[0]);
 			current.textContent = top ? top.name : "No active turn";
+			sendTurnsSummaryToBook();
 		}
 
 		const STAT_REMOVAL_LIMIT = -4;
@@ -2795,8 +3202,30 @@
 
 			const rect = canvas.getBoundingClientRect();
 			if (rect.width > 0 && rect.height > 0) {
-				canvas.width = Math.max(650, Math.floor(rect.width));
-				canvas.height = Math.max(460, Math.floor(rect.height));
+				const desiredWidth = Math.max(650, Math.floor(rect.width));
+				const desiredHeight = Math.max(460, Math.floor(rect.height));
+
+				/* Only resize the canvas when its displayed size really changed.
+				   Reassigning width/height during every drag can interrupt movement state. */
+				if (canvas.width !== desiredWidth || canvas.height !== desiredHeight) {
+					const oldWidth = canvas.width || desiredWidth;
+					const oldHeight = canvas.height || desiredHeight;
+					const scaleX = desiredWidth / oldWidth;
+					const scaleY = desiredHeight / oldHeight;
+
+					participants.forEach(function (participant) {
+						participant.x = Number(participant.x || 0) * scaleX;
+						participant.y = Number(participant.y || 0) * scaleY;
+					});
+
+					mapItems.forEach(function (item) {
+						item.x = Number(item.x || 0) * scaleX;
+						item.y = Number(item.y || 0) * scaleY;
+					});
+
+					canvas.width = desiredWidth;
+					canvas.height = desiredHeight;
+				}
 			}
 
 			ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -3451,21 +3880,51 @@
 			drawGrid();
 		}
 
-		canvas.addEventListener("mousedown", function (e) {
-			const point = getCanvasPoint(e);
+		function findTokenAtPoint(x, y) {
+			const reversed = [...participants].reverse();
 
-			if (mapTool === "deleteItem") {
-				deleteMapItemAt(point.x, point.y);
-				draggingId = null;
-				draggingMapItemIndex = null;
-				return;
+			for (const participant of reversed) {
+				const radius = Math.max(TOKEN_GRAB_RADIUS, hasEnteredCombat(participant) ? 42 : 38);
+
+				if (distance(x, y, participant.x, participant.y) <= radius) {
+					return participant;
+				}
+
+				/* The token name is drawn to the right of the circle.
+				   Let users grab the visible name as well as the round token. */
+				ctx.save();
+				ctx.font = hasEnteredCombat(participant) ? "bold 14px Arial" : "italic 13px Arial";
+				const nameWidth = Math.max(35, ctx.measureText(participant.name || "").width);
+				ctx.restore();
+
+				const labelLeft = participant.x + 12;
+				const labelRight = participant.x + 24 + nameWidth;
+				const labelTop = participant.y - 18;
+				const labelBottom = participant.y + 18;
+
+				if (x >= labelLeft && x <= labelRight && y >= labelTop && y <= labelBottom) {
+					return participant;
+				}
 			}
 
+			return null;
+		}
+
+		function beginMapPointerDrag(event) {
+			if (!event.isPrimary && event.pointerType !== "mouse") return;
+
+			const point = getCanvasPoint(event);
+
+			/* Always clear an old drag before starting a new one.
+			   This prevents a previous release from blocking the next token drag. */
+			draggingId = null;
+			draggingMapItemIndex = null;
+			activeMapPointerId = event.pointerId;
+
 			if (mapTool === "deleteItem") {
 				deleteMapItemAt(point.x, point.y);
-				draggingId = null;
-				draggingMapItemIndex = null;
-				e.preventDefault();
+				activeMapPointerId = null;
+				event.preventDefault();
 				return;
 			}
 
@@ -3473,125 +3932,112 @@
 				draggingMapItemIndex = findMapItemAt(point.x, point.y);
 				selectedMapItemIndex = draggingMapItemIndex;
 				syncMapRotationInputToSelected();
+
 				if (selectedMapItemIndex !== null && mapItems[selectedMapItemIndex]) {
-					setMapItemRotation(getMapItemRotation(mapItems[selectedMapItemIndex]));
+					mapItemRotation = getMapItemRotation(mapItems[selectedMapItemIndex]);
+					syncMapRotationInputToSelected();
+					updateMapStatus("Map item selected. Drag it again whenever needed.");
+				} else {
+					updateMapStatus("Move Map Items: click closer to the item you want to move.");
+					activeMapPointerId = null;
 				}
-				draggingId = null;
 
-				if (draggingMapItemIndex === null) {
-					updateMapStatus("Move Map Items: click closer to any wall, door, chest, trap, pillar, tree, or text label. The grab area has been enlarged.");
+				if (draggingMapItemIndex !== null && canvas.setPointerCapture) {
+					canvas.setPointerCapture(event.pointerId);
 				}
 
+				event.preventDefault();
 				return;
 			}
 
-			// If a map-design tool is selected, place the map item instead of dragging a token.
+			/* Placement tools still place an item with one click. */
 			if (addMapItemAt(point.x, point.y)) {
-				draggingId = null;
-				draggingMapItemIndex = null;
+				activeMapPointerId = null;
+				event.preventDefault();
 				return;
 			}
 
-			const found = [...participants].reverse().find(p => distance(point.x, point.y, p.x, p.y) <= TOKEN_GRAB_RADIUS);
+			if (mapTool !== "move") {
+				activeMapPointerId = null;
+				return;
+			}
+
+			const found = findTokenAtPoint(point.x, point.y);
 			draggingId = found ? found.id : null;
-			draggingMapItemIndex = null;
-		});
 
-		canvas.addEventListener("touchstart", function (e) {
-			if (!e.touches || e.touches.length === 0) return;
-			const touch = e.touches[0];
-			const rect = canvas.getBoundingClientRect();
-			const point = {
-				x: touch.clientX - rect.left,
-				y: touch.clientY - rect.top
-			};
-
-			if (mapTool === "moveItem") {
-				draggingMapItemIndex = findMapItemAt(point.x, point.y);
-				selectedMapItemIndex = draggingMapItemIndex;
-				if (selectedMapItemIndex !== null && mapItems[selectedMapItemIndex]) {
-					setMapItemRotation(getMapItemRotation(mapItems[selectedMapItemIndex]));
+			if (found) {
+				if (canvas.setPointerCapture) {
+					canvas.setPointerCapture(event.pointerId);
 				}
-				draggingId = null;
-				e.preventDefault();
-				return;
+				updateMapStatus("Moving token: " + (found.name || "Unnamed") + ". Release to drop it; it can be moved again afterward.");
+			} else {
+				activeMapPointerId = null;
+				updateMapStatus("Move Tokens: click the token circle or its name, then drag.");
 			}
 
-			if (addMapItemAt(point.x, point.y)) {
-				e.preventDefault();
-				draggingId = null;
-				draggingMapItemIndex = null;
-			}
-		}, { passive: false });
+			event.preventDefault();
+		}
 
-
-		canvas.addEventListener("mousemove", function (e) {
-			const point = getCanvasPoint(e);
-			dragActiveItemOrToken(point, "mouse");
-		});
-
-		canvas.addEventListener("touchmove", function (e) {
-			if (draggingMapItemIndex === null || !mapItems[draggingMapItemIndex]) return;
-			if (!e.touches || e.touches.length === 0) return;
-
-			const touch = e.touches[0];
-			const rect = canvas.getBoundingClientRect();
-			const point = {
-				x: touch.clientX - rect.left,
-				y: touch.clientY - rect.top
-			};
-
-			mapItems[draggingMapItemIndex].x = Math.round(point.x);
-			mapItems[draggingMapItemIndex].y = Math.round(point.y);
-			drawGrid();
-			updateMapStatus("Moving map item. Release touch to drop it.");
-			e.preventDefault();
-		}, { passive: false });
-
-		canvas.addEventListener("touchend", function () {
-			if (draggingMapItemIndex !== null) {
-				updateMapStatus("Map item moved. Save Map to This Browser or Download Map File to keep it.");
-			}
-
-			draggingMapItemIndex = null;
-			draggingId = null;
-		});
-
-
-		window.addEventListener("mousemove", function (e) {
+		function continueMapPointerDrag(event) {
+			if (activeMapPointerId === null || event.pointerId !== activeMapPointerId) return;
 			if (draggingId === null && draggingMapItemIndex === null) return;
 
-			const point = getCanvasPoint(e);
-			dragActiveItemOrToken(point, "mouse");
-		});
+			const point = getCanvasPoint(event);
+			const moved = dragActiveItemOrToken(point, event.pointerType || "pointer");
 
-		window.addEventListener("mouseup", function () {
-			if (draggingMapItemIndex !== null) {
-				updateMapStatus("Map item moved. Save Map to This Browser or Download Map File to keep it.");
+			if (moved) {
+				event.preventDefault();
+			}
+		}
+
+		function finishMapPointerDrag(event) {
+			if (activeMapPointerId === null) return;
+			if (event.pointerId !== undefined && event.pointerId !== activeMapPointerId) return;
+
+			const movedToken = draggingId !== null ? findParticipant(draggingId) : null;
+			const movedItem = draggingMapItemIndex !== null;
+
+			if (canvas.releasePointerCapture && event.pointerId !== undefined) {
+				try {
+					if (canvas.hasPointerCapture && canvas.hasPointerCapture(event.pointerId)) {
+						canvas.releasePointerCapture(event.pointerId);
+					}
+				} catch (error) {
+					/* Pointer capture may already have been released by the browser. */
+				}
 			}
 
 			draggingId = null;
 			draggingMapItemIndex = null;
-		});
+			activeMapPointerId = null;
 
-		canvas.addEventListener("mouseup", function () {
-			if (draggingMapItemIndex !== null) {
-				updateMapStatus("Map item moved. Save Map to This Browser or Download Map File to keep it.");
+			if (movedToken) {
+				updateMapStatus("Token moved: " + (movedToken.name || "Unnamed") + ". Select and drag it again at any time.");
+			} else if (movedItem) {
+				updateMapStatus("Map item moved. Select and drag it again at any time.");
 			}
+		}
 
-			draggingId = null;
-			draggingMapItemIndex = null;
+		canvas.addEventListener("pointerdown", beginMapPointerDrag);
+		canvas.addEventListener("pointermove", continueMapPointerDrag);
+		canvas.addEventListener("pointerup", finishMapPointerDrag);
+		canvas.addEventListener("pointercancel", finishMapPointerDrag);
+		canvas.addEventListener("lostpointercapture", function (event) {
+			if (activeMapPointerId === event.pointerId) {
+				draggingId = null;
+				draggingMapItemIndex = null;
+				activeMapPointerId = null;
+			}
 		});
 
-		canvas.addEventListener("mouseleave", function () {
-			// Do not immediately drop while leaving the canvas; this makes edge placement easier.
-		});
-
-		function getCanvasPoint(e) {
+		function getCanvasPoint(event) {
 			const rect = canvas.getBoundingClientRect();
+			const scaleX = rect.width > 0 ? canvas.width / rect.width : 1;
+			const scaleY = rect.height > 0 ? canvas.height / rect.height : 1;
+
 			return {
-				x: e.clientX - rect.left,
-				y: e.clientY - rect.top
+				x: (event.clientX - rect.left) * scaleX,
+				y: (event.clientY - rect.top) * scaleY
 			};
 		}
 
@@ -3613,13 +4059,17 @@
 				return true;
 			}
 
-			if (!draggingId) return false;
+			if (draggingId === null) return false;
 
 			const p = findParticipant(draggingId);
-			if (!p) return false;
+			if (!p) {
+				draggingId = null;
+				return false;
+			}
 
-			p.x = clamped.x;
-			p.y = clamped.y;
+			const tokenPadding = hasEnteredCombat(p) ? 16 : 12;
+			p.x = Math.max(tokenPadding, Math.min(canvas.width - tokenPadding, clamped.x));
+			p.y = Math.max(tokenPadding, Math.min(canvas.height - tokenPadding, clamped.y));
 			drawGrid();
 			return true;
 		}
@@ -3749,7 +4199,9 @@
 		function divideLoot() {
 			const eligible = participants.filter(p => p.loot && !isDefeated(p) && hasEnteredCombat(p)).map(p => p.name);
 			const defeatedMonsters = participants.filter(function (p) {
-				return isDefeated(p) && String(p.type || "").startsWith("monsters!!");
+				const type = String(p.type || "");
+				const isMonsterType = type.startsWith("monsters!!") || type.startsWith("temporary!!");
+				return isDefeated(p) && hasEnteredCombat(p) && isMonsterType;
 			});
 
 			if (eligible.length === 0) {
@@ -3758,15 +4210,44 @@
 			}
 
 			if (defeatedMonsters.length === 0) {
-				setLootOutput("No loot generated. Defeat a monster after it has an Init Roll first.", "");
+				setLootOutput("No loot generated. Defeat a regular or temporary monster after it has an Init Roll first.", "");
 				return;
 			}
 
 			let loot = [];
 			let checkedMonsterNames = [];
 
+			let defeatedNoLootMonsters = [];
+
 			defeatedMonsters.forEach(function (p) {
-				const monsterName = p.type.split("!!").slice(1).join("!!");
+				const type = String(p.type || "");
+				const monsterName = type.split("!!").slice(1).join("!!");
+
+				if (type.startsWith("temporary!!")) {
+					const monster = p.temporaryMonster || null;
+					if (!monster) return;
+
+					checkedMonsterNames.push(p.name || monsterName);
+
+					if (monster.noLoot) {
+						defeatedNoLootMonsters.push(p.name || monsterName);
+						return;
+					}
+
+					const table = Array.isArray(monster.lootTable) ? monster.lootTable : [];
+					const roll = Math.floor(Math.random() * 20) + 1;
+					const matches = table.filter(function (entry) {
+						return roll >= Number(entry.start) && roll <= Number(entry.end);
+					});
+
+					matches.forEach(function (entry) {
+						if (!entry || !entry.item || /no\s+loot/i.test(entry.item)) return;
+						loot.push(entry.item);
+					});
+
+					return;
+				}
+
 				const monster = data.monsters[monsterName];
 				if (!monster) return;
 
@@ -3790,7 +4271,12 @@
 			});
 
 			if (loot.length === 0) {
-				setLootOutput("No loot dropped from the defeated monster roll. This can happen if the monster rolled No Loot, or if that monster has no treasure table.", "");
+				if (defeatedNoLootMonsters.length === defeatedMonsters.length && defeatedNoLootMonsters.length > 0) {
+					setLootOutput("No loot generated. Defeated monster(s) marked No Loot: " + defeatedNoLootMonsters.map(escapeHtml).join(", ") + ".", "");
+					return;
+				}
+
+				setLootOutput("No loot dropped from the defeated monster roll. The D20 result may be No Loot, or the defeated monster may not have a valid treasure entry.", "");
 				return;
 			}
 
@@ -3929,39 +4415,142 @@
 		}
 
 
-		function loadSavedDiscordMessageID() {
-			const idBox = document.getElementById("discordMessageID");
-			const savedID = localStorage.getItem(DISCORD_MESSAGE_STORAGE_KEY);
+		function normalizeDiscordEventName(value) {
+			const clean = String(value || "").trim().replace(/\s+/g, " ");
+			return clean || "Fallen Gate Encounter";
+		}
 
-			if (savedID) {
-				eventMessageID = savedID;
-				if (idBox) idBox.value = savedID;
-				setDiscordWebhookStatus("Saved Discord Message ID loaded: " + savedID, true);
+		function discordEventStorageKey(value) {
+			return normalizeDiscordEventName(value).toLowerCase();
+		}
+
+		function currentDiscordEventName() {
+			const input = document.getElementById("eventName");
+			return normalizeDiscordEventName(input ? input.value : "");
+		}
+
+		function loadDiscordEventMessageMap() {
+			try {
+				const saved = localStorage.getItem(DISCORD_EVENT_MESSAGE_IDS_STORAGE_KEY);
+				const parsed = saved ? JSON.parse(saved) : {};
+				return parsed && typeof parsed === "object" && !Array.isArray(parsed) ? parsed : {};
+			} catch (error) {
+				return {};
 			}
 		}
 
-		function saveDiscordMessageID(messageID) {
-			if (!messageID) return;
+		function saveDiscordEventMessageMap(messageMap) {
+			localStorage.setItem(DISCORD_EVENT_MESSAGE_IDS_STORAGE_KEY, JSON.stringify(messageMap || {}));
+		}
 
-			eventMessageID = String(messageID).trim();
-			localStorage.setItem(DISCORD_MESSAGE_STORAGE_KEY, eventMessageID);
+		function getSavedDiscordMessageIDForEvent(eventName) {
+			const messageMap = loadDiscordEventMessageMap();
+			const eventKey = discordEventStorageKey(eventName);
+			return String(messageMap[eventKey] || "").trim();
+		}
 
+		function setDiscordMessageIDBox(messageID) {
 			const idBox = document.getElementById("discordMessageID");
-			if (idBox) idBox.value = eventMessageID;
+			if (idBox) idBox.value = messageID || "";
+		}
+
+		function loadSavedDiscordMessageID() {
+			const eventName = currentDiscordEventName();
+			const eventKey = discordEventStorageKey(eventName);
+			const messageMap = loadDiscordEventMessageMap();
+			let savedID = String(messageMap[eventKey] || "").trim();
+
+			/* Migrate the old single saved ID once, assigning it to the current event. */
+			if (!savedID) {
+				const legacyID = String(localStorage.getItem(DISCORD_MESSAGE_STORAGE_KEY) || "").trim();
+
+				if (legacyID && Object.keys(messageMap).length === 0) {
+					messageMap[eventKey] = legacyID;
+					saveDiscordEventMessageMap(messageMap);
+					savedID = legacyID;
+				}
+			}
+
+			eventMessageID = savedID || null;
+			setDiscordMessageIDBox(savedID);
+
+			if (savedID) {
+				setDiscordWebhookStatus("Loaded Discord Message ID for event “" + eventName + "”: " + savedID, true);
+			} else {
+				setDiscordWebhookStatus("No Discord Message ID for event “" + eventName + "”. The next send will create a new Discord post and ID.", true);
+			}
+		}
+
+		function saveDiscordMessageID(messageID, eventName = currentDiscordEventName()) {
+			const cleanID = String(messageID || "").trim();
+			if (!cleanID) return;
+
+			const cleanEventName = normalizeDiscordEventName(eventName);
+			const eventKey = discordEventStorageKey(cleanEventName);
+			const messageMap = loadDiscordEventMessageMap();
+
+			messageMap[eventKey] = cleanID;
+			saveDiscordEventMessageMap(messageMap);
+
+			/* Keep the old key updated for backwards compatibility, but event lookup uses the map. */
+			localStorage.setItem(DISCORD_MESSAGE_STORAGE_KEY, cleanID);
+
+			eventMessageID = cleanID;
+			setDiscordMessageIDBox(cleanID);
+		}
+
+		function removeDiscordMessageIDForEvent(eventName = currentDiscordEventName()) {
+			const cleanEventName = normalizeDiscordEventName(eventName);
+			const eventKey = discordEventStorageKey(cleanEventName);
+			const messageMap = loadDiscordEventMessageMap();
+
+			delete messageMap[eventKey];
+			saveDiscordEventMessageMap(messageMap);
+
+			eventMessageID = null;
+			setDiscordMessageIDBox("");
+		}
+
+		function saveManualDiscordMessageIDForEvent() {
+			const idBox = document.getElementById("discordMessageID");
+			const manualID = idBox ? idBox.value.trim() : "";
+			const eventName = currentDiscordEventName();
+
+			if (!manualID) {
+				removeDiscordMessageIDForEvent(eventName);
+				setDiscordWebhookStatus("Discord Message ID cleared for event “" + eventName + "”.", true);
+				return;
+			}
+
+			saveDiscordMessageID(manualID, eventName);
+			setDiscordWebhookStatus("Discord Message ID saved for event “" + eventName + "”.", true);
+		}
+
+		function handleEventNameChange() {
+			const eventName = currentDiscordEventName();
+			const savedID = getSavedDiscordMessageIDForEvent(eventName);
+
+			eventMessageID = savedID || null;
+			setDiscordMessageIDBox(savedID);
+
+			if (savedID) {
+				setDiscordWebhookStatus("Event changed to “" + eventName + "”. Loaded its saved Discord Message ID: " + savedID, true);
+			} else {
+				setDiscordWebhookStatus("New event name “" + eventName + "”. A new Discord Message ID will be created on the next send.", true);
+			}
+
+			sendTurnsSummaryToBook();
 		}
 
 		function clearDiscordMessageID() {
-			const confirmed = confirm("This will make the next Discord send create a NEW message. Continue?");
+			const eventName = currentDiscordEventName();
+			const confirmed = confirm("Clear the Discord Message ID for event “" + eventName + "”? The next send for this event will create a NEW message.");
 			if (!confirmed) return;
 
-			eventMessageID = null;
-			localStorage.removeItem(DISCORD_MESSAGE_STORAGE_KEY);
+			removeDiscordMessageIDForEvent(eventName);
 
-			const idBox = document.getElementById("discordMessageID");
-			if (idBox) idBox.value = "";
-
-			setDiscordWebhookStatus("Discord Message ID cleared. Next send will create a new post.", true);
-			alert("Saved Discord Message ID cleared. The next send will create a new first message.");
+			setDiscordWebhookStatus("Discord Message ID cleared for event “" + eventName + "”. Next send will create a new post.", true);
+			alert("Saved Discord Message ID cleared for “" + eventName + "”.");
 		}
 
 
@@ -3997,11 +4586,9 @@
 
 
 		async function createNewDiscordPost() {
-			eventMessageID = null;
-			localStorage.removeItem(DISCORD_MESSAGE_STORAGE_KEY);
-
-			const idBox = document.getElementById("discordMessageID");
-			if (idBox) idBox.value = "";
+			const eventName = currentDiscordEventName();
+			removeDiscordMessageIDForEvent(eventName);
+			setDiscordWebhookStatus("Creating a new Discord post and Message ID for event “" + eventName + "”…", true);
 
 			await shareToDiscord(false, false);
 		}
@@ -4015,17 +4602,18 @@
 
 			try {
 				const idBox = document.getElementById("discordMessageID");
+				const eventName = currentDiscordEventName();
+				const manualID = idBox ? idBox.value.trim() : "";
+				const savedID = getSavedDiscordMessageIDForEvent(eventName);
 
-				// Manual ID in the box wins, then saved browser ID.
-				if (idBox && idBox.value.trim() !== "") {
-					eventMessageID = idBox.value.trim();
-					localStorage.setItem(DISCORD_MESSAGE_STORAGE_KEY, eventMessageID);
-				} else if (!eventMessageID) {
-					const savedID = localStorage.getItem(DISCORD_MESSAGE_STORAGE_KEY);
-					if (savedID) {
-						eventMessageID = savedID;
-						if (idBox) idBox.value = savedID;
-					}
+				/* A manually entered ID belongs to the current event.
+				   Otherwise use only the ID stored for this exact event name. */
+				if (manualID) {
+					eventMessageID = manualID;
+					saveDiscordMessageID(manualID, eventName);
+				} else {
+					eventMessageID = savedID || null;
+					setDiscordMessageIDBox(savedID);
 				}
 
 				if (updateOnly && !eventMessageID) {
@@ -4079,20 +4667,20 @@
 				/* Discord should return the message object because ?wait=true is forced.
 				   The ID is saved on first send and also refreshed on updates if Discord returns it. */
 				if (result && result.id) {
-					saveDiscordMessageID(result.id);
+					saveDiscordMessageID(result.id, eventName);
 				}
 
 				if (!updatingExistingMessage) {
 					if (result && result.id) {
-						setDiscordWebhookStatus("Discord message sent. Message ID saved: " + result.id, true);
-						if (!silent) alert("First Discord message sent and saved. Message ID: " + result.id);
+						setDiscordWebhookStatus("Discord message sent for event “" + eventName + "”. Message ID saved: " + result.id, true);
+						if (!silent) alert("New Discord post created for “" + eventName + "”. Message ID: " + result.id);
 					} else {
 						setDiscordWebhookStatus("Discord message sent, but Discord did not return a Message ID. Check webhook permissions or remove ?wait=true from discord_config.js if you added it manually.", false);
 						if (!silent) alert("Discord sent the post, but no Message ID was returned. The tool needs that ID to update the same post later.");
 					}
 				} else {
-					setDiscordWebhookStatus("Discord message updated" + (eventMessageID ? " ID: " + eventMessageID : "") + ".", true);
-					if (!silent) alert("Discord message updated.");
+					setDiscordWebhookStatus("Discord message updated for event “" + eventName + "”" + (eventMessageID ? " ID: " + eventMessageID : "") + ".", true);
+					if (!silent) alert("Discord message updated for “" + eventName + "”.");
 				}
 			} catch (error) {
 				console.error(error);
@@ -4109,6 +4697,11 @@
 			const frame = document.getElementById("leftGuideFrame");
 
 			guideTitle.textContent = title;
+			frame.onload = function () {
+				if (src.indexOf("turns_summary.html") !== -1) {
+					sendTurnsSummaryToBook();
+				}
+			};
 			frame.src = src;
 			layout.classList.remove("guide-open");
 			layout.classList.add("left-guide-open");
@@ -4161,6 +4754,8 @@
 				document.getElementById("tabCharacterSheets").classList.add("active");
 			} else if (id === "diceSystemGuide") {
 				document.getElementById("tabDiceSystem").classList.add("active");
+			} else if (id === "turnsSummaryGuide") {
+				document.getElementById("tabTurnsSummary").classList.add("active");
 			} else if (id === "howToUseGuide") {
 				document.getElementById("tabHowToUse").classList.add("active");
 			}

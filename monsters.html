@@ -247,6 +247,175 @@ p, li, td, th {
   font-weight: 900;
   font-family: Arial, Helvetica, sans-serif;
 }
+
+.temp-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(180px, 1fr));
+  gap: 10px;
+  margin: 10px 0;
+}
+
+.temp-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 13px;
+  font-weight: 900;
+}
+
+.temp-field.full {
+  grid-column: 1 / -1;
+}
+
+.temp-field input,
+.temp-field select,
+.temp-field textarea {
+  width: 100%;
+  padding: 7px 9px;
+  border: 1px solid #9b7b4e;
+  border-radius: 8px;
+  background: rgba(255,252,236,0.88);
+  color: var(--ink);
+  font: inherit;
+  font-weight: 700;
+}
+
+.temp-field textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.temp-loot-wrap {
+  margin: 12px 0;
+  padding: 10px;
+  border: 1px solid rgba(90,61,20,0.28);
+  border-radius: 12px;
+  background: rgba(255,255,255,0.22);
+}
+
+.temp-loot-row {
+  display: grid;
+  grid-template-columns: 82px 82px minmax(180px, 1fr) auto;
+  gap: 7px;
+  align-items: center;
+  margin-bottom: 7px;
+}
+
+.temp-loot-row input {
+  width: 100%;
+  padding: 7px;
+  border: 1px solid #9b7b4e;
+  border-radius: 8px;
+  background: rgba(255,252,236,0.88);
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: 700;
+}
+
+.temp-monster-card {
+  border: 1px solid rgba(90,61,20,0.32);
+  border-radius: 12px;
+  background: rgba(255,255,255,0.27);
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.temp-monster-card h3 {
+  margin: 0 0 5px;
+  color: var(--purple);
+  font-size: 20px;
+}
+
+.temp-monster-meta {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 12px;
+  color: #5a3a1a;
+  margin-bottom: 7px;
+}
+
+.temp-monster-image {
+  width: min(280px, 100%);
+  max-height: 240px;
+  object-fit: contain;
+  border: 1px solid rgba(90,61,20,0.32);
+  border-radius: 10px;
+  background: rgba(255,255,255,0.20);
+  display: block;
+  margin: 8px 0;
+}
+
+.temp-no-loot-check {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 7px 0 10px;
+  padding: 8px 10px;
+  border: 1px solid rgba(90,61,20,0.28);
+  border-radius: 10px;
+  background: rgba(255,255,255,0.28);
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 13px;
+}
+
+.temp-no-loot-check input {
+  width: 18px;
+  height: 18px;
+}
+
+.temp-loot-disabled {
+  opacity: 0.45;
+  pointer-events: none;
+}
+
+.temp-loot-range-error {
+  padding: 5px;
+  border: 2px solid #a52820;
+  border-radius: 9px;
+  background: rgba(197, 77, 67, 0.10);
+}
+
+.temp-result {
+  margin-top: 8px;
+  padding: 8px;
+  border-radius: 9px;
+  background: rgba(255,245,196,0.58);
+  border: 1px solid rgba(90,61,20,0.25);
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: 900;
+}
+
+.temp-empty {
+  padding: 12px;
+  border: 1px dashed rgba(90,61,20,0.45);
+  border-radius: 10px;
+  background: rgba(255,255,255,0.22);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.temp-image-preview {
+  width: min(260px, 100%);
+  max-height: 220px;
+  object-fit: contain;
+  display: none;
+  border: 1px solid rgba(90,61,20,0.32);
+  border-radius: 10px;
+  margin-top: 7px;
+}
+
+@media (max-width: 720px) {
+  .temp-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .temp-loot-row {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .temp-loot-row .loot-item-input {
+    grid-column: 1 / -1;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -256,12 +425,14 @@ p, li, td, th {
       <input id="searchBox" class="book-search" placeholder="Search monsters, category, class, weakness..." oninput="searchPages()">
       <button class="book-btn" onclick="prevPage()">Previous</button>
       <button class="book-btn dark" onclick="nextPage()">Next</button>
+      <button class="book-btn dark" onclick="goToPage('temporary_monster_form')">Create Temporary Monster</button>
     </div>
     <main class="book-page-area">
 <section class="book-page active" id="monster_index">
   <h2 class="item-title">Monster Index</h2>
   <div class="category">Broken down by category / title</div>
   <div class="title-grid">
+    <button class="title-card" onclick="goToPage('temporary_monsters_page')"><strong>Temporary Monsters</strong>View, roll loot, edit, or add saved temporary monsters</button>
     <button class="title-card" onclick="goToPage('title_other')"><strong>Other</strong>39 monsters</button>
 <button class="title-card" onclick="goToPage('title_abyssal_nature')"><strong>Abyssal Nature</strong>2 monsters</button>
 <button class="title-card" onclick="goToPage('title_dreadspire_enemies')"><strong>Dreadspire Enemies</strong>4 monsters</button>
@@ -275,6 +446,96 @@ p, li, td, th {
 <button class="title-card" onclick="goToPage('title_the_order_of_the_eternal_prism')"><strong>The Order of the Eternal Prism</strong>5 monsters</button>
   </div>
 </section>
+
+
+<section class="book-page" id="temporary_monster_form">
+  <h2 class="item-title">Temporary Monster Form</h2>
+  <div class="category">Saved only in this browser</div>
+
+  <input type="hidden" id="tempMonsterId">
+
+  <div class="temp-form-grid">
+    <label class="temp-field full">Monster Name
+      <input id="tempMonsterName" type="text" placeholder="Required">
+    </label>
+
+    <label class="temp-field">Body
+      <input id="tempMonsterBody" type="number" value="0">
+    </label>
+    <label class="temp-field">Mind
+      <input id="tempMonsterMind" type="number" value="0">
+    </label>
+    <label class="temp-field">Spirit
+      <input id="tempMonsterSpirit" type="number" value="0">
+    </label>
+    <label class="temp-field">AC
+      <input id="tempMonsterAC" type="number" value="0">
+    </label>
+    <label class="temp-field">Combat Bonus
+      <input id="tempMonsterBonus" type="number" value="0">
+    </label>
+
+    <label class="temp-field">Optional Category
+      <input id="tempMonsterCategory" type="text" placeholder="Example: Abyssal Nature">
+    </label>
+    <label class="temp-field">Optional Class
+      <input id="tempMonsterClass" type="text" placeholder="Example: Necromancer">
+    </label>
+    <label class="temp-field">Optional Movement
+      <input id="tempMonsterMovement" type="text" placeholder="Example: 30 ft, fly 60 ft">
+    </label>
+    <label class="temp-field">Optional Size
+      <input id="tempMonsterSize" type="text" placeholder="Example: Medium">
+    </label>
+
+    <label class="temp-field full">Optional Image
+      <input id="tempMonsterImageInput" type="file" accept="image/*" onchange="loadTemporaryMonsterImage(this)">
+      <img id="tempMonsterImagePreview" class="temp-image-preview" alt="Temporary monster preview">
+      <button type="button" class="book-btn" onclick="clearTemporaryMonsterImage()">Clear Image</button>
+    </label>
+
+    <label class="temp-field full">Optional Full Monster Notes
+      <textarea id="tempMonsterNotes" placeholder="Attacks, abilities, weaknesses, lore, tactics, or any other notes"></textarea>
+    </label>
+  </div>
+
+  <div class="temp-loot-wrap">
+    <h3 style="margin:0 0 8px;color:#4d245d">Loot / Treasure Table — D20</h3>
+
+    <label class="temp-no-loot-check">
+      <input id="tempMonsterNoLoot" type="checkbox" onchange="toggleTemporaryNoLoot()">
+      <strong>No Loot for this Monster</strong> — bypass the loot function
+    </label>
+
+    <p class="small">Unless No Loot is checked, the ranges must cover every D20 result from <strong>1 through 20 exactly once</strong>. No numbers may overlap, and every ending roll must be higher than its starting roll.</p>
+
+    <div id="tempLootControls">
+      <div id="tempLootRows"></div>
+      <button class="book-btn" type="button" onclick="addTemporaryLootRow()">Add Loot Item</button>
+    </div>
+  </div>
+
+  <div class="monster-actions">
+    <button class="book-btn dark" type="button" onclick="saveTemporaryMonster()">Save Temporary Monster</button>
+    <button class="book-btn dark" type="button" onclick="addTemporaryMonsterFormToRoster()">Add Temporary Monster to Roster</button>
+    <button class="book-btn" type="button" onclick="resetTemporaryMonsterForm()">Clear Form</button>
+    <button class="book-btn" type="button" onclick="goToPage('temporary_monsters_page')">Open Temporary Monsters</button>
+  </div>
+
+  <div id="tempMonsterFormStatus" class="temp-result" style="display:none"></div>
+</section>
+
+<section class="book-page" id="temporary_monsters_page">
+  <h2 class="item-title">Temporary Monsters</h2>
+  <div class="category">Browser-saved temporary entries</div>
+  <div class="monster-actions">
+    <button class="book-btn dark" onclick="goToPage('temporary_monster_form')">Create Temporary Monster</button>
+    <button class="book-btn" onclick="renderTemporaryMonsters()">Refresh List</button>
+    <button class="book-btn danger" onclick="clearAllTemporaryMonsters()">Clear All Temporary Monsters</button>
+  </div>
+  <div id="temporaryMonstersList"></div>
+</section>
+
 
 <section class="book-page" id="title_other">
   <h2 class="item-title">Other</h2>
@@ -4412,6 +4673,537 @@ function addMonsterToRoster(monsterName) {
 
 
 
+
+const TEMP_MONSTER_STORAGE_KEY = "fallenGateTemporaryMonsters";
+let temporaryMonsters = [];
+let temporaryMonsterImageData = "";
+
+function loadTemporaryMonsters() {
+  try {
+    const saved = localStorage.getItem(TEMP_MONSTER_STORAGE_KEY);
+    temporaryMonsters = saved ? JSON.parse(saved) : [];
+    if (!Array.isArray(temporaryMonsters)) temporaryMonsters = [];
+  } catch (error) {
+    temporaryMonsters = [];
+  }
+
+  renderTemporaryMonsters();
+}
+
+function saveTemporaryMonstersToBrowser() {
+  try {
+    localStorage.setItem(TEMP_MONSTER_STORAGE_KEY, JSON.stringify(temporaryMonsters));
+    return true;
+  } catch (error) {
+    alert("The temporary monster could not be saved. The image may be too large for browser storage.");
+    return false;
+  }
+}
+
+function temporaryEscape(value) {
+  return String(value ?? "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
+function addTemporaryLootRow(start = "", end = "", item = "") {
+  const container = document.getElementById("tempLootRows");
+  if (!container) return;
+
+  const row = document.createElement("div");
+  row.className = "temp-loot-row";
+  row.innerHTML = `
+    <input class="loot-start-input" type="number" min="1" max="19" placeholder="Start 1–19" value="${temporaryEscape(start)}" oninput="validateTemporaryLootRow(this.parentElement)">
+    <input class="loot-end-input" type="number" min="2" max="20" placeholder="End 2–20" value="${temporaryEscape(end)}" oninput="validateTemporaryLootRow(this.parentElement)">
+    <input class="loot-item-input" type="text" placeholder="Loot or treasure item" value="${temporaryEscape(item)}">
+    <button class="book-btn danger" type="button" onclick="this.parentElement.remove()">Remove</button>
+  `;
+  container.appendChild(row);
+  validateTemporaryLootRow(row);
+}
+
+function validateTemporaryLootRow(row) {
+  if (!row) return true;
+
+  const startInput = row.querySelector(".loot-start-input");
+  const endInput = row.querySelector(".loot-end-input");
+  if (!startInput || !endInput) return true;
+
+  const start = Number(startInput.value || 0);
+  const end = Number(endInput.value || 0);
+
+  endInput.min = start >= 1 ? String(Math.min(20, start + 1)) : "2";
+
+  const hasBothValues = startInput.value !== "" && endInput.value !== "";
+  const valid = !hasBothValues || (start >= 1 && start <= 19 && end > start && end <= 20);
+
+  if (hasBothValues && end <= start) {
+    endInput.setCustomValidity("Ending roll number must be higher than the starting roll number.");
+    row.classList.add("temp-loot-range-error");
+  } else if (hasBothValues && (start < 1 || start > 19 || end > 20)) {
+    endInput.setCustomValidity("Loot ranges must stay between 1 and 20.");
+    row.classList.add("temp-loot-range-error");
+  } else {
+    endInput.setCustomValidity("");
+    row.classList.remove("temp-loot-range-error");
+  }
+
+  return valid;
+}
+
+function collectTemporaryLootRows() {
+  return Array.from(document.querySelectorAll("#tempLootRows .temp-loot-row")).map(function (row, index) {
+    return {
+      rowNumber: index + 1,
+      start: Number(row.querySelector(".loot-start-input").value || 0),
+      end: Number(row.querySelector(".loot-end-input").value || 0),
+      item: row.querySelector(".loot-item-input").value.trim()
+    };
+  }).filter(function (entry) {
+    return entry.start > 0 || entry.end > 0 || entry.item;
+  });
+}
+
+function toggleTemporaryNoLoot() {
+  const noLoot = document.getElementById("tempMonsterNoLoot").checked;
+  const controls = document.getElementById("tempLootControls");
+
+  if (controls) {
+    controls.classList.toggle("temp-loot-disabled", noLoot);
+  }
+}
+
+function validateTemporaryLootTable(lootTable, noLoot) {
+  if (noLoot) {
+    return { valid: true, missing: [], overlaps: [], invalidRanges: [], emptyItems: [] };
+  }
+
+  if (!lootTable.length) {
+    return {
+      valid: false,
+      missing: Array.from({ length: 20 }, function (_, index) { return index + 1; }),
+      overlaps: [],
+      invalidRanges: [],
+      emptyItems: []
+    };
+  }
+
+  const coverageCount = Array(21).fill(0);
+  const invalidRanges = [];
+  const emptyItems = [];
+
+  lootTable.forEach(function (entry) {
+    const start = Number(entry.start);
+    const end = Number(entry.end);
+
+    if (!entry.item) {
+      emptyItems.push(entry.rowNumber);
+    }
+
+    if (start < 1 || start > 19 || end < 2 || end > 20 || end <= start) {
+      invalidRanges.push({
+        rowNumber: entry.rowNumber,
+        start: start,
+        end: end
+      });
+      return;
+    }
+
+    for (let roll = start; roll <= end; roll++) {
+      coverageCount[roll]++;
+    }
+  });
+
+  const missing = [];
+  const overlaps = [];
+
+  for (let roll = 1; roll <= 20; roll++) {
+    if (coverageCount[roll] === 0) missing.push(roll);
+    if (coverageCount[roll] > 1) overlaps.push(roll);
+  }
+
+  return {
+    valid:
+      missing.length === 0 &&
+      overlaps.length === 0 &&
+      invalidRanges.length === 0 &&
+      emptyItems.length === 0,
+    missing: missing,
+    overlaps: overlaps,
+    invalidRanges: invalidRanges,
+    emptyItems: emptyItems
+  };
+}
+
+function loadTemporaryMonsterImage(input) {
+  const file = input && input.files ? input.files[0] : null;
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = function () {
+    const img = new Image();
+    img.onload = function () {
+      const maxSize = 700;
+      let width = img.width;
+      let height = img.height;
+
+      if (width > maxSize || height > maxSize) {
+        const scale = Math.min(maxSize / width, maxSize / height);
+        width = Math.round(width * scale);
+        height = Math.round(height * scale);
+      }
+
+      const canvas = document.createElement("canvas");
+      canvas.width = width;
+      canvas.height = height;
+      canvas.getContext("2d").drawImage(img, 0, 0, width, height);
+
+      temporaryMonsterImageData = canvas.toDataURL("image/jpeg", 0.78);
+      const preview = document.getElementById("tempMonsterImagePreview");
+      preview.src = temporaryMonsterImageData;
+      preview.style.display = "block";
+    };
+    img.src = reader.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+function clearTemporaryMonsterImage() {
+  temporaryMonsterImageData = "";
+  const input = document.getElementById("tempMonsterImageInput");
+  const preview = document.getElementById("tempMonsterImagePreview");
+  if (input) input.value = "";
+  if (preview) {
+    preview.src = "";
+    preview.style.display = "none";
+  }
+}
+
+function resetTemporaryMonsterForm() {
+  document.getElementById("tempMonsterId").value = "";
+  document.getElementById("tempMonsterName").value = "";
+  document.getElementById("tempMonsterBody").value = 0;
+  document.getElementById("tempMonsterMind").value = 0;
+  document.getElementById("tempMonsterSpirit").value = 0;
+  document.getElementById("tempMonsterAC").value = 0;
+  document.getElementById("tempMonsterBonus").value = 0;
+  document.getElementById("tempMonsterCategory").value = "";
+  document.getElementById("tempMonsterClass").value = "";
+  document.getElementById("tempMonsterMovement").value = "";
+  document.getElementById("tempMonsterSize").value = "";
+  document.getElementById("tempMonsterNotes").value = "";
+  document.getElementById("tempMonsterNoLoot").checked = false;
+  document.getElementById("tempLootRows").innerHTML = "";
+  clearTemporaryMonsterImage();
+  addTemporaryLootRow();
+  toggleTemporaryNoLoot();
+  document.getElementById("tempMonsterFormStatus").style.display = "none";
+}
+
+function saveTemporaryMonster() {
+  const name = document.getElementById("tempMonsterName").value.trim();
+
+  if (!name) {
+    alert("Temporary Monster Name is required.");
+    return null;
+  }
+
+  const currentId = document.getElementById("tempMonsterId").value.trim();
+  const noLoot = document.getElementById("tempMonsterNoLoot").checked;
+  const lootTable = noLoot ? [] : collectTemporaryLootRows();
+  const lootValidation = validateTemporaryLootTable(lootTable, noLoot);
+
+  if (!lootValidation.valid) {
+    const problems = [];
+
+    if (lootValidation.missing.length) {
+      problems.push("Missing number(s): " + lootValidation.missing.join(", "));
+    }
+
+    if (lootValidation.overlaps.length) {
+      problems.push("Overlapping number(s): " + lootValidation.overlaps.join(", "));
+    }
+
+    if (lootValidation.invalidRanges.length) {
+      lootValidation.invalidRanges.forEach(function (range) {
+        problems.push(
+          "Loot row " + range.rowNumber + ": ending roll " + range.end +
+          " must be higher than starting roll " + range.start + "."
+        );
+      });
+    }
+
+    if (lootValidation.emptyItems.length) {
+      problems.push("Loot item is missing on row(s): " + lootValidation.emptyItems.join(", "));
+    }
+
+    alert(
+      "The loot table must cover every D20 result from 1 through 20 exactly once.\n\n" +
+      problems.join("\n") +
+      "\n\nEvery ending roll must be higher than its starting roll. Change the ranges, or check No Loot for this Monster."
+    );
+    return null;
+  }
+
+  const monster = {
+    id: currentId || ("temp_" + Date.now()),
+    name: name,
+    body: Number(document.getElementById("tempMonsterBody").value || 0),
+    mind: Number(document.getElementById("tempMonsterMind").value || 0),
+    spirit: Number(document.getElementById("tempMonsterSpirit").value || 0),
+    ac: Number(document.getElementById("tempMonsterAC").value || 0),
+    bonus: Number(document.getElementById("tempMonsterBonus").value || 0),
+    category: document.getElementById("tempMonsterCategory").value.trim(),
+    monsterClass: document.getElementById("tempMonsterClass").value.trim(),
+    movement: document.getElementById("tempMonsterMovement").value.trim(),
+    size: document.getElementById("tempMonsterSize").value.trim(),
+    notes: document.getElementById("tempMonsterNotes").value.trim(),
+    image: temporaryMonsterImageData,
+    noLoot: noLoot,
+    lootTable: lootTable,
+    updatedAt: new Date().toLocaleString()
+  };
+
+  const existingIndex = temporaryMonsters.findIndex(function (entry) {
+    return entry.id === monster.id;
+  });
+
+  if (existingIndex >= 0) {
+    temporaryMonsters[existingIndex] = monster;
+  } else {
+    temporaryMonsters.push(monster);
+  }
+
+  if (!saveTemporaryMonstersToBrowser()) return null;
+
+  renderTemporaryMonsters();
+
+  const status = document.getElementById("tempMonsterFormStatus");
+  status.textContent = "Saved temporary monster: " + monster.name;
+  status.style.display = "block";
+
+  document.getElementById("tempMonsterId").value = monster.id;
+  return monster;
+}
+
+
+function addTemporaryMonsterFormToRoster() {
+  const monster = saveTemporaryMonster();
+  if (!monster) return;
+
+  addTemporaryMonsterToRoster(monster.id);
+
+  const status = document.getElementById("tempMonsterFormStatus");
+  if (status) {
+    status.textContent = "Saved and added temporary monster to the roster: " + monster.name;
+    status.style.display = "block";
+  }
+}
+
+function editTemporaryMonster(id) {
+  const monster = temporaryMonsters.find(function (entry) {
+    return entry.id === id;
+  });
+  if (!monster) return;
+
+  document.getElementById("tempMonsterId").value = monster.id;
+  document.getElementById("tempMonsterName").value = monster.name || "";
+  document.getElementById("tempMonsterBody").value = Number(monster.body || 0);
+  document.getElementById("tempMonsterMind").value = Number(monster.mind || 0);
+  document.getElementById("tempMonsterSpirit").value = Number(monster.spirit || 0);
+  document.getElementById("tempMonsterAC").value = Number(monster.ac || 0);
+  document.getElementById("tempMonsterBonus").value = Number(monster.bonus || 0);
+  document.getElementById("tempMonsterCategory").value = monster.category || "";
+  document.getElementById("tempMonsterClass").value = monster.monsterClass || "";
+  document.getElementById("tempMonsterMovement").value = monster.movement || "";
+  document.getElementById("tempMonsterSize").value = monster.size || "";
+  document.getElementById("tempMonsterNotes").value = monster.notes || "";
+  document.getElementById("tempMonsterNoLoot").checked = Boolean(monster.noLoot);
+
+  document.getElementById("tempLootRows").innerHTML = "";
+  (monster.lootTable || []).forEach(function (loot) {
+    addTemporaryLootRow(loot.start, loot.end, loot.item);
+  });
+  if (!(monster.lootTable || []).length && !monster.noLoot) addTemporaryLootRow();
+  toggleTemporaryNoLoot();
+
+  temporaryMonsterImageData = monster.image || "";
+  const preview = document.getElementById("tempMonsterImagePreview");
+  if (temporaryMonsterImageData) {
+    preview.src = temporaryMonsterImageData;
+    preview.style.display = "block";
+  } else {
+    preview.src = "";
+    preview.style.display = "none";
+  }
+
+  goToPage("temporary_monster_form");
+}
+
+function deleteTemporaryMonster(id) {
+  const monster = temporaryMonsters.find(function (entry) {
+    return entry.id === id;
+  });
+  if (!monster) return;
+
+  if (!confirm("Delete temporary monster " + monster.name + "?")) return;
+
+  temporaryMonsters = temporaryMonsters.filter(function (entry) {
+    return entry.id !== id;
+  });
+  saveTemporaryMonstersToBrowser();
+  renderTemporaryMonsters();
+}
+
+function clearAllTemporaryMonsters() {
+  if (!temporaryMonsters.length) return;
+  if (!confirm("Delete all temporary monsters saved in this browser?")) return;
+
+  temporaryMonsters = [];
+  saveTemporaryMonstersToBrowser();
+  renderTemporaryMonsters();
+}
+
+function rollTemporaryMonsterLoot(id) {
+  const monster = temporaryMonsters.find(function (entry) {
+    return entry.id === id;
+  });
+  if (!monster) return;
+
+  const resultBox = document.getElementById("tempLootResult_" + id);
+
+  if (monster.noLoot) {
+    resultBox.textContent = "No Loot: this monster bypasses the loot function.";
+    return;
+  }
+
+  const table = monster.lootTable || [];
+  const validation = validateTemporaryLootTable(table, false);
+
+  if (!validation.valid) {
+    const problems = [];
+
+    if (validation.missing.length) {
+      problems.push("Missing: " + validation.missing.join(", "));
+    }
+
+    if (validation.overlaps.length) {
+      problems.push("Overlapping: " + validation.overlaps.join(", "));
+    }
+
+    if (validation.invalidRanges && validation.invalidRanges.length) {
+      validation.invalidRanges.forEach(function (range) {
+        problems.push("Row " + range.rowNumber + ": End " + range.end + " must be higher than Start " + range.start);
+      });
+    }
+
+    if (validation.emptyItems && validation.emptyItems.length) {
+      problems.push("Missing loot item on row(s): " + validation.emptyItems.join(", "));
+    }
+
+    resultBox.textContent = "Loot table is invalid. " + problems.join(" | ");
+    return;
+  }
+
+  const roll = Math.floor(Math.random() * 20) + 1;
+  const matches = table.filter(function (entry) {
+    return roll >= Number(entry.start) && roll <= Number(entry.end);
+  });
+
+  resultBox.textContent = "D20 Roll " + roll + ": " + matches.map(function (entry) {
+    return entry.item;
+  }).join(" | ");
+}
+
+function addTemporaryMonsterToRoster(id) {
+  const monster = temporaryMonsters.find(function (entry) {
+    return entry.id === id;
+  });
+  if (!monster) return;
+
+  try {
+    if (window.parent && window.parent !== window && typeof window.parent.addTemporaryMonsterFromGuide === "function") {
+      window.parent.addTemporaryMonsterFromGuide(monster);
+      return;
+    }
+  } catch (error) {}
+
+  if (window.parent && window.parent !== window) {
+    window.parent.postMessage({
+      type: "addTemporaryMonsterToRoster",
+      monster: monster
+    }, "*");
+    return;
+  }
+
+  alert("Open the Monster Guide inside the DM Tool before adding the temporary monster to the roster.");
+}
+
+function renderTemporaryMonsters() {
+  const container = document.getElementById("temporaryMonstersList");
+  if (!container) return;
+
+  if (!temporaryMonsters.length) {
+    container.innerHTML = '<div class="temp-empty">No temporary monsters have been saved yet.</div>';
+    return;
+  }
+
+  container.innerHTML = temporaryMonsters.map(function (monster) {
+    const lootRows = (monster.lootTable || []).map(function (loot) {
+      return "<li>" + temporaryEscape(loot.start) + "–" + temporaryEscape(loot.end) + ": " + temporaryEscape(loot.item) + "</li>";
+    }).join("");
+
+    const lootDisplay = monster.noLoot
+      ? "<p><strong>No Loot:</strong> loot rolling is bypassed for this monster.</p>"
+      : (lootRows ? "<ul>" + lootRows + "</ul>" : "<p>Incomplete loot table.</p>");
+
+    const image = monster.image
+      ? '<img class="temp-monster-image" src="' + monster.image + '" alt="' + temporaryEscape(monster.name) + '">'
+      : '<div class="monster-no-image">No temporary image selected.</div>';
+
+    return `
+      <article class="temp-monster-card">
+        <h3>${temporaryEscape(monster.name)}</h3>
+        <div class="temp-monster-meta">
+          ${monster.category ? "Category: " + temporaryEscape(monster.category) + " | " : ""}
+          ${monster.monsterClass ? "Class: " + temporaryEscape(monster.monsterClass) + " | " : ""}
+          ${monster.movement ? "Movement: " + temporaryEscape(monster.movement) + " | " : ""}
+          ${monster.size ? "Size: " + temporaryEscape(monster.size) : ""}
+        </div>
+
+        ${image}
+
+        <div class="stat-grid">
+          <div class="stat-box"><span>Body</span>${temporaryEscape(monster.body)}</div>
+          <div class="stat-box"><span>Mind</span>${temporaryEscape(monster.mind)}</div>
+          <div class="stat-box"><span>Spirit</span>${temporaryEscape(monster.spirit)}</div>
+          <div class="stat-box"><span>AC</span>${temporaryEscape(monster.ac)}</div>
+          <div class="stat-box"><span>Combat Bonus</span>${temporaryEscape(monster.bonus)}</div>
+        </div>
+
+        ${monster.notes ? '<div class="preserve-lines"><strong>Full Monster Notes:</strong>\n' + temporaryEscape(monster.notes) + '</div>' : ""}
+
+        <div class="temp-loot-wrap">
+          <strong>Loot / Treasure Table</strong>
+          ${lootDisplay}
+          <div id="tempLootResult_${temporaryEscape(monster.id)}" class="temp-result">${monster.noLoot ? "No Loot: loot function bypassed." : "No loot rolled yet."}</div>
+        </div>
+
+        <div class="monster-actions">
+          <button class="book-btn dark" onclick="addTemporaryMonsterToRoster('${temporaryEscape(monster.id)}')">Add Monster to Roster</button>
+          <button class="book-btn" onclick="rollTemporaryMonsterLoot('${temporaryEscape(monster.id)}')">Roll Treasure</button>
+          <button class="book-btn" onclick="editTemporaryMonster('${temporaryEscape(monster.id)}')">Edit</button>
+          <button class="book-btn danger" onclick="deleteTemporaryMonster('${temporaryEscape(monster.id)}')">Delete</button>
+        </div>
+      </article>
+    `;
+  }).join("");
+}
+
+
 let allPages = [];
 let filteredPages = [];
 let currentPage = 0;
@@ -4419,6 +5211,11 @@ let currentPage = 0;
 function initBook() {
   allPages = Array.from(document.querySelectorAll(".book-page"));
   filteredPages = allPages.slice();
+  loadTemporaryMonsters();
+  if (document.getElementById("tempLootRows") && !document.querySelector("#tempLootRows .temp-loot-row")) {
+    addTemporaryLootRow();
+  }
+  toggleTemporaryNoLoot();
   showPage(0);
 }
 
