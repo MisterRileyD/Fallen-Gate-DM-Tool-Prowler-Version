@@ -2599,11 +2599,41 @@
 			if (p.spiritStart === undefined) p.spiritStart = "";
 		}
 
+
+		function initiativeNumber(p) {
+			const value = Number(p && p.init);
+			return Number.isFinite(value) ? value : 0;
+		}
+
+		function hasInitRoll(p) {
+			return initiativeNumber(p) > 0;
+		}
+
+		function compareParticipantsByInit(a, b) {
+			const aHasInit = hasInitRoll(a);
+			const bHasInit = hasInitRoll(b);
+
+			if (aHasInit && !bHasInit) return -1;
+			if (!aHasInit && bHasInit) return 1;
+
+			if (aHasInit && bHasInit) {
+				const initDifference = initiativeNumber(b) - initiativeNumber(a);
+				if (initDifference !== 0) return initDifference;
+			}
+
+			/* Tie breaker keeps the same input/add order. */
+			return participants.indexOf(a) - participants.indexOf(b);
+		}
+
+		function getRosterDisplayParticipants() {
+			return participants.slice().sort(compareParticipantsByInit);
+		}
+
 		function renderTable() {
 			const tbody = document.getElementById("partyBody");
 			tbody.innerHTML = "";
 
-			participants.forEach(function (p) {
+			getRosterDisplayParticipants().forEach(function (p) {
 				normalizeDeathRuleFields(p);
 				hydrateStatsFromType(p, false);
 				const tr = document.createElement("tr");
@@ -2667,6 +2697,10 @@
 				return "<span class='status-pill active' title='Active'>Live</span>";
 			}
 
+			if (hasInitRoll(p)) {
+				return "<span class='status-pill active' title='In turn order; select a type when needed for loot/death rules'>Turn</span>";
+			}
+
 			return "<span class='status-pill' title='Pending Init'>Wait</span>";
 		}
 
@@ -2709,7 +2743,7 @@
 			}
 
 
-			syncTurnOrder();
+			syncTurnOrder(field === "init");
 
 			if (field === "init") {
 				const newInitForSummary = Number(p.init || 0);
@@ -2791,7 +2825,7 @@
 
 		function currentTurnSummaryName() {
 			const top = turnOrderIds.length ? findParticipant(turnOrderIds[0]) : null;
-			return top ? top.name : "No active turn";
+			return top && isActiveForOrder(top) ? top.name : "No active turn";
 		}
 
 		function turnOrderSnapshot() {
@@ -3047,27 +3081,37 @@
 		}
 
 		function sortTurnOrder() {
-			turnOrderIds = participants
-				.filter(isActiveForOrder)
-				.sort((a, b) => Number(b.init) - Number(a.init))
-				.map(p => p.id);
+			syncTurnOrder(true);
+			renderTable();
 
-			renderTurnOrder();
 			const turnNote = getTurnActionNote(true);
-			addTurnSummaryEntry("sort", "Turn Order Sorted by Initiative", "Sort by Init was clicked." + (turnNote ? " | " + turnNote : ""));
+			addTurnSummaryEntry("sort", "Turn Order Sorted by Initiative", "Sort by Init was clicked. Highest Init is now on top." + (turnNote ? " | " + turnNote : ""));
 		}
 
-		function syncTurnOrder() {
+		function syncTurnOrder(sortByInit = false) {
+			if (sortByInit) {
+				turnOrderIds = participants
+					.filter(isActiveForOrder)
+					.sort(compareParticipantsByInit)
+					.map(function (p) { return p.id; });
+
+				renderTurnOrder();
+				return;
+			}
+
 			turnOrderIds = turnOrderIds.filter(function (id) {
 				const p = findParticipant(id);
 				return p && isActiveForOrder(p);
 			});
 
-			participants.forEach(function (p) {
-				if (isActiveForOrder(p) && !turnOrderIds.includes(p.id)) {
-					turnOrderIds.push(p.id);
-				}
-			});
+			participants
+				.slice()
+				.sort(compareParticipantsByInit)
+				.forEach(function (p) {
+					if (isActiveForOrder(p) && !turnOrderIds.includes(p.id)) {
+						turnOrderIds.push(p.id);
+					}
+				});
 
 			renderTurnOrder();
 		}
@@ -3108,7 +3152,7 @@
 			// This prevents Next Turn from creating a brand new Discord post by accident.
 			const idBox = document.getElementById("discordMessageID");
 			const typedID = idBox && idBox.value ? idBox.value.trim() : "";
-			const savedID = localStorage.getItem(DISCORD_MESSAGE_STORAGE_KEY);
+			const savedID = getSavedDiscordMessageIDForEvent(currentDiscordEventName());
 			const hasExistingPost = Boolean(eventMessageID || typedID || savedID);
 
 			if (!hasExistingPost) return;
@@ -3164,7 +3208,9 @@
 		}
 
 		function isActiveForOrder(p) {
-			return hasEnteredCombat(p) && !isDefeated(p);
+			/* Turn order should appear as soon as an Init Roll is entered.
+			   Type is still required for defeat/loot combat rules. */
+			return hasInitRoll(p) && !isDefeated(p);
 		}
 
 		function isRemovedByStats(p) {
