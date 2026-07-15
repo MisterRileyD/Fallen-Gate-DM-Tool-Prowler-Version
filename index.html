@@ -2185,8 +2185,82 @@
 		const TOKEN_GRAB_RADIUS = 38;
 		const MAP_ITEM_GRAB_PADDING = 24;
 
+		const FALLEN_GATE_WAVE_FIGHT_MONSTERS = {
+		  "Abyssal Vultures": {
+		    "active": 1,
+		    "monster_title": "Wave Fight Monsters",
+		    "body": 2,
+		    "mind": 0,
+		    "spirit": 0,
+		    "ac": 0,
+		    "bonus": 0,
+		    "monster_class": "Undead",
+		    "movement": "Unknown",
+		    "size": "Unknown",
+		    "attacks": "Claw or Bite attack for 1 Body damage.",
+		    "description": "Undead vulture-like carrion hunters used in wave fights. They descend from above, harass wounded targets, and keep pressure on the battlefield.",
+		    "treasure_text": "1\u201320: No Loot"
+		  },
+		  "Goblin Archer": {
+		    "active": 1,
+		    "monster_title": "Wave Fight Monsters",
+		    "body": 4,
+		    "mind": 4,
+		    "spirit": 4,
+		    "ac": 0,
+		    "bonus": 0,
+		    "monster_class": "Mortal",
+		    "movement": "Unknown",
+		    "size": "Unknown",
+		    "attacks": "Ranged bow attack dealing 2 Body damage on hit.",
+		    "description": "A goblin ranged fighter who keeps distance, fires into the fight, and punishes targets distracted by melee attackers.",
+		    "treasure_text": "1\u201320: No Loot"
+		  },
+		  "Goblin Shaman": {
+		    "active": 1,
+		    "monster_title": "Wave Fight Monsters",
+		    "body": 3,
+		    "mind": 3,
+		    "spirit": 3,
+		    "ac": 0,
+		    "bonus": 0,
+		    "monster_class": "Mortal",
+		    "movement": "Unknown",
+		    "size": "Unknown",
+		    "attacks": "Once per turn the Shaman may choose one spell. Fire Ball: single-target fire-based ranged attack dealing 3 Body damage on hit. Heal: heal an ally for 3 Body.",
+		    "description": "A goblin support caster that shifts between hurting enemies and keeping allies alive during a wave fight.",
+		    "treasure_text": "1\u201320: No Loot"
+		  },
+		  "Goblin Spearman": {
+		    "active": 1,
+		    "monster_title": "Wave Fight Monsters",
+		    "body": 4,
+		    "mind": 4,
+		    "spirit": 4,
+		    "ac": 0,
+		    "bonus": 0,
+		    "monster_class": "Mortal",
+		    "movement": "Unknown",
+		    "size": "Unknown",
+		    "attacks": "Melee spear attack causing 2 Body damage on hit.",
+		    "description": "A front-line goblin wave fighter that presses forward with a spear and protects weaker ranged or caster allies.",
+		    "treasure_text": "1\u201320: No Loot"
+		  }
+		};
+		
+				function mergeWaveFightMonstersIntoData() {
+					if (!data) data = {};
+					if (!data.monsters) data.monsters = {};
+		
+					Object.keys(FALLEN_GATE_WAVE_FIGHT_MONSTERS).forEach(function (name) {
+						data.monsters[name] = FALLEN_GATE_WAVE_FIGHT_MONSTERS[name];
+					});
+				}
+		
+		
 		function initDMTool() {
 			data = window.FALLEN_GATE_DATA || {};
+			mergeWaveFightMonstersIntoData();
 			characterSheets = window.FALLEN_GATE_CHARACTER_SHEETS || {};
 
 			if (!data.ranks || !data.dragons || !data.monsters) {
@@ -2225,6 +2299,7 @@
 
 			const monsterTitleOrder = [
 				"Other",
+				"Wave Fight Monsters",
 				"Abyssal Nature",
 				"Dreadspire Enemies",
 				"Infected Enemies",
