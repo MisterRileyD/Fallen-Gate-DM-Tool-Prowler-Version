@@ -173,6 +173,7 @@ p, li, td, th {
   <div class="embedded-book">
     <div class="book-toolbar">
       <button class="book-btn dark" onclick="goToPage('spell_index')">Spell Index</button>
+      <button class="book-btn spell-back-btn" onclick="goBackArea()" title="Go back through the last 5 opened spellbook areas">Back Area</button>
       <input id="searchBox" class="book-search" placeholder="Search spells, who can cast, book, type, cost..." oninput="searchPages()">
       <button class="book-btn" onclick="prevPage()">Previous</button>
       <button class="book-btn dark" onclick="nextPage()">Next</button>
@@ -183,7 +184,7 @@ p, li, td, th {
   <h2 class="item-title">Spellbook Index</h2>
   <div class="category">Magic Books</div>
   <div class="card-grid">
-    <button class="book-card" onclick="goToPage('book_neutral_magic')"><strong>Neutral Magic</strong>129 spells</button><button class="book-card" onclick="goToPage('book_light_magic')"><strong>Light Magic</strong>69 spells</button><button class="book-card" onclick="goToPage('book_dark_magic')"><strong>Dark Magic</strong>92 spells</button>
+    <button class="book-card" onclick="goToPage('book_neutral_magic')"><strong>Neutral Magic</strong>140 spells</button><button class="book-card" onclick="goToPage('book_light_magic')"><strong>Light Magic</strong>69 spells</button><button class="book-card" onclick="goToPage('book_dark_magic')"><strong>Dark Magic</strong>92 spells</button>
   </div>
 </section>
 
@@ -191,7 +192,7 @@ p, li, td, th {
   <h2 class="item-title">Neutral Magic</h2>
   <div class="category">Magic Book</div>
   <div class="card-grid">
-    <button class="type-card" onclick="goToPage('type_neutral_magic_conjuration_magic')"><strong>Conjuration Magic</strong>18 spells</button><button class="type-card" onclick="goToPage('type_neutral_magic_ecomancy')"><strong>Ecomancy</strong>13 spells</button><button class="type-card" onclick="goToPage('type_neutral_magic_elemental_magic')"><strong>Elemental Magic</strong>23 spells</button><button class="type-card" onclick="goToPage('type_neutral_magic_illusion')"><strong>Illusion</strong>16 spells</button><button class="type-card" onclick="goToPage('type_neutral_magic_phantasmal')"><strong>Phantasmal</strong>11 spells</button><button class="type-card" onclick="goToPage('type_neutral_magic_spatial_magic')"><strong>Spatial Magic</strong>14 spells</button><button class="type-card" onclick="goToPage('type_neutral_magic_summoning')"><strong>Summoning</strong>20 spells</button><button class="type-card" onclick="goToPage('type_neutral_magic_transmutation')"><strong>Transmutation</strong>14 spells</button>
+    <button class="type-card" onclick="goToPage('type_neutral_magic_conjuration_magic')"><strong>Conjuration Magic</strong>22 spells</button><button class="type-card" onclick="goToPage('type_neutral_magic_ecomancy')"><strong>Ecomancy</strong>13 spells</button><button class="type-card" onclick="goToPage('type_neutral_magic_elemental_magic')"><strong>Elemental Magic</strong>27 spells</button><button class="type-card" onclick="goToPage('type_neutral_magic_illusion')"><strong>Illusion</strong>16 spells</button><button class="type-card" onclick="goToPage('type_neutral_magic_phantasmal')"><strong>Phantasm</strong>14 spells</button><button class="type-card" onclick="goToPage('type_neutral_magic_spatial_magic')"><strong>Spatial Magic</strong>14 spells</button><button class="type-card" onclick="goToPage('type_neutral_magic_summoning')"><strong>Summoning</strong>20 spells</button><button class="type-card" onclick="goToPage('type_neutral_magic_transmutation')"><strong>Transmutation</strong>14 spells</button>
   </div>
 </section>
 
@@ -199,7 +200,7 @@ p, li, td, th {
   <h2 class="item-title">Conjuration Magic</h2>
   <div class="category">Neutral Magic → Who Can Cast</div>
   <div class="card-grid">
-    <button class="cast-card" onclick="goToPage('cast_neutral_magic_conjuration_magic_all_ranks')"><strong>All Ranks</strong>14 spells</button><button class="cast-card" onclick="goToPage('cast_neutral_magic_conjuration_magic_savant_spells')"><strong>Savant Spells</strong>3 spells</button><button class="cast-card" onclick="goToPage('cast_neutral_magic_conjuration_magic_oracle_spells')"><strong>Oracle Spells</strong>1 spell</button>
+    <button class="cast-card" onclick="goToPage('cast_neutral_magic_conjuration_magic_all_ranks')"><strong>All Ranks</strong>17 spells</button><button class="cast-card" onclick="goToPage('cast_neutral_magic_conjuration_magic_savant_spells')"><strong>Savant Spells</strong>4 spells</button><button class="cast-card" onclick="goToPage('cast_neutral_magic_conjuration_magic_oracle_spells')"><strong>Oracle Spells</strong>1 spell</button>
   </div>
 </section>
 
@@ -208,6 +209,9 @@ p, li, td, th {
   <div class="category">Neutral Magic → Conjuration Magic → Who Can Cast</div>
   <div class="spell-grid">
     <button class="spell-list-btn" onclick="goToPage('spell_neutral_magic_conjuration_magic_all_ranks_aufer_materia_remove_item')">Aufer Materia (Remove Item)<small>1 Mind</small></button><button class="spell-list-btn" onclick="goToPage('spell_neutral_magic_conjuration_magic_all_ranks_cibus_et_potio_create_food_and_drink')">Cibus et Potio (Create Food and Drink)<small>Free</small></button><button class="spell-list-btn" onclick="goToPage('spell_neutral_magic_conjuration_magic_all_ranks_difficilis_materia_difficult_item')">Difficilis Materia (Difficult Item)<small>2 Mind</small></button><button class="spell-list-btn" onclick="goToPage('spell_neutral_magic_conjuration_magic_all_ranks_excandescunt_volucres_flare_birds')">Excandescunt Volucres (Flare Birds)<small>1 Mind</small></button><button class="spell-list-btn" onclick="goToPage('spell_neutral_magic_conjuration_magic_all_ranks_geminae_golems_twin_golems')">Geminae Golems (Twin Golems)<small>2 Mind</small></button><button class="spell-list-btn" onclick="goToPage('spell_neutral_magic_conjuration_magic_all_ranks_magiam_detegere_detect_magic')">Magiam Detegere (Detect Magic)<small>1 mind</small></button><button class="spell-list-btn" onclick="goToPage('spell_neutral_magic_conjuration_magic_all_ranks_manentia_permanency')">Manentia (Permanency)<small>Free</small></button><button class="spell-list-btn" onclick="goToPage('spell_neutral_magic_conjuration_magic_all_ranks_obtestor_arma_conjure_weapon')">Obtestor Arma (Conjure Weapon)<small>0 Mind or 1 Mind</small></button><button class="spell-list-btn" onclick="goToPage('spell_neutral_magic_conjuration_magic_all_ranks_obtestor_armis_conjure_armor')">Obtestor Armis (Conjure Armor)<small>1 Mind</small></button><button class="spell-list-btn" onclick="goToPage('spell_neutral_magic_conjuration_magic_all_ranks_scutum_adamantinum_adamantine_shield')">Scutum Adamantinum (Adamantine Shield)<small>1 Mind</small></button><button class="spell-list-btn" onclick="goToPage('spell_neutral_magic_conjuration_magic_all_ranks_securus_materia_simple_item')">Securus Materia (Simple Item)<small>Free</small></button><button class="spell-list-btn" onclick="goToPage('spell_neutral_magic_conjuration_magic_all_ranks_striges_iuniperorum_witches_broom')">Striges Iuniperorum (Witches Broom)<small>Free</small></button><button class="spell-list-btn" onclick="goToPage('spell_neutral_magic_conjuration_magic_all_ranks_telae_adhaerentes_clinging_webs')">Telae Adhaerentes (Clinging Webs)<small>2 mind</small></button><button class="spell-list-btn" onclick="goToPage('spell_neutral_magic_conjuration_magic_all_ranks_vita_temporaria_temporary_life')">Vita Temporaria (Temporary Life)<small>3 Mind</small></button>
+    <button class="spell-list-btn" onclick="goToPage('spell_neutral_magic_conjuration_magic_all_ranks_evocare_turrim_conjure_turret')">Evocare Turrim (Conjure Turret)<small>2 Mind</small></button>
+    <button class="spell-list-btn" onclick="goToPage('spell_neutral_magic_conjuration_magic_all_ranks_concutere_sidus_shattering_star')">Concutere Sidus (Shattering Star)<small>1 Mind</small></button>
+    <button class="spell-list-btn" onclick="goToPage('spell_neutral_magic_conjuration_magic_all_ranks_ferrum_pallium_blade_cloak')">Ferrum Pallium (Blade Cloak)<small>1 Mind</small></button>
   </div>
 </section>
 
@@ -216,6 +220,7 @@ p, li, td, th {
   <div class="category">Neutral Magic → Conjuration Magic → Who Can Cast</div>
   <div class="spell-grid">
     <button class="spell-list-btn" onclick="goToPage('spell_neutral_magic_conjuration_magic_savant_spells_convivia_victoriae_victory_feast')">Convivia Victoriae (Victory Feast)<small>1 Mind per person attending the Feast.</small></button><button class="spell-list-btn" onclick="goToPage('spell_neutral_magic_conjuration_magic_savant_spells_magicae_speculum_magic_mirror')">Magicae Speculum (Magic Mirror)<small>3 Mind</small></button><button class="spell-list-btn" onclick="goToPage('spell_neutral_magic_conjuration_magic_savant_spells_provectus_armis_advanced_armor')">Provectus Armis (Advanced Armor)<small>4 Mind</small></button>
+    <button class="spell-list-btn" onclick="goToPage('spell_neutral_magic_conjuration_magic_savant_spells_arcana_bomba_arcane_bomb')">Arcana Bomba (Arcane Bomb)<small>6 Mind</small></button>
   </div>
 </section>
 
@@ -263,7 +268,7 @@ p, li, td, th {
   <h2 class="item-title">Elemental Magic</h2>
   <div class="category">Neutral Magic → Who Can Cast</div>
   <div class="card-grid">
-    <button class="cast-card" onclick="goToPage('cast_neutral_magic_elemental_magic_all_ranks')"><strong>All Ranks</strong>20 spells</button><button class="cast-card" onclick="goToPage('cast_neutral_magic_elemental_magic_savant_spells')"><strong>Savant Spells</strong>1 spell</button><button class="cast-card" onclick="goToPage('cast_neutral_magic_elemental_magic_savant_and_oracle_spells')"><strong>Savant and Oracle Spells</strong>1 spell</button><button class="cast-card" onclick="goToPage('cast_neutral_magic_elemental_magic_oracle_spells')"><strong>Oracle Spells</strong>1 spell</button>
+    <button class="cast-card" onclick="goToPage('cast_neutral_magic_elemental_magic_all_ranks')"><strong>All Ranks</strong>20 spells</button><button class="cast-card" onclick="goToPage('cast_neutral_magic_elemental_magic_savant_spells')"><strong>Savant Spells</strong>5 spells</button><button class="cast-card" onclick="goToPage('cast_neutral_magic_elemental_magic_savant_and_oracle_spells')"><strong>Savant and Oracle Spells</strong>1 spell</button><button class="cast-card" onclick="goToPage('cast_neutral_magic_elemental_magic_oracle_spells')"><strong>Oracle Spells</strong>1 spell</button>
   </div>
 </section>
 
@@ -280,6 +285,10 @@ p, li, td, th {
   <div class="category">Neutral Magic → Elemental Magic → Who Can Cast</div>
   <div class="spell-grid">
     <button class="spell-list-btn" onclick="goToPage('spell_neutral_magic_elemental_magic_savant_spells_natura_furia_nature_s_fury')">Natura Furia (Nature&#x27;s Fury)<small>3 Mind</small></button>
+    <button class="spell-list-btn" onclick="goToPage('spell_neutral_magic_elemental_magic_savant_spells_ignis_fatuus_will_o_wisp')">Ignis Fatuus (Will o&#x27; Wisp)<small>6 Mind</small></button>
+    <button class="spell-list-btn" onclick="goToPage('spell_neutral_magic_elemental_magic_savant_spells_tempest_glacies_ice_storm')">Tempest Glacies (Ice Storm)<small>4 Mind to manifest, 2 Mind/round to maintain</small></button>
+    <button class="spell-list-btn" onclick="goToPage('spell_neutral_magic_elemental_magic_savant_spells_novacula_ventum_razor_wind')">Novacula Ventum (Razor Wind)<small>6 Mind</small></button>
+    <button class="spell-list-btn" onclick="goToPage('spell_neutral_magic_elemental_magic_savant_spells_fissura_consumens_consuming_fissure')">Fissura Consumens (Consuming Fissure)<small>6 Mind</small></button>
   </div>
 </section>
 
@@ -339,35 +348,44 @@ p, li, td, th {
   </div>
 </section>
 
+
 <section class="book-page" id="type_neutral_magic_phantasmal">
-  <h2 class="item-title">Phantasmal</h2>
+  <h2 class="item-title">Phantasm</h2>
   <div class="category">Neutral Magic → Who Can Cast</div>
   <div class="card-grid">
-    <button class="cast-card" onclick="goToPage('cast_neutral_magic_phantasmal_all_ranks')"><strong>All Ranks</strong>9 spells</button><button class="cast-card" onclick="goToPage('cast_neutral_magic_phantasmal_savant_and_oracle_spells')"><strong>Savant and Oracle Spells</strong>1 spell</button><button class="cast-card" onclick="goToPage('cast_neutral_magic_phantasmal_oracle_spells')"><strong>Oracle Spells</strong>1 spell</button>
+    <button class="cast-card" onclick="goToPage('cast_neutral_magic_phantasmal_all_ranks')"><strong>All Ranks</strong>8 spells</button><button class="cast-card" onclick="goToPage('cast_neutral_magic_phantasmal_any_rank')"><strong>Any Rank</strong>3 spells</button><button class="cast-card" onclick="goToPage('cast_neutral_magic_phantasmal_savant_and_oracle_spells')"><strong>Savant and Oracle Spells</strong>1 spell</button><button class="cast-card" onclick="goToPage('cast_neutral_magic_phantasmal_oracle_and_savants')"><strong>Oracle &amp; Savants</strong>2 spells</button>
   </div>
 </section>
 
 <section class="book-page" id="cast_neutral_magic_phantasmal_all_ranks">
   <h2 class="item-title">All Ranks</h2>
-  <div class="category">Neutral Magic → Phantasmal → Who Can Cast</div>
+  <div class="category">Neutral Magic → Phantasm → Who Can Cast</div>
   <div class="spell-grid">
-    <button class="spell-list-btn" onclick="goToPage('spell_neutral_magic_phantasmal_all_ranks_armatura_ectoplasmatia_ecto_plasma_armor')">Armatura Ectoplasmatia (Ecto Plasma Armor)<small>3 Spirit</small></button><button class="spell-list-btn" onclick="goToPage('spell_neutral_magic_phantasmal_all_ranks_fulmen_phantasmalis_phantom_bolt')">Fulmen Phantasmalis (Phantom Bolt)<small>3 Spirit for the first bolt, 2 Spirit per subsequent bolt</small></button><button class="spell-list-btn" onclick="goToPage('spell_neutral_magic_phantasmal_all_ranks_iter_spiritus_ghost_walk')">Iter Spiritus (Ghost Walk)<small>3 Spirit per turn</small></button><button class="spell-list-btn" onclick="goToPage('spell_neutral_magic_phantasmal_all_ranks_manus_magistri_hands_of_the_master')">Manus Magistri (Hands of the Master)<small>1 Spirit</small></button><button class="spell-list-btn" onclick="goToPage('spell_neutral_magic_phantasmal_all_ranks_manus_phantasmalis_phantasmal_hand')">Manus Phantasmalis (Phantasmal Hand)<small>1 Spirit per Round</small></button><button class="spell-list-btn" onclick="goToPage('spell_neutral_magic_phantasmal_all_ranks_medicina_etherea_ethereal_mend')">Medicina Etherea (Ethereal Mend)<small>2 Spirit</small></button><button class="spell-list-btn" onclick="goToPage('spell_neutral_magic_phantasmal_all_ranks_spiritus_explorator_spectral_reconnaissance')">Spiritus Explorator (Spectral Reconnaissance)<small>5 Spirit</small></button><button class="spell-list-btn" onclick="goToPage('spell_neutral_magic_phantasmal_all_ranks_spiritus_lamina_spirit_blade')">Spiritus Lamina (Spirit blade)<small>Free</small></button><button class="spell-list-btn" onclick="goToPage('spell_neutral_magic_phantasmal_all_ranks_spiritus_loquere_spirit_speak')">Spiritus Loquere (Spirit Speak)<small>Free</small></button>
+    <button class="spell-list-btn" onclick="goToPage('spell_neutral_magic_phantasmal_all_ranks_spiritus_lamina_spirit_blade')">Spiritus Lamina (Spirit blade)<small>Free</small></button><button class="spell-list-btn" onclick="goToPage('spell_neutral_magic_phantasmal_all_ranks_manus_phantasmalis_phantasmal_hand')">Manus Phantasmalis (Phantasmal Hand)<small>1 Spirit</small></button><button class="spell-list-btn" onclick="goToPage('spell_neutral_magic_phantasmal_all_ranks_armatura_ectoplasmatia_ectoplasmic_armor')">Armatura Ectoplasmatia (Ectoplasmic Armor)<small>2 Spirit; 1 Spirit if cast in the Spirit Realm</small></button><button class="spell-list-btn" onclick="goToPage('spell_neutral_magic_phantasmal_all_ranks_iter_spiritus_ghost_walk')">Iter Spiritus (Ghost Walk)<small>See spell description</small></button><button class="spell-list-btn" onclick="goToPage('spell_neutral_magic_phantasmal_all_ranks_medicina_etherea_ethereal_mend')">Medicina Etherea (Ethereal Mend)<small>2 Body</small></button><button class="spell-list-btn" onclick="goToPage('spell_neutral_magic_phantasmal_all_ranks_spiritus_loquere_spirit_speak')">Spiritus Loquere (Spirit Speak)<small>Free</small></button><button class="spell-list-btn" onclick="goToPage('spell_neutral_magic_phantasmal_all_ranks_manus_magistri_hands_of_the_master')">Manus Magistri (Hands of the Master)<small>1 Spirit</small></button><button class="spell-list-btn" onclick="goToPage('spell_neutral_magic_phantasmal_all_ranks_alae_aurielis_uriels_wings')">Alae Aurielis (Uriel’s Wings)<small>1 Spirit</small></button>
+  </div>
+</section>
+
+<section class="book-page" id="cast_neutral_magic_phantasmal_any_rank">
+  <h2 class="item-title">Any Rank</h2>
+  <div class="category">Neutral Magic → Phantasm → Who Can Cast</div>
+  <div class="spell-grid">
+    <button class="spell-list-btn" onclick="goToPage('spell_neutral_magic_phantasmal_any_rank_spiritus_explorator_spectral_reconnaissance')">Spiritus Explorator (Spectral Reconnaissance)<small>3 Spirit</small></button><button class="spell-list-btn" onclick="goToPage('spell_neutral_magic_phantasmal_any_rank_fulmen_phantasmalis_phantom_bolt')">Fulmen Phantasmalis (Phantom Bolt)<small>2 Mind, and 1 Mind for continued channeling.</small></button><button class="spell-list-btn" onclick="goToPage('spell_neutral_magic_phantasmal_any_rank_nova_spectralis_spectral_nova')">Nova Spectralis (Spectral Nova)<small>2 Mind</small></button>
   </div>
 </section>
 
 <section class="book-page" id="cast_neutral_magic_phantasmal_savant_and_oracle_spells">
   <h2 class="item-title">Savant and Oracle Spells</h2>
-  <div class="category">Neutral Magic → Phantasmal → Who Can Cast</div>
+  <div class="category">Neutral Magic → Phantasm → Who Can Cast</div>
   <div class="spell-grid">
-    <button class="spell-list-btn" onclick="goToPage('spell_neutral_magic_phantasmal_savant_and_oracle_spells_phantasma_custos_spectral_guardian')">Phantasma Custos (Spectral Guardian)<small>5 Spirit</small></button>
+    <button class="spell-list-btn" onclick="goToPage('spell_neutral_magic_phantasmal_savant_and_oracle_spells_phantasma_custos_spectral_guardian')">Phantasma Custos (Spectral Guardian)<small>4 Spirit; The cost of this Spell may not be Reduced.</small></button>
   </div>
 </section>
 
-<section class="book-page" id="cast_neutral_magic_phantasmal_oracle_spells">
-  <h2 class="item-title">Oracle Spells</h2>
-  <div class="category">Neutral Magic → Phantasmal → Who Can Cast</div>
+<section class="book-page" id="cast_neutral_magic_phantasmal_oracle_and_savants">
+  <h2 class="item-title">Oracle &amp; Savants</h2>
+  <div class="category">Neutral Magic → Phantasm → Who Can Cast</div>
   <div class="spell-grid">
-    <button class="spell-list-btn" onclick="goToPage('spell_neutral_magic_phantasmal_oracle_spells_nova_spectralis_spectral_nova')">Nova Spectralis (Spectral Nova)<small>5 Spirit</small></button>
+    <button class="spell-list-btn" onclick="goToPage('spell_neutral_magic_phantasmal_oracle_and_savants_requies_inquietis_rest_of_the_restless')">Requies Inquietis (Rest of the Restless)<small>2 Body and 2 Mind; The cost of this Spell cannot be reduced.</small></button><button class="spell-list-btn" onclick="goToPage('spell_neutral_magic_phantasmal_oracle_and_savants_speculum_spiritus_spirit_mirror')">Speculum Spiritus (Spirit Mirror)<small>3 Mind; The cost of this Spell cannot be reduced.</small></button>
   </div>
 </section>
 
@@ -1661,108 +1679,180 @@ May only be cast once per scene.</td></tr><tr><th>Auto Hit</th><td>N/A</td></tr>
   </table>
 </section>
 
-<section class="book-page" id="spell_neutral_magic_phantasmal_all_ranks_armatura_ectoplasmatia_ecto_plasma_armor">
-  <h2 class="item-title">Armatura Ectoplasmatia (Ecto Plasma Armor)</h2>
-  <div class="category">Neutral Magic → Phantasmal → All Ranks</div>
-  <table class="field-table">
-    <tr><th>Incantation</th><td>Must say &quot;Armatura Ectoplasmatia.&quot;</td></tr><tr><th>Movements</th><td>While speaking the spell take the index and middle finger of your casting hand and touch the middle of your forehead</td></tr><tr><th>Description</th><td class="preserve-lines">Casting the spell will cause an Ecto-plasma to start covering your body and clothes. This armor gives the caster a AC of 10 against physical attacks, as well as negates 1 Spirit and 1 Mind damage of any physical attack or spell which successfully hits the caster.</td></tr><tr><th>Auto Hit</th><td>N/A</td></tr><tr><th>Friendly Fire</th><td>N/A</td></tr><tr><th>Cost</th><td>3 Spirit</td></tr><tr><th>Duration</th><td>End of scene</td></tr><tr><th>Learn</th><td>DC 10</td></tr><tr><th>Who Can Cast</th><td>All Ranks</td></tr>
-  </table>
-</section>
 
-<section class="book-page" id="spell_neutral_magic_phantasmal_all_ranks_fulmen_phantasmalis_phantom_bolt">
-  <h2 class="item-title">Fulmen Phantasmalis (Phantom Bolt)</h2>
-  <div class="category">Neutral Magic → Phantasmal → All Ranks</div>
+<section class="book-page" id="spell_neutral_magic_phantasmal_all_ranks_spiritus_lamina_spirit_blade">
+  <h2 class="item-title">Spiritus Lamina (Spirit blade)</h2>
+  <div class="category">Neutral Magic → Phantasm → All Ranks</div>
   <table class="field-table">
-    <tr><th>Incantation</th><td>Must say &quot;Fulmen Phantasmalis&quot;</td></tr><tr><th>Movements</th><td>Extend your casting hand forward, fingers outstretched, and then quickly clench your fist as if gathering energy before thrusting your hand forward to release the bolt.</td></tr><tr><th>Description</th><td class="preserve-lines">By invoking this spell, the caster conjures a bolt of ethereal energy from the spirit plane and hurls it at a target within range. The phantom bolt strikes with spectral force, dealing spirit and mental damage upon impact. Upon a successful hit, the target suffers 3 Spirit and 1 Mind damage. The caster can maintain concentration into subsequent rounds and unleash additional bolts, costing only 2 Spirit points per subsequent attack.</td></tr><tr><th>Auto Hit</th><td>No</td></tr><tr><th>Friendly Fire</th><td>N/A</td></tr><tr><th>Cost</th><td>3 Spirit for the first bolt, 2 Spirit per subsequent bolt</td></tr><tr><th>Duration</th><td>Instantaneous</td></tr><tr><th>Learn</th><td>DC 13</td></tr><tr><th>Who Can Cast</th><td>All Ranks</td></tr>
-  </table>
-</section>
-
-<section class="book-page" id="spell_neutral_magic_phantasmal_all_ranks_iter_spiritus_ghost_walk">
-  <h2 class="item-title">Iter Spiritus (Ghost Walk)</h2>
-  <div class="category">Neutral Magic → Phantasmal → All Ranks</div>
-  <table class="field-table">
-    <tr><th>Incantation</th><td>Must say &quot;Iter Spiritus.&quot;</td></tr><tr><th>Movements</th><td>None</td></tr><tr><th>Description</th><td class="preserve-lines">Speaking the spell will cause the caster to move their body fully into the Ghost (Ethereal) world letting them walk through objects(walls, doors, people) while in this realm the caster cannot be attacked or attack by spell or weapon by anyone not also in the Ghost world. Ghost walking is not without danger when compared to Ethereal Form (Transmutation) as true ghosts will try to keep you in the Ghost Realm if you remain in the ghost realm for too long, after 3 rounds you must make a DC 10 check or take 6 Spirit damage.
-If the Caster is reduced to 0 Spirit while in the Ghost World, their body remains stranded there and must be retrieved before they can be revived.
-When transitioning from material world to Ghost World, all material possessions are left behind by the caster.</td></tr><tr><th>Auto Hit</th><td>N/A</td></tr><tr><th>Friendly Fire</th><td>N/A</td></tr><tr><th>Cost</th><td>3 Spirit per turn</td></tr><tr><th>Duration</th><td>End of scene</td></tr><tr><th>Learn</th><td>DC 10</td></tr><tr><th>Who Can Cast</th><td>All Ranks</td></tr>
-  </table>
-</section>
-
-<section class="book-page" id="spell_neutral_magic_phantasmal_all_ranks_manus_magistri_hands_of_the_master">
-  <h2 class="item-title">Manus Magistri (Hands of the Master)</h2>
-  <div class="category">Neutral Magic → Phantasmal → All Ranks</div>
-  <table class="field-table">
-    <tr><th>Incantation</th><td>Must say, &quot;Manus Magistri.&quot;</td></tr><tr><th>Movements</th><td>Caster extends both hands out and open to their sides and then brings their hands in to their chest while making fists and speaking the incantation.</td></tr><tr><th>Description</th><td class="preserve-lines">Manus Magistri summons a pair of helpful spectral hands that manifest and then super impose themselves over your hands and forearms like gauntlets, aiding in the task at hand. These helping hands increase Attack and Defense rolls by +2 for the rest of the scene.
-They also add +2 to all Tradeskills rolls for the purpose of either learning Tradeskills or crafting items.
-This spell cannot be stacked with Infurnum Manicae, Sanctus Eryx, Alis lucis, Infusus Sanguine, or Cortex Manicae.</td></tr><tr><th>Auto Hit</th><td>N/A</td></tr><tr><th>Friendly Fire</th><td>N/A</td></tr><tr><th>Cost</th><td>1 Spirit</td></tr><tr><th>Duration</th><td>End of Scene</td></tr><tr><th>Learn</th><td>DC: 8</td></tr><tr><th>Who Can Cast</th><td>All Ranks</td></tr>
+    <tr><th>Incantation</th><td>Must say “Spiritus Lamina”</td></tr><tr><th>Movements</th><td>With your casting hand make an upside down cross thrust out your hand and make a fist as if grabbing a blade</td></tr><tr><th>Description</th><td class="preserve-lines">Call a weapon of any form or shape into the world from the spirit world this weapon counts as a magical weapon but can do no actual physical damage. Instead, it deals spiritual damage only, but it still needs to overcome any AC the target may have. The weapon will vanish if the caster is rendered unconscious or their Spirit stat is reduced to zero. Weapon deals 2 Spirit Damage on a successful hit. 
+Caster may attack in the same round that the weapon is summoned</td></tr><tr><th>Auto Hit</th><td>N/A</td></tr><tr><th>Friendly Fire</th><td>N/A</td></tr><tr><th>Cost</th><td>Free</td></tr><tr><th>Duration</th><td>End of Scene</td></tr><tr><th>Category</th><td>Phantasmal</td></tr><tr><th>Learn</th><td>DC 10</td></tr><tr><th>Who Can Cast</th><td>All Ranks</td></tr>
   </table>
 </section>
 
 <section class="book-page" id="spell_neutral_magic_phantasmal_all_ranks_manus_phantasmalis_phantasmal_hand">
   <h2 class="item-title">Manus Phantasmalis (Phantasmal Hand)</h2>
-  <div class="category">Neutral Magic → Phantasmal → All Ranks</div>
+  <div class="category">Neutral Magic → Phantasm → All Ranks</div>
   <table class="field-table">
-    <tr><th>Incantation</th><td>Must say “Manus Phantasmalis”</td></tr><tr><th>Movements</th><td>Thrust out your casting open hand palm out in front of you.</td></tr><tr><th>Description</th><td class="preserve-lines">Call a Ghostly hand into this world from the spirit plane. This hand can lift small objects (like a key or candle, the end of a rope but not a full 50 feet of rope or a small bottle of water but not a full 5 gal bottle) or do small actions (like turn a key in a lock or extinguish a candle flame ) within 100 ft of the caster. The Hand can also be used as a ranged attack for 1 Spirit Damage. The caster must concentrate on the control of the hand and expend 1 Spirit per round the Hand is used.
-The Hand may act in the same round that it is summoned.</td></tr><tr><th>Auto Hit</th><td>No</td></tr><tr><th>Friendly Fire</th><td>N/A</td></tr><tr><th>Cost</th><td>1 Spirit per Round</td></tr><tr><th>Duration</th><td>As long as upkeep cost is met</td></tr><tr><th>Learn</th><td>DC 7</td></tr><tr><th>Who Can Cast</th><td>All Ranks</td></tr>
+    <tr><th>Incantation</th><td>Must say “Manus Phantasmalis”</td></tr><tr><th>Movements</th><td>Thrust out your casting open hand palm out in front of you.</td></tr><tr><th>Description</th><td class="preserve-lines">Call a spectral hand into the Material Realm from the Spirit Realm to do your bidding.
+This hand can lift and use small objects (like a key, candle stick, or a small bottle of water) or take small actions (like turn a key in a lock, or extinguish a candle flame) within 100 feet of the caster.
+The Hand can also be used as a ranged attack for 1 Spirit Damage.
+The Hand may act in the same round that it is summoned.
+The Caster must concentrate on the control of the hand and expend 1 Spirit per Round the Hand is used in Combat.
+
+If the Caster takes any Damage while channeling this Spell, the Spell is Instantly Dispelled.
+The Caster may Move and Dodge as normal while channeling the spell.
+
+Outside of Combat, the duration extends to 20 minutes per 1 Spirit expended.</td></tr><tr><th>Auto Hit</th><td>No</td></tr><tr><th>Friendly Fire</th><td>N/A</td></tr><tr><th>Cost</th><td>1 Spirit</td></tr><tr><th>Duration</th><td>Channeled</td></tr><tr><th>Category</th><td>Phantasm</td></tr><tr><th>Learn</th><td>DC 8</td></tr><tr><th>Who Can Cast</th><td>All Ranks</td></tr>
+  </table>
+</section>
+
+<section class="book-page" id="spell_neutral_magic_phantasmal_all_ranks_armatura_ectoplasmatia_ectoplasmic_armor">
+  <h2 class="item-title">Armatura Ectoplasmatia (Ectoplasmic Armor)</h2>
+  <div class="category">Neutral Magic → Phantasm → All Ranks</div>
+  <table class="field-table">
+    <tr><th>Incantation</th><td>Must say &quot;Armatura Ectoplasmatia.&quot;</td></tr><tr><th>Movements</th><td>While speaking the spell take the index and middle finger of your casting hand and touch the middle of your forehead</td></tr><tr><th>Description</th><td class="preserve-lines">Casting the spell will cause ectoplasm to be expelled from their own body and start covering them.  This armor may take any shape the Caster desires.  This spell grants the Caster 10 Armor against physical attacks, as well as negates 1 Spirit and 1 Mind Damage of any Physical Attack or Spell that successfully hits them.
+
+In the Spirit Realm the damage reduction changes to 1 Body and 1 Mind per Attack.</td></tr><tr><th>Auto Hit</th><td>N/A</td></tr><tr><th>Friendly Fire</th><td>N/A</td></tr><tr><th>Cost</th><td>2 Spirit; 1 Spirit if cast in the Spirit Realm</td></tr><tr><th>Duration</th><td>End of scene</td></tr><tr><th>Category</th><td>Phantasm</td></tr><tr><th>Learn</th><td>DC 10</td></tr><tr><th>Who Can Cast</th><td>All Ranks</td></tr>
+  </table>
+</section>
+
+<section class="book-page" id="spell_neutral_magic_phantasmal_all_ranks_iter_spiritus_ghost_walk">
+  <h2 class="item-title">Iter Spiritus (Ghost Walk)</h2>
+  <div class="category">Neutral Magic → Phantasm → All Ranks</div>
+  <table class="field-table">
+    <tr><th>Incantation</th><td>Must say &quot;Iter Spiritus.&quot;</td></tr><tr><th>Movements</th><td>Take a step in any direction.</td></tr><tr><th>Description</th><td class="preserve-lines">Casting the spell will allow the caster to step into the Spirit Realm from the Material Realm, or vice versa.
+The cost for stepping from the Material Realm into the Spirit Realm is 2 Body.
+The cost for stepping from the Spirit Realm into the Material Realm is 2 Spirit.
+
+If the Caster is reduced to 0 Spirit while in the Spirit Realm, they fall unconscious in the Spirit Realm and may be healed.
+If the Caster is reduced to 0 Body while in the Spirit Realm, they violently snap back to the Material Realm unconscious and their Stats are halved (1/2) until they can recover.  This recovery time is based on Rank Stat Regeneration times.
+
+All Items now stay with the Caster, Mundane and Magical.</td></tr><tr><th>Auto Hit</th><td>N/A</td></tr><tr><th>Friendly Fire</th><td>N/A</td></tr><tr><th>Cost</th><td>See spell description</td></tr><tr><th>Duration</th><td>End of Scene</td></tr><tr><th>Category</th><td>Phantasm</td></tr><tr><th>Learn</th><td>DC 12</td></tr><tr><th>Who Can Cast</th><td>All ranks</td></tr>
   </table>
 </section>
 
 <section class="book-page" id="spell_neutral_magic_phantasmal_all_ranks_medicina_etherea_ethereal_mend">
   <h2 class="item-title">Medicina Etherea (Ethereal Mend)</h2>
-  <div class="category">Neutral Magic → Phantasmal → All Ranks</div>
+  <div class="category">Neutral Magic → Phantasm → All Ranks</div>
   <table class="field-table">
-    <tr><th>Incantation</th><td>Must say &quot;Medicina Etherea&quot;</td></tr><tr><th>Movements</th><td>Place both hands over the target area, palms down, and then slowly move them in a circular motion as if gently weaving threads of energy</td></tr><tr><th>Description</th><td class="preserve-lines">This spell taps into the ethereal energies of the spirit realm to mend minor wounds and alleviate pain. Upon casting, a soothing wave of ethereal energy flows from the caster&#x27;s hands to the target, promoting natural healing processes. The spell can mend minor cuts, bruises, and minor fractures. It restores 2 Body to the target and provides temporary relief from minor pain and discomfort.</td></tr><tr><th>Auto Hit</th><td>No</td></tr><tr><th>Friendly Fire</th><td>N/A</td></tr><tr><th>Cost</th><td>2 Spirit</td></tr><tr><th>Duration</th><td>Instantaneous</td></tr><tr><th>Learn</th><td>DC 7</td></tr><tr><th>Who Can Cast</th><td>All Ranks</td></tr>
+    <tr><th>Incantation</th><td>Must say &quot;Medicina Etherea&quot;</td></tr><tr><th>Movements</th><td>Place both hands over the target area, palms down, fingers laced.</td></tr><tr><th>Description</th><td class="preserve-lines">This spell allows the Caster to sacrifice a portion of their tie to the Material Realm in order to bolster the targets presence in the Spirit Realm.  This spell mends the targets Spiritual form and restores 2 Spirit to the target and provides temporary relief from minor pain and discomfort.
+
+This Spell may only be cast while in the Spirit Realm.
+This Spell may not be cast on yourself.
+
+Oracle and Savant of Healing bonuses apply to the spell.</td></tr><tr><th>Auto Hit</th><td>N/A</td></tr><tr><th>Friendly Fire</th><td>N/A</td></tr><tr><th>Cost</th><td>2 Body</td></tr><tr><th>Duration</th><td>Instant</td></tr><tr><th>Category</th><td>Phantasm</td></tr><tr><th>Learn</th><td>DC 8</td></tr><tr><th>Who Can Cast</th><td>All ranks</td></tr>
   </table>
 </section>
 
-<section class="book-page" id="spell_neutral_magic_phantasmal_all_ranks_spiritus_explorator_spectral_reconnaissance">
+<section class="book-page" id="spell_neutral_magic_phantasmal_any_rank_spiritus_explorator_spectral_reconnaissance">
   <h2 class="item-title">Spiritus Explorator (Spectral Reconnaissance)</h2>
-  <div class="category">Neutral Magic → Phantasmal → All Ranks</div>
+  <div class="category">Neutral Magic → Phantasm → Any Rank</div>
   <table class="field-table">
-    <tr><th>Incantation</th><td>Must say &quot;Spiritus Explorator&quot;</td></tr><tr><th>Movements</th><td>Extend your arms outward, palms facing upward, and chant the incantation while focusing your gaze into the distance.</td></tr><tr><th>Description</th><td class="preserve-lines">This spell summons a spectral scout/spy to perform reconnaissance on behalf of the caster. The spectral entity manifests as a ghostly apparition with the ability to observe and gather information from afar. It can travel great distances and infiltrate areas inaccessible to the caster, providing valuable intelligence on enemy movements, terrain, and other pertinent details.
+    <tr><th>Incantation</th><td>Must say &quot;Spiritus Explorator&quot;</td></tr><tr><th>Movements</th><td>Make a rectangular box shape with your two hands, touching index fingers and thumbs, and look through it. This must be maintained for the duration of the spell.</td></tr><tr><th>Description</th><td class="preserve-lines">This spell summons a spectral scout/spy to perform reconnaissance on behalf of the caster. The spectral entity manifests as a ghostly apparition with the ability to observe and gather information from afar. It can travel great distances and infiltrate areas inaccessible to the caster, providing valuable intelligence on enemy movements, terrain, and other pertinent details.
+
 The spectral scout/spy is intangible and invisible to normal sight (may be seen using Oculi Veritatis - Eyes of Truth, or similar spell/ability), making it difficult to detect by conventional means. It can pass through walls, barriers, and other obstacles with ease, allowing it to explore restricted areas and report back to the caster with its findings.
+
 However, the spectral scout/spy&#x27;s reconnaissance capabilities are not unlimited. It can only remain active for a limited duration before dissipating back into the ether. Additionally, its range of reconnaissance is extensive but not infinite, meaning it cannot traverse across vast distances indefinitely nor travel between Planes/Realms/Universes.
-Allows the in-game use of F5 in situations you might not otherwise be allowed, DM ruling may over ride this at any time</td></tr><tr><th>Auto Hit</th><td>N/A</td></tr><tr><th>Friendly Fire</th><td>N/A</td></tr><tr><th>Cost</th><td>5 Spirit</td></tr><tr><th>Duration</th><td>10 minutes (real-time)</td></tr><tr><th>Learn</th><td>DC 13</td></tr><tr><th>Who Can Cast</th><td>All Ranks</td></tr>
+Allows the in-game use of F5 in situations you might not otherwise be allowed, DM ruling may over ride this at any time.
+
+If the Caster takes any Damage while channeling this Spell, the Spell is Instantly Dispelled.
+The Caster may Move and Dodge as normal while channeling the spell.</td></tr><tr><th>Auto Hit</th><td>N/A</td></tr><tr><th>Friendly Fire</th><td>N/A</td></tr><tr><th>Cost</th><td>3 Spirit</td></tr><tr><th>Duration</th><td>10 minutes (real-time/at DM’s discretion)</td></tr><tr><th>Range</th><td>1 mile radius from the caster.</td></tr><tr><th>Category</th><td>Phantasm</td></tr><tr><th>Learn</th><td>DC 12</td></tr><tr><th>Who Can Cast</th><td>Any Rank</td></tr>
   </table>
 </section>
 
-<section class="book-page" id="spell_neutral_magic_phantasmal_all_ranks_spiritus_lamina_spirit_blade">
-  <h2 class="item-title">Spiritus Lamina (Spirit blade)</h2>
-  <div class="category">Neutral Magic → Phantasmal → All Ranks</div>
+<section class="book-page" id="spell_neutral_magic_phantasmal_any_rank_fulmen_phantasmalis_phantom_bolt">
+  <h2 class="item-title">Fulmen Phantasmalis (Phantom Bolt)</h2>
+  <div class="category">Neutral Magic → Phantasm → Any Rank</div>
   <table class="field-table">
-    <tr><th>Incantation</th><td>Must say “Spiritus Lamina”</td></tr><tr><th>Movements</th><td>With your casting hand make an upside down cross thrust out your hand and make a fist as if grabbing a blade</td></tr><tr><th>Description</th><td class="preserve-lines">Call a weapon of any form or shape into the world from the spirit world this weapon counts as a magical weapon but can do no actual physical damage. Instead, it deals spiritual damage only, but it still needs to overcome any AC the target may have. The weapon will vanish if the caster is rendered unconscious or their Spirit stat is reduced to zero. Weapon deals 2 Spirit Damage on a successful hit.
-Caster may attack in the same round that the weapon is summoned</td></tr><tr><th>Auto Hit</th><td>N/A</td></tr><tr><th>Friendly Fire</th><td>N/A</td></tr><tr><th>Cost</th><td>Free</td></tr><tr><th>Duration</th><td>End of Scene</td></tr><tr><th>Learn</th><td>DC 10</td></tr><tr><th>Who Can Cast</th><td>All Ranks</td></tr>
+    <tr><th>Incantation</th><td>Must say &quot;Fulmen Phantasmalis&quot;</td></tr><tr><th>Movements</th><td>Clench your fist pulling it in to your chest as if gathering energy, and then thrust your hand towards the target. Keep your arm and hand extended for continued channeling.</td></tr><tr><th>Description</th><td class="preserve-lines">By invoking this spell, the caster conjures a bolt of ethereal energy and hurls it at a target at range.  The phantom bolt strikes with spectral force, dealing spirit and mental damage upon impact.  Upon a successful hit, the target suffers 2 Spirit and 1 Mind damage.  The caster can maintain concentration into subsequent rounds and unleash additional bolts, costing only 1 Mind points per subsequent attack.
+
+If the Caster takes any Damage while channeling this Spell, the Spell is Instantly Dispelled.
+The Caster may Move and Dodge as normal while channeling the spell.</td></tr><tr><th>Auto Hit</th><td>No</td></tr><tr><th>Friendly Fire</th><td>N/A</td></tr><tr><th>Cost</th><td>2 Mind, and 1 Mind for continued channeling.</td></tr><tr><th>Duration</th><td>Instant, Channeled</td></tr><tr><th>Category</th><td>Phantasm</td></tr><tr><th>Learn</th><td>DC 12</td></tr><tr><th>Who Can Cast</th><td>Any Rank</td></tr>
   </table>
 </section>
 
-<section class="book-page" id="spell_neutral_magic_phantasmal_all_ranks_spiritus_loquere_spirit_speak">
-  <h2 class="item-title">Spiritus Loquere (Spirit Speak)</h2>
-  <div class="category">Neutral Magic → Phantasmal → All Ranks</div>
+<section class="book-page" id="spell_neutral_magic_phantasmal_any_rank_nova_spectralis_spectral_nova">
+  <h2 class="item-title">Nova Spectralis (Spectral Nova)</h2>
+  <div class="category">Neutral Magic → Phantasm → Any Rank</div>
   <table class="field-table">
-    <tr><th>Incantation</th><td>Must say &quot;Spiritus Loquere&quot;</td></tr><tr><th>Movements</th><td>Sit in a meditative position.</td></tr><tr><th>Description</th><td class="preserve-lines">This spell will allow you to call forth a spirit from the great beyond to converse with them. It must be someone you know or know of, or have a connection with. The stronger the bond, the easier the spell is to perform. This spell will not work if the spirit in question was sent to the lower planes or devoured in some way. This spell is mostly for RP flavor so use your imagination.
-1: DC: 13 ~ Knew of the person, but never actually met.
-2: DC: 10 ~ Actually met and conversed, but were not considered a friend.
-3: DC: 7 ~ The person was a close friend, lover, or family member.</td></tr><tr><th>Auto Hit</th><td>N/A</td></tr><tr><th>Friendly Fire</th><td>N/A</td></tr><tr><th>Cost</th><td>Free</td></tr><tr><th>Duration</th><td>Until you send the spirit away</td></tr><tr><th>Learn</th><td>See Spell Description:</td></tr><tr><th>Who Can Cast</th><td>All Ranks</td></tr>
+    <tr><th>Incantation</th><td>Must say &quot;Nova Spectralis&quot;</td></tr><tr><th>Movements</th><td>Raise both hands above your head, palms facing outward, and then forcefully bring them down.</td></tr><tr><th>Description</th><td class="preserve-lines">When this spell is invoked, the caster unleashes a powerful explosion of spectral energy that radiates outwards in a wide sphere, affecting all targets within range.  The spectral nova can inflict significant spirit and mental damage to all targets caught in its blast radius.
+Upon impact, all targets within 20 feet of the caster will take 2 Mind and 2 Spirit damage, and be knocked back 10 ft.
+A successful DC 12 check will half the Damage and prevent knockback.</td></tr><tr><th>Auto Hit</th><td>Yes</td></tr><tr><th>Friendly Fire</th><td>Yes</td></tr><tr><th>Cost</th><td>2 Mind</td></tr><tr><th>Duration</th><td>Instant</td></tr><tr><th>Category</th><td>Phantasm</td></tr><tr><th>Learn</th><td>DC 12</td></tr><tr><th>Who Can Cast</th><td>Any Rank</td></tr>
   </table>
 </section>
 
 <section class="book-page" id="spell_neutral_magic_phantasmal_savant_and_oracle_spells_phantasma_custos_spectral_guardian">
   <h2 class="item-title">Phantasma Custos (Spectral Guardian)</h2>
-  <div class="category">Neutral Magic → Phantasmal → Savant and Oracle Spells</div>
+  <div class="category">Neutral Magic → Phantasm → Savant and Oracle Spells</div>
   <table class="field-table">
-    <tr><th>Incantation</th><td>Must say &quot;Phantasma Custos&quot;</td></tr><tr><th>Movements</th><td>moves your casting hand from one side to the other in drawn out motion until arm is extended to open the gateway for the spirit</td></tr><tr><th>Description</th><td class="preserve-lines">This spell summons a single, formidable spectral guardian from the spirit world to protect and fight alongside the caster. The Spectral Guardian appears as a large, ghostly knight clad in ancient armor, wielding a massive ethereal weapon of the caster&#x27;s choice (e.g., sword, axe, or spear). The guardian stands as a stalwart protector, capable of both offense and defense.
-Stats: 0/3/3/10/0
-Attack: The Spectral Guardian can make one attack once every 2 rounds, dealing 3 Spirit damage on a successful hit.
-Immune to Body damage
-Special Ability: The guardian emits a passive aura that grants a +1 AC bonus to all allies within 10 feet.</td></tr><tr><th>Auto Hit</th><td>No</td></tr><tr><th>Friendly Fire</th><td>N/A</td></tr><tr><th>Cost</th><td>5 Spirit</td></tr><tr><th>Duration</th><td>4 rounds or until destroyed</td></tr><tr><th>Learn</th><td>DC 13</td></tr><tr><th>Who Can Cast</th><td>Savant, Oracle</td></tr>
+    <tr><th>Incantation</th><td>Must say &quot;Phantasma Custos&quot;</td></tr><tr><th>Movements</th><td>Move your casting hand from one side to the other in a broad arc to open the gateway for the spirit.</td></tr><tr><th>Description</th><td class="preserve-lines">This spell summons a single, formidable spectral guardian from the spirit world to protect and fight alongside the caster. The Spectral Guardian appears as a ghostly knight clad in ancient armor about 10 ft tall and wields a massive ethereal weapon of the caster&#x27;s choice (e.g., sword, axe, or spear). The guardian stands as a stalwart protector, capable of both offense and defense.
+
+Stats:  0/4/4/10/0
+The Spectral Guardian is immune to Body Damage.
+The Spectral Guardian acts on the same Initiative as the Caster.
+Attack:  The Spectral Guardian can make one attack once every second Round it exists, dealing 3 Spirit damage on a successful hit.
+Special Ability:  The guardian emits a passive aura that grants a +1 AC bonus to all allies within 20 feet.</td></tr><tr><th>Auto Hit</th><td>No</td></tr><tr><th>Friendly Fire</th><td>N/A</td></tr><tr><th>Cost</th><td>4 Spirit; The cost of this Spell may not be Reduced.</td></tr><tr><th>Duration</th><td>Until Destroyed or End of Scene</td></tr><tr><th>Category</th><td>Phantasm</td></tr><tr><th>Learn</th><td>DC 14</td></tr><tr><th>Who Can Cast</th><td>Savant, Oracle</td></tr>
   </table>
 </section>
 
-<section class="book-page" id="spell_neutral_magic_phantasmal_oracle_spells_nova_spectralis_spectral_nova">
-  <h2 class="item-title">Nova Spectralis (Spectral Nova)</h2>
-  <div class="category">Neutral Magic → Phantasmal → Oracle Spells</div>
+<section class="book-page" id="spell_neutral_magic_phantasmal_all_ranks_spiritus_loquere_spirit_speak">
+  <h2 class="item-title">Spiritus Loquere (Spirit Speak)</h2>
+  <div class="category">Neutral Magic → Phantasm → All Ranks</div>
   <table class="field-table">
-    <tr><th>Incantation</th><td>Must say &quot;Nova Spectralis&quot;</td></tr><tr><th>Movements</th><td>Raise both hands above your head, palms facing outward, and then forcefully bring them down to chest level, releasing a burst of energy</td></tr><tr><th>Description</th><td class="preserve-lines">When this spell is invoked, the caster unleashes a powerful explosion of spectral energy that radiates outwards in a wide sphere, affecting all targets within range. The spectral nova can inflict significant spirit and mental damage to all targets caught in its blast radius. Upon impact, all targets within 20 feet of the caster must roll a DC 11 check or suffer 4 Spirit and 2 Body damage, and be Knocked back 10 ft. A successful DC 11 check will avoid all Damage and prevent knockback.
-The caster must exercise caution to avoid harming allies within the vicinity.</td></tr><tr><th>Auto Hit</th><td>Yes</td></tr><tr><th>Friendly Fire</th><td>Yes</td></tr><tr><th>Cost</th><td>5 Spirit</td></tr><tr><th>Duration</th><td>Instantaneous</td></tr><tr><th>Learn</th><td>N/A</td></tr><tr><th>Who Can Cast</th><td>Oracle</td></tr>
+    <tr><th>Incantation</th><td>Must say &quot;Spiritus Loquere&quot;</td></tr><tr><th>Movements</th><td>Sit in a meditative position.</td></tr><tr><th>Description</th><td class="preserve-lines">This spell will allow you to call forth a spirit from the great beyond to converse with them. It must be someone you know or know of, or have a connection with. The stronger the bond, the easier the spell is to perform. This spell will not work if the spirit in question was sent to the lower planes or devoured in some way. This spell is mostly for RP flavor so use your imagination.
+
+1: DC: 13 ~ Knew of the person, but never actually met.
+2: DC: 10 ~ Actually met and conversed, but were not considered a friend.
+3: DC: 7 ~ The person was a close friend, lover, or family member.</td></tr><tr><th>Auto Hit</th><td>N/A</td></tr><tr><th>Friendly Fire</th><td>N/A</td></tr><tr><th>Cost</th><td>Free</td></tr><tr><th>Duration</th><td>Until you send the spirit away</td></tr><tr><th>Category</th><td>Phantasm</td></tr><tr><th>Learn</th><td>See Spell Description:</td></tr><tr><th>Who Can Cast</th><td>All Ranks</td></tr>
+  </table>
+</section>
+
+<section class="book-page" id="spell_neutral_magic_phantasmal_all_ranks_manus_magistri_hands_of_the_master">
+  <h2 class="item-title">Manus Magistri (Hands of the Master)</h2>
+  <div class="category">Neutral Magic → Phantasm → All Ranks</div>
+  <table class="field-table">
+    <tr><th>Incantation</th><td>Must say, &quot;Manus Magistri.&quot;</td></tr><tr><th>Movements</th><td>Caster extends both hands out and open to their sides and then brings their hands in to their chest while making fists and speaking the incantation.</td></tr><tr><th>Description</th><td class="preserve-lines">Manus Magistri summons a pair of helpful spectral hands that manifest and then super impose themselves over your hands and forearms like gauntlets, aiding in the task at hand.  These helping hands increase Attack and Defense rolls by +2 for the rest of the scene.
+
+They also add +2 to all Tradeskills rolls for the purpose of either learning Tradeskills or crafting items.
+
+This spell cannot be stacked with Infurnum Manicae, Sanctus Eryx, Alis lucis, Infusus Sanguine, or Cortex Manicae.</td></tr><tr><th>Auto Hit</th><td>N/A</td></tr><tr><th>Friendly Fire</th><td>N/A</td></tr><tr><th>Cost</th><td>1 Spirit</td></tr><tr><th>Duration</th><td>End of Scene</td></tr><tr><th>Category</th><td>Phantasm</td></tr><tr><th>Learn</th><td>DC: 8</td></tr><tr><th>Who Can Cast</th><td>All Ranks</td></tr>
+  </table>
+</section>
+
+<section class="book-page" id="spell_neutral_magic_phantasmal_all_ranks_alae_aurielis_uriels_wings">
+  <h2 class="item-title">Alae Aurielis (Uriel’s Wings)</h2>
+  <div class="category">Neutral Magic → Phantasm → All Ranks</div>
+  <table class="field-table">
+    <tr><th>Incantation</th><td>Must say, &quot;Alae Aurielis&quot;</td></tr><tr><th>Movements</th><td>Bow your head clasping your hands in front of you and then spread your arms wide speaking the incantation.</td></tr><tr><th>Description</th><td class="preserve-lines">This Spell grants the Caster spectral wings and the ability to fly within the Spirit Realm.  The wings may take any shape the Caster desires, as long as they are obviously wings.
+Outside of Combat, in the Spirit Realm these wings are a quick method of movement, rivaling the speed of Dragons.
+In Combat the wings allow the Caster to fly 60 feet per Round.
+
+Outside of the Spirit Realm, these wings can be seen, but are purely decorative.
+
+Races who already have wings do not require this spell to fly in the Spirit Realm.</td></tr><tr><th>Auto Hit</th><td>N/A</td></tr><tr><th>Friendly Fire</th><td>N/A</td></tr><tr><th>Cost</th><td>1 Spirit</td></tr><tr><th>Duration</th><td>End of Scene</td></tr><tr><th>Category</th><td>Phantasm</td></tr><tr><th>Learn</th><td>DC 8</td></tr><tr><th>Who Can Cast</th><td>All Ranks</td></tr>
+  </table>
+</section>
+
+<section class="book-page" id="spell_neutral_magic_phantasmal_oracle_and_savants_requies_inquietis_rest_of_the_restless">
+  <h2 class="item-title">Requies Inquietis (Rest of the Restless)</h2>
+  <div class="category">Neutral Magic → Phantasm → Oracle &amp; Savants</div>
+  <table class="field-table">
+    <tr><th>Incantation</th><td>Must say, &quot;Requies Inquietis&quot;</td></tr><tr><th>Movements</th><td>The Caster claps their hands over their heart and then spreads their arms wide, palms up while speaking the incantation.</td></tr><tr><th>Description</th><td class="preserve-lines">The Order of Tobin has learned how use the energies within the Spirit Realm to bolster and heal their allies spirit when needed.  The Caster heals 4 Spirit to ALL Allies around the Caster in a 60 foot radius.
+
+This Spell can only be used once per Combat Scene.
+This Spell may only be cast while in the Spirit Realm.
+
+Oracle and Savant of Healing bonuses apply to the spell.</td></tr><tr><th>Auto Hit</th><td>N/A</td></tr><tr><th>Friendly Fire</th><td>N/A</td></tr><tr><th>Cost</th><td>2 Body and 2 Mind; The cost of this Spell cannot be reduced.</td></tr><tr><th>Duration</th><td>Instant</td></tr><tr><th>Category</th><td>Phantasm</td></tr><tr><th>Learn</th><td>14</td></tr><tr><th>Who Can Cast</th><td>Oracle &amp; Savants</td></tr>
+  </table>
+</section>
+
+<section class="book-page" id="spell_neutral_magic_phantasmal_oracle_and_savants_speculum_spiritus_spirit_mirror">
+  <h2 class="item-title">Speculum Spiritus (Spirit Mirror)</h2>
+  <div class="category">Neutral Magic → Phantasm → Oracle &amp; Savants</div>
+  <table class="field-table">
+    <tr><th>Incantation</th><td>Must say, &quot;Speculum Spiritus.&quot;</td></tr><tr><th>Movements</th><td>Moves their casting hand as if removing a veil from their face.</td></tr><tr><th>Description</th><td class="preserve-lines">This spell allows the Caster to thin the barrier between worlds so that those in the Material Realm can see and hear what is happening in the Spirit Realm.  This also allows those in the Spirit Realm to see and hear things in the Material Realm, which can allow for two-way communication.
+
+This does NOT allow those in the Material Realm directly affect those in the Spirit Realm or vice versa.  A person still needs to enter the Spirit Realm to directly affect others in the Spirit Realm.</td></tr><tr><th>Auto Hit</th><td>N/A</td></tr><tr><th>Friendly Fire</th><td>N/A</td></tr><tr><th>Cost</th><td>3 Mind; The cost of this Spell cannot be reduced.</td></tr><tr><th>Duration</th><td>End of Scene</td></tr><tr><th>Category</th><td>Phantasmal</td></tr><tr><th>Learn</th><td>10</td></tr><tr><th>Who Can Cast</th><td>Oracle &amp; Savants</td></tr>
   </table>
 </section>
 
@@ -4088,7 +4178,7 @@ Tendrils use the rank bonus of their Caster to attack.</td></tr><tr><th>Auto Hit
     </main>
     <footer class="book-footer">
       <button class="book-btn" onclick="goToPage('spell_index')">Index</button>
-      <button class="book-btn" onclick="prevPage()">← Back</button>
+      <button class="book-btn spell-back-btn" onclick="goBackArea()" title="Go back through the last 5 opened spellbook areas">← Back Area</button>
       <button class="book-btn dark" onclick="nextPage()">Next →</button>
       <span id="pageCount" class="page-count">Page 1</span>
     </footer>
@@ -4097,25 +4187,84 @@ Tendrils use the rank bonus of their Caster to attack.</td></tr><tr><th>Auto Hit
 let allPages = [];
 let filteredPages = [];
 let currentPage = 0;
+const SPELLBOOK_BACK_HISTORY_KEY = "fallenGateSpellbookBackHistory";
+let spellbookBackHistory = [];
+
+function currentActivePageId() {
+  const page = filteredPages[currentPage];
+  return page && page.id ? page.id : "";
+}
+
+function loadSpellbookBackHistory() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(SPELLBOOK_BACK_HISTORY_KEY) || "[]");
+    spellbookBackHistory = Array.isArray(saved)
+      ? saved.filter(function (id) { return document.getElementById(id); }).slice(-5)
+      : [];
+  } catch (error) {
+    spellbookBackHistory = [];
+  }
+}
+
+function saveSpellbookBackHistory() {
+  localStorage.setItem(SPELLBOOK_BACK_HISTORY_KEY, JSON.stringify(spellbookBackHistory.slice(-5)));
+}
+
+function pushSpellbookBackHistory() {
+  const id = currentActivePageId();
+  if (!id) return;
+
+  if (spellbookBackHistory[spellbookBackHistory.length - 1] === id) return;
+
+  spellbookBackHistory.push(id);
+  spellbookBackHistory = spellbookBackHistory.slice(-5);
+  saveSpellbookBackHistory();
+}
+
+function updateSpellbookBackButtons() {
+  const labels = spellbookBackHistory
+    .map(function (id) {
+      const page = document.getElementById(id);
+      const title = page ? page.querySelector(".item-title") : null;
+      return title ? title.textContent.trim() : id;
+    })
+    .filter(Boolean)
+    .reverse();
+
+  document.querySelectorAll(".spell-back-btn").forEach(function (button) {
+    button.disabled = spellbookBackHistory.length === 0;
+    button.title = labels.length
+      ? "Back through recent areas: " + labels.join(" ← ")
+      : "No saved spellbook area yet.";
+  });
+}
 
 function initBook() {
   allPages = Array.from(document.querySelectorAll(".book-page"));
   filteredPages = allPages.slice();
-  showPage(0);
+  loadSpellbookBackHistory();
+  showPage(0, false);
 }
 
-function showPage(index) {
+function showPage(index, rememberCurrent = false) {
   if (filteredPages.length === 0) {
     allPages.forEach(p => p.classList.remove("active"));
     document.getElementById("pageCount").textContent = "No pages";
+    updateSpellbookBackButtons();
     return;
   }
   if (index < 0) index = filteredPages.length - 1;
   if (index >= filteredPages.length) index = 0;
+
+  if (rememberCurrent && filteredPages[currentPage]) {
+    pushSpellbookBackHistory();
+  }
+
   currentPage = index;
   allPages.forEach(p => p.classList.remove("active"));
   filteredPages[currentPage].classList.add("active");
   document.getElementById("pageCount").textContent = "Page " + (currentPage + 1) + " of " + filteredPages.length;
+  updateSpellbookBackButtons();
 }
 
 function goToPage(id) {
@@ -4123,11 +4272,28 @@ function goToPage(id) {
   if (!page) return;
   filteredPages = allPages.slice();
   const index = filteredPages.indexOf(page);
-  showPage(index >= 0 ? index : 0);
+  showPage(index >= 0 ? index : 0, true);
 }
 
-function nextPage() { showPage(currentPage + 1); }
-function prevPage() { showPage(currentPage - 1); }
+function goBackArea() {
+  while (spellbookBackHistory.length) {
+    const id = spellbookBackHistory.pop();
+    saveSpellbookBackHistory();
+
+    const page = document.getElementById(id);
+    if (!page) continue;
+
+    filteredPages = allPages.slice();
+    const index = filteredPages.indexOf(page);
+    showPage(index >= 0 ? index : 0, false);
+    return;
+  }
+
+  updateSpellbookBackButtons();
+}
+
+function nextPage() { showPage(currentPage + 1, false); }
+function prevPage() { showPage(currentPage - 1, false); }
 
 
 
