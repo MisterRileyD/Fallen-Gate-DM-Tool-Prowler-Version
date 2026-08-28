@@ -2258,9 +2258,34 @@
 				}
 		
 		
+
+		const FALLEN_GATE_CUSTOM_RANKS = {
+		  "Keeper of Oracles": {
+		    active: 1,
+		    body: 24,
+		    mind: 24,
+		    spirit: 24,
+		    ac: 0,
+		    bonus: 6,
+		    rank_type: "Fallen Gate Rank",
+		    description: "Keeper of Oracles. Body 24, Mind 24, Spirit 24, Combat Modifier +6."
+		  }
+		};
+
+		function mergeCustomRanksIntoData() {
+			if (!data) data = {};
+			if (!data.ranks) data.ranks = {};
+
+			Object.keys(FALLEN_GATE_CUSTOM_RANKS).forEach(function (rankName) {
+				data.ranks[rankName] = FALLEN_GATE_CUSTOM_RANKS[rankName];
+			});
+		}
+
+
 		function initDMTool() {
 			data = window.FALLEN_GATE_DATA || {};
 			mergeWaveFightMonstersIntoData();
+			mergeCustomRanksIntoData();
 			characterSheets = window.FALLEN_GATE_CHARACTER_SHEETS || {};
 
 			if (!data.ranks || !data.dragons || !data.monsters) {
