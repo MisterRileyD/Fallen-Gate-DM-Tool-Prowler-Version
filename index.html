@@ -2246,7 +2246,98 @@
 		    "description": "A front-line goblin wave fighter that presses forward with a spear and protects weaker ranged or caster allies.",
 		    "treasure_text": "1\u201320: No Loot"
 		  }
-		};
+		,
+  "Orc Scout": {
+    "active": 1,
+    "monster_title": "Wave Fight Monsters",
+    "body": 6,
+    "mind": 6,
+    "spirit": 6,
+    "ac": 10,
+    "bonus": 0,
+    "monster_class": "Mortal",
+    "movement": "Unknown",
+    "size": "Unknown",
+    "attacks": "Ranged bow attack dealing 2 Body damage on hit, or Melee Attack dealing 2 Body damage on hit.",
+    "description": "A quick-moving orc skirmisher used to scout ahead, harry targets from range, and finish weakened foes in close combat.",
+    "treasure_text": "1–20: No Loot"
+  },
+  "Orc Raider": {
+    "active": 1,
+    "monster_title": "Wave Fight Monsters",
+    "body": 6,
+    "mind": 6,
+    "spirit": 6,
+    "ac": 12,
+    "bonus": 1,
+    "monster_class": "Mortal",
+    "movement": "Unknown",
+    "size": "Unknown",
+    "attacks": "Melee Attack dealing 3 Body damage on hit.",
+    "description": "A brutal orc attacker built for aggressive wave pressure and hard-hitting melee strikes.",
+    "treasure_text": "1–20: No Loot"
+  },
+  "Orc Sorceror": {
+    "active": 1,
+    "monster_title": "Wave Fight Monsters",
+    "body": 5,
+    "mind": 7,
+    "spirit": 7,
+    "ac": 0,
+    "bonus": 2,
+    "monster_class": "Mortal",
+    "movement": "Unknown",
+    "size": "Unknown",
+    "attacks": "Fireball dealing 3 Body damage on hit. Special Actions: Heal may heal an ally for 3 Body. Blood Rage may bestow Rage upon all allies within the wave, giving them +1 Damage to all attacks and imposing a -2 penalty to their defensive rolls.",
+    "description": "An orc support caster that blasts enemies with fire magic, heals allies, and drives its wave into a violent frenzy.",
+    "treasure_text": "1–20: No Loot"
+  },
+  "Orc Heavy Infantry": {
+    "active": 1,
+    "monster_title": "Wave Fight Monsters",
+    "body": 8,
+    "mind": 8,
+    "spirit": 8,
+    "ac": 14,
+    "bonus": 2,
+    "monster_class": "Mortal",
+    "movement": "Unknown",
+    "size": "Unknown",
+    "attacks": "Melee Attack dealing 3 Body damage on hit.",
+    "description": "A heavily armored front-line orc that absorbs punishment and anchors the wave with raw strength.",
+    "treasure_text": "1–20: No Loot"
+  },
+  "Warg Rider (Counts as two entities - Orc Rider)": {
+    "active": 1,
+    "monster_title": "Wave Fight Monsters",
+    "body": 8,
+    "mind": 8,
+    "spirit": 8,
+    "ac": 12,
+    "bonus": 2,
+    "monster_class": "Mortal",
+    "movement": "Unknown",
+    "size": "Unknown",
+    "attacks": "Thrown Spear attack, dealing 3 Body damage on hit.",
+    "description": "One half of the Warg Rider wave unit. This entry represents the Orc Rider only. The full Warg Rider counts as two entities when paired with the Warg mount.",
+    "treasure_text": "1–20: No Loot"
+  },
+  "Warg Rider (Counts as two entities - Warg mount)": {
+    "active": 1,
+    "monster_title": "Wave Fight Monsters",
+    "body": 6,
+    "mind": 6,
+    "spirit": 6,
+    "ac": 0,
+    "bonus": 1,
+    "monster_class": "Animal",
+    "movement": "Unknown",
+    "size": "Unknown",
+    "attacks": "Bite, dealing 3 Body damage on hit.",
+    "description": "One half of the Warg Rider wave unit. This entry represents the Warg mount only. The full Warg Rider counts as two entities when paired with the Orc Rider.",
+    "treasure_text": "1–20: No Loot"
+  }
+};
 		
 				function mergeWaveFightMonstersIntoData() {
 					if (!data) data = {};
